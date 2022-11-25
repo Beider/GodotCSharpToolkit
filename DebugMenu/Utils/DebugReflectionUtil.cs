@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace DebugMenu
+namespace GodotCSharpToolkit.DebugMenu
 {
     /// <summary>
     /// Class taken from MDFramework

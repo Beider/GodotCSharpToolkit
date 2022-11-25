@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
-namespace DebugMenu
+namespace GodotCSharpToolkit.DebugMenu
 {
     /// <summary>
     /// Simple callback used on button press

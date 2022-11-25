@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-namespace DebugMenu
+namespace GodotCSharpToolkit.DebugMenu
 {
     public class DebugMenuDialog : Control
     {

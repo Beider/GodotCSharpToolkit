@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-namespace DebugMenu
+namespace GodotCSharpToolkit.DebugMenu
 {
     /// <summary>
     /// To make example work load this as an autoload after the DebugMenu.

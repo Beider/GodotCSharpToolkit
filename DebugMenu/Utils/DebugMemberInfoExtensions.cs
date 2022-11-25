@@ -2,7 +2,7 @@ using System;
 using Godot;
 using System.Reflection;
 
-namespace DebugMenu
+namespace GodotCSharpToolkit.DebugMenu
 {
     /// <summary>
     /// Extension class to provide useful framework methods

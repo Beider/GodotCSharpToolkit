@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace DebugMenu
+namespace GodotCSharpToolkit.DebugMenu
 {
     public partial class DebugMenu
     {

@@ -2,7 +2,7 @@ using Godot;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace DebugMenu
+namespace GodotCSharpToolkit.DebugMenu
 {
 
     /// <summary>

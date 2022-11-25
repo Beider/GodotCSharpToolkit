@@ -1,0 +1,295 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://GodotCSharpToolkit/DebugMenu/DebugMenu.cs" type="Script" id=1]
+[ext_resource path="res://GodotCSharpToolkit/DebugMenu/OnScreenOverlay/OnScreenDebugInterface.cs" type="Script" id=2]
+[ext_resource path="res://GodotCSharpToolkit/DebugMenu/DebugButtonMenu.cs" type="Script" id=3]
+[ext_resource path="res://GodotCSharpToolkit/DebugMenu/DebugMenuDialog.cs" type="Script" id=4]
+
+[node name="DebugMenu" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="OnScreenDebug" type="Control" parent="CanvasLayer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true
+}
+
+[node name="DebugButtonMenu" type="Control" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="Panel" parent="CanvasLayer/DebugButtonMenu"]
+self_modulate = Color( 1, 1, 1, 0.392157 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 50.0
+margin_top = 50.0
+margin_right = -50.0
+margin_bottom = -50.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="LblDebugMenu" type="Label" parent="CanvasLayer/DebugButtonMenu/Background"]
+anchor_right = 1.0
+margin_bottom = 30.0
+text = "Debug Menu"
+align = 1
+valign = 1
+
+[node name="Root" type="Panel" parent="CanvasLayer/DebugButtonMenu/Background"]
+self_modulate = Color( 0.858824, 0.972549, 1, 0.392157 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 35.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DebugButtonMenu/Background/Root"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_bottom = -5.0
+scroll_horizontal_enabled = false
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="RootGrid" type="GridContainer" parent="CanvasLayer/DebugButtonMenu/Background/Root/ScrollContainer"]
+margin_right = 919.0
+size_flags_horizontal = 3
+columns = 4
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Column1" type="GridContainer" parent="CanvasLayer/DebugButtonMenu/Background/Root/ScrollContainer/RootGrid"]
+margin_right = 227.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Column2" type="GridContainer" parent="CanvasLayer/DebugButtonMenu/Background/Root/ScrollContainer/RootGrid"]
+margin_left = 231.0
+margin_right = 458.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Column3" type="GridContainer" parent="CanvasLayer/DebugButtonMenu/Background/Root/ScrollContainer/RootGrid"]
+margin_left = 462.0
+margin_right = 689.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Column4" type="GridContainer" parent="CanvasLayer/DebugButtonMenu/Background/Root/ScrollContainer/RootGrid"]
+margin_left = 693.0
+margin_right = 919.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HSplitContainer" type="HSplitContainer" parent="CanvasLayer/DebugButtonMenu/Background"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 30.0
+margin_right = -5.0
+margin_bottom = -5.0
+dragger_visibility = 1
+
+[node name="VSplitContainer" type="VSplitContainer" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer"]
+margin_right = 239.0
+margin_bottom = 465.0
+dragger_visibility = 1
+
+[node name="LblVisibilityGroups" type="Label" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer/VSplitContainer"]
+margin_right = 239.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 239, 0 )
+text = "Visibility Groups"
+align = 1
+valign = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer/VSplitContainer"]
+margin_top = 26.0
+margin_right = 239.0
+margin_bottom = 465.0
+
+[node name="VisibilityGroupGrid" type="GridContainer" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer/VSplitContainer/ScrollContainer"]
+margin_right = 239.0
+margin_bottom = 439.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VSplitContainer2" type="VSplitContainer" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer"]
+margin_left = 251.0
+margin_right = 914.0
+margin_bottom = 465.0
+dragger_visibility = 1
+
+[node name="LblActions" type="Label" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer/VSplitContainer2"]
+margin_right = 663.0
+margin_bottom = 14.0
+text = "Actions"
+align = 1
+valign = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer/VSplitContainer2"]
+margin_top = 26.0
+margin_right = 663.0
+margin_bottom = 465.0
+
+[node name="ActionGrid" type="GridContainer" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer/VSplitContainer2/ScrollContainer"]
+margin_right = 663.0
+margin_bottom = 439.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DialogBackground" type="ColorRect" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.588235 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Dialog" type="Panel" parent="CanvasLayer/DialogBackground"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -175.0
+margin_top = -150.0
+margin_right = 175.0
+margin_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="CanvasLayer/DialogBackground/Dialog"]
+anchor_right = 1.0
+margin_bottom = 30.0
+text = "Button text here"
+align = 1
+valign = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DialogBackground/Dialog"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 36.0
+margin_right = -5.0
+margin_bottom = -41.0
+scroll_horizontal_enabled = false
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ControlGrid" type="GridContainer" parent="CanvasLayer/DialogBackground/Dialog/ScrollContainer"]
+margin_right = 340.0
+margin_bottom = 76.0
+size_flags_horizontal = 3
+columns = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/DialogBackground/Dialog/ScrollContainer/ControlGrid"]
+margin_top = 5.0
+margin_right = 70.0
+margin_bottom = 19.0
+text = "Bool_Value"
+
+[node name="CheckBox" type="CheckBox" parent="CanvasLayer/DialogBackground/Dialog/ScrollContainer/ControlGrid"]
+margin_left = 74.0
+margin_right = 340.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "Some checkbox"
+
+[node name="Label2" type="Label" parent="CanvasLayer/DialogBackground/Dialog/ScrollContainer/ControlGrid"]
+margin_top = 31.0
+margin_right = 70.0
+margin_bottom = 45.0
+text = "List_value"
+
+[node name="MenuButton" type="MenuButton" parent="CanvasLayer/DialogBackground/Dialog/ScrollContainer/ControlGrid"]
+margin_left = 74.0
+margin_top = 28.0
+margin_right = 340.0
+margin_bottom = 48.0
+size_flags_horizontal = 3
+text = "Dropdown List"
+
+[node name="Label3" type="Label" parent="CanvasLayer/DialogBackground/Dialog/ScrollContainer/ControlGrid"]
+margin_top = 57.0
+margin_right = 70.0
+margin_bottom = 71.0
+text = "Text value"
+
+[node name="LineEdit" type="LineEdit" parent="CanvasLayer/DialogBackground/Dialog/ScrollContainer/ControlGrid"]
+margin_left = 74.0
+margin_top = 52.0
+margin_right = 340.0
+margin_bottom = 76.0
+text = "Some text value"
+
+[node name="HSplitContainer" type="HSplitContainer" parent="CanvasLayer/DialogBackground/Dialog"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = -35.0
+margin_right = -5.0
+margin_bottom = -5.0
+dragger_visibility = 1
+
+[node name="BtnOk" type="Button" parent="CanvasLayer/DialogBackground/Dialog/HSplitContainer"]
+self_modulate = Color( 0, 1, 0.156863, 1 )
+margin_right = 164.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+text = "Ok"
+
+[node name="BtnCancel" type="Button" parent="CanvasLayer/DialogBackground/Dialog/HSplitContainer"]
+self_modulate = Color( 1, 0, 0, 1 )
+margin_left = 176.0
+margin_right = 340.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="ErrorPanel" type="Panel" parent="CanvasLayer/DialogBackground/Dialog"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -175.0
+margin_top = 4.0
+margin_right = 175.0
+margin_bottom = 104.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="ErrorMessage" type="Label" parent="CanvasLayer/DialogBackground/Dialog/ErrorPanel"]
+modulate = Color( 1, 0, 0, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Error Message goes here this one is really effing long is it not at leas."
+align = 1
+valign = 1
+autowrap = true
+
+[connection signal="pressed" from="CanvasLayer/DialogBackground/Dialog/HSplitContainer/BtnOk" to="CanvasLayer/DialogBackground" method="OnOkPressed"]
+[connection signal="pressed" from="CanvasLayer/DialogBackground/Dialog/HSplitContainer/BtnCancel" to="CanvasLayer/DialogBackground" method="OnCancelPressed"]

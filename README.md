@@ -28,6 +28,10 @@ Below you can find a list of features and instructions on how to use these featu
 
 A debug menu controlled by simple annotations. You can see examples of all annotations in the [DebugMenuExample](DebugMenu/Example/DebugMenuExample.cs) class. The screenshot below is of how the menu looks with only the example active. To use simply add the autoload to your godot project (make sure you load the .tscn file not the .cs file).
 
+The debug menu will only run while in debug mode, it checks for *OS.IsDebugBuild()* and does a *QueueFree()* on itself if not in debug mode.
+
+The DebugMenu also comes with an **on screen debug** (default has FPS counter, but you can add anything you want). In addition there is also **debug tools** which are simple class files that inherit from a specific interface. All debug tools are resolved by reflection on startup and executed on every game startup.
+
 * **Autoload File:** [res://GodotCSharpToolkit/DebugMenu/DebugMenu.tscn](DebugMenu/DebugMenu.tscn)
 * **Namespace:** GodotCSharpToolkit.DebugMenu
 * **Instructions:** Look in class [res://GodotCSharpToolkit/DebugMenu/Example/DebugMenuExample.cs](DebugMenu/Example/DebugMenuExample.cs)

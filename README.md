@@ -3,6 +3,9 @@
 This is a collection of useful tools that you can use to quickstart your godot projects.
 Check [my youtube](https://www.youtube.com/channel/UCM0mBdsjKQ78eGBSSpnQGuQ) for related tutorial videos. If you got any questions check [my discord](https://discord.gg/CXfYFvWWer).
 
+## License
+Use as you see fit, just please attribute credits accordingly if you distribute the code. Also please don't attempt to resell this code like an ass. If you make improvements it is appreciated if you create pull requests so they can be integrated back into the main repository.
+
 ## Notes
 * Some of the features require [Newtonsoft Json](https://www.nuget.org/packages/Newtonsoft.Json/), these can easily be removed.
 * Everything is in the GodotCSharpToolkit namespace.

@@ -7,6 +7,16 @@ namespace GodotCSharpToolkit.DebugMenu
     /// <summary>
     /// To make example work load this as an autoload after the DebugMenu.
     /// <para>Also check out IDebugTool.cs for information on how to use debug tools</para>
+    /// 
+    /// All classes that contain debug methods need to be tagged with the [DebugIncludeClass] annotation.
+    /// We do this so we don't have to check every node that is added for debug methods as this may cause lag.
+    /// 
+    /// Try to avoid putting debug methods into things that are spawned in large quantities (eg. projectiles or so)
+    /// 
+    /// There is an example further down on how to use the OnScreenDebug on a property or member. However it can also
+    /// be used with a callback method to get the value. See OnScreenDebugManager.cs for the methods you can use.
+    /// 
+    /// For info on how to use debug tools see IDebugTool.cs
     /// </summary>
     [DebugIncludeClass]
     public class DebugMenuExample : Node
@@ -149,6 +159,7 @@ namespace GodotCSharpToolkit.DebugMenu
             Value3
         }
 
+        // Simple on screen debug for a parameter
         [OnScreenDebug(EXAMPLE_CATEGORY, "Cycle value", nameof(Colors.Yellow))]
         private CycleEnum CycleValue = CycleEnum.Value1;
 

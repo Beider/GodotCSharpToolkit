@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Reflection;
 using System.Globalization;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -9,16 +10,19 @@ namespace GodotCSharpToolkit.Misc
 {
     public static class Utils
     {
+        private static IToolkitSettings ToolkitSettings;
+
         /// <summary>
         /// Load all json files in a folder
         /// </summary>
         /// <param name="path">Path should be relative</param>
+        /// <param name="includeSubFolders">Should we include sub folders</param>
         /// <returns>A list of content</returns>
-        public static List<U> LoadJsonFileContent<T, U>(string path) where T : IJsonFile<U> where U : IJsonDefWithName
+        public static List<U> LoadJsonFileContent<T, U>(string path, bool includeSubFolders) where T : IJsonFile<U> where U : IJsonDefWithName
         {
             // Load a generic json file
             List<U> resultList = new List<U>();
-            List<T> files = Utils.LoadAllJsonFilesInFolderGodot<T>(path);
+            List<T> files = Utils.LoadAllJsonFilesInFolderGodot<T>(path, includeSubFolders);
             foreach (T sDefJsonFile in files)
             {
                 foreach (U def in sDefJsonFile.GetValues())
@@ -31,9 +35,33 @@ namespace GodotCSharpToolkit.Misc
         }
 
         /// <summary>
+        /// Get the toolkit settings
+        /// </summary>
+        /// <returns></returns>
+        public static IToolkitSettings GetToolkitSettings()
+        {
+            if (ToolkitSettings == null)
+            {
+                foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
+                {
+                    if (typeof(IToolkitSettings).IsAssignableFrom(type) && !type.IsAbstract)
+                    {
+                        ToolkitSettings = Activator.CreateInstance(type) as IToolkitSettings;
+                        break;
+                    }
+                }
+                if (ToolkitSettings == null)
+                {
+                    Logging.Logger.Error("Could not find toolkit settings, please implement IToolkitSettings");
+                }
+            }
+            return ToolkitSettings;
+        }
+
+        /// <summary>
         /// Uses the godot file reader and directory browser to read all json files of a given type in a folder.
         /// </summary>
-        public static List<T> LoadAllJsonFilesInFolderGodot<T>(string path)
+        public static List<T> LoadAllJsonFilesInFolderGodot<T>(string path, bool includeSubFolders)
         {
             List<T> retList = new List<T>();
             Directory dir = new Directory();
@@ -46,10 +74,10 @@ namespace GodotCSharpToolkit.Misc
                 {
                     break;
                 }
-                if (dir.CurrentIsDir())
+                if (includeSubFolders && dir.CurrentIsDir())
                 {
-                    // Go into all subfolder except ignore folder
-                    retList.AddRange(LoadAllJsonFilesInFolderGodot<T>(path + filePath + "/"));
+                    // Go into all subfolder
+                    retList.AddRange(LoadAllJsonFilesInFolderGodot<T>(path + filePath + "/", includeSubFolders));
                 }
                 else if (filePath.ToLower().EndsWith(".json"))
                 {
@@ -117,7 +145,7 @@ namespace GodotCSharpToolkit.Misc
             MissingMemberHandling = MissingMemberHandling.Ignore,
             Converters = {
             new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
-        },
+            }
         };
     }
 }

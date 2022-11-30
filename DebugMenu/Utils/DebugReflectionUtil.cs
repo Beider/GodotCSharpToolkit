@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Reflection;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -36,14 +37,14 @@ namespace GodotCSharpToolkit.DebugMenu
 
         private static int _cacheHits = 0;
 
-        private static Dictionary<string, int> CallerCounter = new Dictionary<string, int>();
+        private static ConcurrentDictionary<string, int> CallerCounter = new ConcurrentDictionary<string, int>();
         private static void RecordCaller()
         {
             StackTrace stackTrace = new StackTrace();
             string callerMethod = stackTrace.GetFrame(2).GetMethod().Name;
             if (!CallerCounter.ContainsKey(callerMethod))
             {
-                CallerCounter.Add(callerMethod, 0);
+                CallerCounter.TryAdd(callerMethod, 0);
             }
 
             CallerCounter[callerMethod]++;
@@ -52,7 +53,7 @@ namespace GodotCSharpToolkit.DebugMenu
         #endregion
 
         #region GetCustomAttributes
-        private static Dictionary<string, object[]> GetCustomAttributesCache = new Dictionary<string, object[]>();
+        private static ConcurrentDictionary<string, object[]> GetCustomAttributesCache = new ConcurrentDictionary<string, object[]>();
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static object[] GetCustomAttributes<T>(MemberInfo member, bool inherit) where T : Attribute
@@ -60,7 +61,7 @@ namespace GodotCSharpToolkit.DebugMenu
             string key = $"{member.DeclaringType.Name}#{member.Name}#{typeof(T).Name}";
             if (!GetCustomAttributesCache.ContainsKey(key))
             {
-                GetCustomAttributesCache.Add(key, member.GetCustomAttributes(typeof(T), inherit));
+                GetCustomAttributesCache.TryAdd(key, member.GetCustomAttributes(typeof(T), inherit));
             }
 
             return GetCustomAttributesCache[key];
@@ -69,7 +70,7 @@ namespace GodotCSharpToolkit.DebugMenu
 
         #region GetCustomAttribute
 
-        private static Dictionary<string, Attribute> GetCustomAttributeCache = new Dictionary<string, Attribute>();
+        private static ConcurrentDictionary<string, Attribute> GetCustomAttributeCache = new ConcurrentDictionary<string, Attribute>();
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static Attribute GetCustomAttribute<T>(MemberInfo member) where T : Attribute
@@ -77,7 +78,7 @@ namespace GodotCSharpToolkit.DebugMenu
             string key = $"{member.DeclaringType.Name}#{member.Name}#{typeof(T).Name}";
             if (!GetCustomAttributeCache.ContainsKey(key))
             {
-                GetCustomAttributeCache.Add(key, member.GetCustomAttribute(typeof(T)));
+                GetCustomAttributeCache.TryAdd(key, member.GetCustomAttribute(typeof(T)));
             }
 
             return GetCustomAttributeCache[key];
@@ -89,7 +90,7 @@ namespace GodotCSharpToolkit.DebugMenu
             string key = $"{type.Name}#{typeof(T).Name}";
             if (!GetCustomAttributeCache.ContainsKey(key))
             {
-                GetCustomAttributeCache.Add(key, type.GetCustomAttribute(typeof(T)));
+                GetCustomAttributeCache.TryAdd(key, type.GetCustomAttribute(typeof(T)));
             }
 
             return GetCustomAttributeCache[key];
@@ -97,7 +98,7 @@ namespace GodotCSharpToolkit.DebugMenu
         #endregion
 
         #region GetMethodInfos
-        private static Dictionary<string, IList<MethodInfo>> GetMethodInfosCache = new Dictionary<string, IList<MethodInfo>>();
+        private static ConcurrentDictionary<string, IList<MethodInfo>> GetMethodInfosCache = new ConcurrentDictionary<string, IList<MethodInfo>>();
 
         /// <summary>
         /// Returns a list of all the unique methods for a Node, including the hierarchy
@@ -128,7 +129,7 @@ namespace GodotCSharpToolkit.DebugMenu
                     }
                 }
 
-                GetMethodInfosCache.Add(key, DeDupedMethods.AsReadOnly());
+                GetMethodInfosCache.TryAdd(key, DeDupedMethods.AsReadOnly());
             }
 
             return GetMethodInfosCache[key];
@@ -137,7 +138,7 @@ namespace GodotCSharpToolkit.DebugMenu
         #endregion
 
         #region GetMemberInfos
-        private static Dictionary<string, IList<MemberInfo>> GetMemberInfosCache = new Dictionary<string, IList<MemberInfo>>();
+        private static ConcurrentDictionary<string, IList<MemberInfo>> GetMemberInfosCache = new ConcurrentDictionary<string, IList<MemberInfo>>();
         /// <summary>
         /// Returns a list of all the unique members for a Node, including the hierarchy
         /// </summary>
@@ -172,7 +173,7 @@ namespace GodotCSharpToolkit.DebugMenu
                 }
 
                 // Convert to read only so our cache is never modified
-                GetMemberInfosCache.Add(key, DeDupedMembers.AsReadOnly());
+                GetMemberInfosCache.TryAdd(key, DeDupedMembers.AsReadOnly());
             }
 
             return GetMemberInfosCache[key];
@@ -182,7 +183,7 @@ namespace GodotCSharpToolkit.DebugMenu
 
         #region FindClassAttributeInNode
 
-        private static Dictionary<string, Attribute> ClassAttributeCache = new Dictionary<string, Attribute>();
+        private static ConcurrentDictionary<string, Attribute> ClassAttributeCache = new ConcurrentDictionary<string, Attribute>();
         /// <summary>
         /// Returns the attribute object for the specified type, 
         /// climbing the hierarchy until Node is reached or the attribute is found
@@ -216,11 +217,11 @@ namespace GodotCSharpToolkit.DebugMenu
             if (FoundAtr != null)
             {
                 // Add to buffer if found
-                ClassAttributeCache.Add(key, FoundAtr);
+                ClassAttributeCache.TryAdd(key, FoundAtr);
                 return FoundAtr;
             }
 
-            ClassAttributeCache.Add(key, null);
+            ClassAttributeCache.TryAdd(key, null);
 
             return null;
         }

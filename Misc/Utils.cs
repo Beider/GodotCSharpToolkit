@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.Misc
 {
@@ -22,15 +23,27 @@ namespace GodotCSharpToolkit.Misc
         {
             // Load a generic json file
             List<U> resultList = new List<U>();
-            List<T> files = Utils.LoadAllJsonFilesInFolderGodot<T>(path, includeSubFolders);
-            foreach (T sDefJsonFile in files)
+            List<T> files;
+            if (path.ToLower().StartsWith("res://") || path.ToLower().StartsWith("user://"))
             {
-                foreach (U def in sDefJsonFile.GetValues())
+                Logger.Info($"Godot path: {path}");
+                files = Utils.LoadAllJsonFilesInFolderGodot<T>(path, includeSubFolders);
+            }
+            else
+            {
+                Logger.Info($"Absolute path: {path}");
+                files = Utils.LoadAllJsonFilesInFolder<T>(path, includeSubFolders);
+            }
+            if (files != null)
+            {
+                foreach (T sDefJsonFile in files)
                 {
-                    resultList.Add(def);
+                    foreach (U def in sDefJsonFile.GetValues())
+                    {
+                        resultList.Add(def);
+                    }
                 }
             }
-
             return resultList;
         }
 
@@ -61,10 +74,12 @@ namespace GodotCSharpToolkit.Misc
         /// <summary>
         /// Uses the godot file reader and directory browser to read all json files of a given type in a folder.
         /// </summary>
-        public static List<T> LoadAllJsonFilesInFolderGodot<T>(string path, bool includeSubFolders)
+        public static List<T> LoadAllJsonFilesInFolderGodot<T>(string pathToFile, bool includeSubFolders)
         {
             List<T> retList = new List<T>();
             Directory dir = new Directory();
+            // Release builds do not like backslashes
+            String path = pathToFile.Replace("\\", "/");
             dir.Open(path);
             dir.ListDirBegin(true, true);
             while (true)
@@ -84,7 +99,14 @@ namespace GodotCSharpToolkit.Misc
                     // Load all scenes found
                     string fileContent = LoadTextFile(path + filePath);
                     T jsonObj = (T)Utils.FromJson(fileContent, typeof(T));
-                    retList.Add(jsonObj);
+                    if (jsonObj == null)
+                    {
+                        Logger.Info($"Failed to deserialize json to {typeof(T).Name}");
+                    }
+                    else
+                    {
+                        retList.Add(jsonObj);
+                    }
                 }
             }
             dir.ListDirEnd();
@@ -108,18 +130,28 @@ namespace GodotCSharpToolkit.Misc
         }
 
         /// <summary>
-        /// Only for use with JSON util, should not be used in the real game
+        /// Only use for loading files from an absolute path
         /// </summary>
-        public static List<T> LoadAllJsonFilesInFolder<T>(string path)
+        public static List<T> LoadAllJsonFilesInFolder<T>(string path, bool includeSubFolders)
         {
             List<T> returnList = new List<T>();
+            Logger.Info($"Loading from path: {path}");
             try
             {
                 foreach (var file in System.IO.Directory.GetFiles(path, "*.json", System.IO.SearchOption.AllDirectories))
                 {
+                    Logger.Info($"Found file: {file}");
                     string fileContent = System.IO.File.ReadAllText(file);
                     T jsonObj = (T)Utils.FromJson(fileContent, typeof(T));
                     returnList.Add(jsonObj);
+                }
+
+                if (includeSubFolders)
+                {
+                    foreach (var dir in (System.IO.Directory.GetDirectories(path)))
+                    {
+                        returnList.AddRange(LoadAllJsonFilesInFolder<T>(dir, includeSubFolders));
+                    }
                 }
             }
             catch (Exception ex)

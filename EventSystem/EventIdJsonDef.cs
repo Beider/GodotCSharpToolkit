@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using GodotCSharpToolkit.DataManager;
 using GodotCSharpToolkit.Misc;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.EventSystem
 {

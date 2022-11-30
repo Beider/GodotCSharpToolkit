@@ -1,6 +1,6 @@
 using System;
 using System.Reflection;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Godot;
 
 namespace GodotCSharpToolkit.DebugMenu
@@ -8,7 +8,7 @@ namespace GodotCSharpToolkit.DebugMenu
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method)]
     public class OnScreenDebug : Attribute
     {
-        private static Dictionary<string, Color> ColorLookupDictionary = new Dictionary<string, Color>();
+        private static ConcurrentDictionary<string, Color> ColorLookupDictionary = new ConcurrentDictionary<string, Color>();
         public readonly string DebugCategory;
         public readonly string Name;
         public readonly Color Color;
@@ -19,9 +19,11 @@ namespace GodotCSharpToolkit.DebugMenu
             {
                 return;
             }
+
             foreach (PropertyInfo info in typeof(Colors).GetProperties())
             {
-                ColorLookupDictionary.Add(info.Name.ToLower(), (Color)info.GetValue(null, null));
+                // Doing try here as this could cause problems when using threading
+                ColorLookupDictionary.TryAdd(info.Name.ToLower(), (Color)info.GetValue(null, null));
             }
         }
 

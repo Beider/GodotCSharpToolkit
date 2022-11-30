@@ -7,6 +7,7 @@ using GodotCSharpToolkit.EventSystem.Events;
 using GodotCSharpToolkit.EventSystem.Recorders;
 using GodotCSharpToolkit.EventSystem.Providers;
 using GodotCSharpToolkit.DataManager;
+using GodotCSharpToolkit.Extensions;
 using GodotCSharpToolkit.Misc;
 
 namespace GodotCSharpToolkit.EventSystem
@@ -40,8 +41,15 @@ namespace GodotCSharpToolkit.EventSystem
                 return;
             }
             string path = "res://" + settings.GetDataPath();
-            JsonDataManager.LoadJsonFile<EventIdJsonFile, EventIdJsonDef>(Constants.EVENT_SYSTEM_JSON_KEY, path, false);
-            RegisterEvents();
+            try
+            {
+                JsonDataManager.LoadJsonFile<EventIdJsonFile, EventIdJsonDef>(Constants.EVENT_SYSTEM_JSON_KEY, path, false);
+                RegisterEvents();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Failed to register events", ex);
+            }
         }
 
         public static void StopAllRecorders()
@@ -143,8 +151,14 @@ namespace GodotCSharpToolkit.EventSystem
             return Instance.CurrentSequence;
         }
 
-        public static void SendEvent(RecordableEvent rEvent)
+        public static void SendEvent(RecordableEvent rEvent, bool fromProvider = false)
         {
+            // Add our peer ID if this event originates from our client
+            if (!fromProvider)
+            {
+                rEvent.Sender = Instance.GetPeerId();
+            }
+
             // Send to all recorders (they will figure out if it should be stored or not)
             Instance.Recorders.ForEach(r => r.RecordEvent(rEvent));
 
@@ -167,7 +181,7 @@ namespace GodotCSharpToolkit.EventSystem
             }
 
             // Log
-            //GlobalGameManager.LogDebug($"{rEvent.Tick} - {rEvent.Sequence} - {rEvent.GetType().ToString()} - {rEvent.Serialize()}");
+            //Logger.Error($"{rEvent.Tick} - {rEvent.Sequence} - {rEvent.GetType().ToString()} - {rEvent.Serialize()}");
         }
 
         public static Type GetTypeFromId(byte id)

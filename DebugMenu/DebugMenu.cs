@@ -25,6 +25,9 @@ namespace GodotCSharpToolkit.DebugMenu
         private OnScreenDebugInterface OnScreenDebugControl;
         private DebugButtonMenu DebugButtonMenu;
 
+        private List<Node> CachedNodes = new List<Node>();
+        private bool CacheProcessed = false;
+
         /// <summary>
         /// All types that have the DebugIncludeClass attribute will be in this list.
         /// Used as a filter so we don't waste time on non-debug menu types.
@@ -56,6 +59,15 @@ namespace GodotCSharpToolkit.DebugMenu
             // Add basic stuff to OnScreenDebug (FPS)
             OnScreenDebugManager.Initialize();
             InitTools();
+        }
+
+        public override void _Process(float delta)
+        {
+            if (CacheBuildDone)
+            {
+                ProcessCachedNodes();
+                SetProcess(false);
+            }
         }
 
         public override void _EnterTree()
@@ -104,13 +116,23 @@ namespace GodotCSharpToolkit.DebugMenu
             }
         }
 
+        private void ProcessCachedNodes()
+        {
+            Logging.Logger.Info($"DebugMenu processing a cache of {CachedNodes.Count} nodes");
+            CachedNodes.ForEach(n => OnNodeAdded(n));
+            CachedNodes.Clear();
+        }
+
+
         private void OnNodeAdded(Node node)
         {
-            Type type = node.GetType();
             if (!CacheBuildDone)
             {
-                BuildReflectionCacheForType(type);
+                CachedNodes.Add(node);
+                return;
             }
+
+            Type type = node.GetType();
             if (!IncludeList.ContainsKey(type))
             {
                 return;
@@ -123,6 +145,10 @@ namespace GodotCSharpToolkit.DebugMenu
         private void OnNodeRemoved(Node node)
         {
             Type type = node.GetType();
+            if (CachedNodes.Contains(node))
+            {
+                CachedNodes.Remove(node);
+            }
             if (!IncludeList.ContainsKey(type))
             {
                 return;

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.DebugMenu
 {

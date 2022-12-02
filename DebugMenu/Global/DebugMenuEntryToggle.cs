@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.DebugMenu
 {
@@ -32,7 +33,7 @@ namespace GodotCSharpToolkit.DebugMenu
             }
             catch (Exception ex)
             {
-                GD.PrintErr(ex.Message);
+                Logger.Error("Failed to get bool value", ex);
             }
             return false;
         }

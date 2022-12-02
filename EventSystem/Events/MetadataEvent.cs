@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using GodotCSharpToolkit.Misc;
 using GodotCSharpToolkit.Logging;
@@ -157,6 +158,15 @@ namespace GodotCSharpToolkit.EventSystem.Events
             }
 
             return list.Length;
+        }
+
+        protected T MetadataStringToEnum<T>(string metadataKey) where T : struct
+        {
+            string value = GetMetadata(metadataKey) as String;
+            T enumVal;
+            Enum.TryParse<T>(value, out enumVal);
+
+            return enumVal;
         }
     }
 }

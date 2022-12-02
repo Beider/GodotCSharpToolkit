@@ -26,7 +26,6 @@ namespace GodotCSharpToolkit.DebugMenu
         private DebugButtonMenu DebugButtonMenu;
 
         private List<Node> CachedNodes = new List<Node>();
-        private bool CacheProcessed = false;
 
         /// <summary>
         /// All types that have the DebugIncludeClass attribute will be in this list.

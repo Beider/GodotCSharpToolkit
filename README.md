@@ -44,6 +44,16 @@ Probably the most powerful and useful feature of the framework. A very simple to
 * **Video Tutorial:** N/A (coming soon)
 * **Notes:** See video
 
+### Json Data Loader
+
+A tool meant to be used along with the CSharpDataEditor. Can load json files from disk into your data structures, you can then access this data at any time from the data loader.
+
+* **Autoload File:** [res://GodotCSharpToolkit/DataManager/JsonDataManager.cs](DataManager/JsonDataManager.cs)
+* **Namespace:** GodotCSharpToolkit.DataManager
+* **Instructions:** See video
+* **Video Tutorial:** N/A (coming soon)
+* **Notes:** see video
+
 ### Debug Menu
 
 A debug menu controlled by simple annotations. You can see examples of all annotations in the [DebugMenuExample](DebugMenu/Example/DebugMenuExample.cs) class. The screenshot below is of how the menu looks with only the example active. To use simply add the autoload to your godot project (make sure you load the .tscn file not the .cs file).

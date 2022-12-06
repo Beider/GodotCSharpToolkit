@@ -17,7 +17,11 @@ No matter which method you use, make sure the folder you install it into is call
 
 If you did this correctly the path to this file (readme.md) should be **\<your game project>/GodotCSharpToolkit/readme.md**
 
+### Step 1 - Autoloads
 Once you have done this you need to setup two autoloads [res://GodotCSharpToolkit/DebugMenu/DebugMenu.tscn](DebugMenu/DebugMenu.tscn) and [res://GodotCSharpToolkit/ToolkitLoader.cs](ToolkitLoader.cs). Set them up in that order and also add a loading scene as the ToolkitLoader requires one frame to pass before all the autoloads it adds for you will process. Optionally you can also look inside the ToolkitLoader and simply add the individual classes as autoloads.
+
+### Step 2 - Toolkit settings
+The second thing you need to do is implement the [res://GodotCSharpToolkit/Misc/IToolkitSettings.cs](Misc/IToolkitSettings.cs) interface. This is to provide paths for the toolkit to work properly. Please check the interface for instructions. It does not matter where you implement this, the toolkit will search your binary for an interface implementation. The class must have a constructor without arguments though. The loading method is in [Utils.GetToolkitSettings()](Misc/Utils.cs) in case you want to see how it is loaded.
 
 ### Submodule / Subrepository
 The easiest way to install the GodotCSharpToolkit is to include it as a submodule inside your main game repository. If you use [Source Tree](https://www.sourcetreeapp.com/) then you can find [instructions on how to do so here](https://confluence.atlassian.com/sourcetreekb/adding-a-submodule-subtree-with-sourcetree-785332086.html).
@@ -39,6 +43,16 @@ Probably the most powerful and useful feature of the framework. A very simple to
 * **Instructions:** See video
 * **Video Tutorial:** N/A (coming soon)
 * **Notes:** See video
+
+### Json Data Loader
+
+A tool meant to be used along with the CSharpDataEditor. Can load json files from disk into your data structures, you can then access this data at any time from the data loader.
+
+* **Autoload File:** [res://GodotCSharpToolkit/DataManager/JsonDataManager.cs](DataManager/JsonDataManager.cs)
+* **Namespace:** GodotCSharpToolkit.DataManager
+* **Instructions:** See video
+* **Video Tutorial:** N/A (coming soon)
+* **Notes:** see video
 
 ### Debug Menu
 

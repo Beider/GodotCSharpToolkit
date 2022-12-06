@@ -60,7 +60,7 @@ namespace GodotCSharpToolkit.DataManager
 
 
         /// <summary>
-        /// Fill the given dictionary (see usage in Reload())
+        /// Fill the given dictionary
         /// </summary>
         private Dictionary<string, IJsonDefWithName> FillDictionary<T, U>(string relativePath, bool includeSubFolders) where T : IJsonFile<U> where U : IJsonDefWithName
         {

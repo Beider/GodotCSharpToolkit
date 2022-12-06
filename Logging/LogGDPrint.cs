@@ -15,7 +15,7 @@ namespace GodotCSharpToolkit.Logging
 
         public void Log(string message, LogLevel level, Exception ex)
         {
-            if (Level < (int)level)
+            if ((int)level < Level)
             {
                 return;
             }

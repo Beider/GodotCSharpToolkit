@@ -14,6 +14,7 @@ namespace GodotCSharpToolkit
         public override void _Ready()
         {
             AddAutloadFromType(typeof(Logger));
+            AddAutloadFromType(typeof(GameTicker));
             AddAutloadFromType(typeof(JsonDataManager));
             AddAutloadFromType(typeof(EventManager));
         }

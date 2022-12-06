@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.DebugMenu
 {
@@ -196,7 +197,7 @@ namespace GodotCSharpToolkit.DebugMenu
             catch (Exception ex)
             {
                 message = $"Error during validation: '{ex.Message}'";
-                GD.PrintErr(message);
+                Logger.Error("Error during validation", ex);
             }
 
             ShowError(message);

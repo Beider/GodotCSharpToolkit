@@ -92,7 +92,7 @@ namespace GodotCSharpToolkit.EventSystem
         /// </summary>
         private void SaveEvents(string path)
         {
-            GD.Print($"- {NewEvents.Count} new events found");
+            Logger.Info($"- {NewEvents.Count} new events found");
             if (NewEvents.Count == 0)
             {
                 return;
@@ -103,7 +103,7 @@ namespace GodotCSharpToolkit.EventSystem
             foreach (Type evnt in NewEvents)
             {
                 currentId++;
-                GD.Print($"- Added Event ({currentId}): {evnt.Name}");
+                Logger.Info($"- Added Event ({currentId}): {evnt.Name}");
                 var eventId = new EventIdJsonDef();
                 eventId.Id = currentId;
                 eventId.ClassName = evnt.Name;

@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using GodotCSharpToolkit.Misc;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.Extensions
 {
@@ -67,7 +68,7 @@ namespace GodotCSharpToolkit.Extensions
         /// <param name="name">Name of the watch</param>
         public static void PrintStopwatch(this System.Diagnostics.Stopwatch watch, string name)
         {
-            GD.Print($"{name} took {watch.ElapsedMilliseconds} milliseconds ({watch.ElapsedTicks} ticks)");
+            Logger.Info($"{name} took {watch.ElapsedMilliseconds} milliseconds ({watch.ElapsedTicks} ticks)");
         }
     }
 }

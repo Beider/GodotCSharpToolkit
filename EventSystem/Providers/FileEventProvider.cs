@@ -136,7 +136,7 @@ namespace GodotCSharpToolkit.EventSystem.Providers
         {
             var evnt = EventManager.DeserializeEvent(splitLine);
             evnt.IsLocal = false;
-            EventManager.SendEvent(evnt, true);
+            EventManager.SendEvent(evnt, false);
         }
 
         private void FillBuffer()

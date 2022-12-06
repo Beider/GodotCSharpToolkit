@@ -180,7 +180,7 @@ namespace GodotCSharpToolkit.DebugMenu
                             }
                             catch (Exception ex)
                             {
-                                GD.Print($"Failed to refresh CallbackButton '{ex.Message}'");
+                                Logger.Error($"Failed to refresh CallbackButton", ex);
                             }
                         };
                         DebugMenuAction actCall = (btn, parameters) =>
@@ -245,7 +245,7 @@ namespace GodotCSharpToolkit.DebugMenu
             // Disposes of the thread so it does not keep running
             object result = CacheThread.WaitToFinish();
             CacheBuildDone = true;
-            GD.Print($"*THREAD FINISHED* - Building reflection cache took {result.ToString()} ms");
+            Logger.Info($"*THREAD FINISHED* - Building reflection cache took {result.ToString()} ms");
         }
 
         protected void BuildReflectionCacheForType(Type type)

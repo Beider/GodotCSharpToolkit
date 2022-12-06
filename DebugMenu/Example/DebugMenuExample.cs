@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.DebugMenu
 {
@@ -51,7 +52,7 @@ namespace GodotCSharpToolkit.DebugMenu
         [DebugMenuDialogField(2, "text_value2", nameof(InitialStringValueExample), false)]
         public void OpenDialogExample(string buttonName, string textValue)
         {
-            GD.Print($"DialogExample01: {buttonName}, {textValue}");
+            Logger.Info($"DialogExample01: {buttonName}, {textValue}");
         }
 
         /// <summary>
@@ -87,7 +88,7 @@ namespace GodotCSharpToolkit.DebugMenu
         [DebugMenuDialogField(100, "list_value", nameof(InitialStringValueListExample), nameof(ListValuesProviderExample))]
         public void OpenDialogExample2(bool boolValue, string listValue)
         {
-            GD.Print($"DialogExample02: {boolValue}, {listValue}");
+            Logger.Info($"DialogExample02: {boolValue}, {listValue}");
         }
 
         /// <summary>
@@ -205,7 +206,7 @@ namespace GodotCSharpToolkit.DebugMenu
         [DebugMenuEntrySimple(EXAMPLE_CAT_SIMPLE, "Simple Button Two (No close)", nameof(Colors.PaleTurquoise), false, 0, "Value1", "Value2")]
         public void SimpleButtonCall(string value1, string value2)
         {
-            GD.Print($"Called: Value1({value1}), Value2({value2})");
+            Logger.Info($"Called: Value1({value1}), Value2({value2})");
         }
 
         #endregion

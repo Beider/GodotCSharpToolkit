@@ -57,7 +57,7 @@ namespace GodotCSharpToolkit.DebugMenu
 
             // Add basic stuff to OnScreenDebug (FPS)
             OnScreenDebugManager.Initialize();
-            InitTools();
+            CallDeferred(nameof(InitTools));
         }
 
         public override void _Process(float delta)

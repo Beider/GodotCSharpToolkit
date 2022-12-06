@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.DebugMenu
 {
@@ -30,7 +31,7 @@ namespace GodotCSharpToolkit.DebugMenu
                 _cacheHits = value;
                 if (_cacheHits % 100 == 0)
                 {
-                    GD.Print(String.Format("Cache hit {0} times", _cacheHits));
+                    Logger.Info(String.Format("Cache hit {0} times", _cacheHits));
                 }
             }
         }

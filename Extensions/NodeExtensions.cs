@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.Extensions
 {
@@ -93,7 +94,7 @@ namespace GodotCSharpToolkit.Extensions
             PackedScene pScene = ResourceLoader.Load(path) as PackedScene;
             if (pScene == null)
             {
-                GD.Print($"Could not load scene {path}");
+                Logger.Error($"Could not load scene {path}");
                 return default(T);
             }
 

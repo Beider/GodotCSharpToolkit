@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.DebugMenu
 {
@@ -59,7 +60,7 @@ namespace GodotCSharpToolkit.DebugMenu
                     catch (Exception ex)
                     {
                         // Something went wrong
-                        GD.Print(ex.ToString());
+                        Logger.Error("Somethign went wrong when updating labels", ex);
                     }
                 }
 

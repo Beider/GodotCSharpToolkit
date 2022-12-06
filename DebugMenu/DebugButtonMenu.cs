@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.DebugMenu
 {
@@ -271,29 +272,11 @@ namespace GodotCSharpToolkit.DebugMenu
                 }
                 catch (Exception ex)
                 {
-                    PrintException(ex);
+                    Logger.Error("Failed on dialog ok pressed", ex);
                     return false;
                 }
             }
             return false;
-        }
-
-        private static void PrintException(Exception ex)
-        {
-            Exception curEx = ex;
-            GD.PrintErr("--------------------------------");
-            GD.PrintErr("-            START             -");
-            GD.PrintErr("--------------------------------");
-            while (curEx != null)
-            {
-                GD.PrintErr(curEx.Message);
-                GD.PrintErr(curEx.StackTrace);
-                GD.PrintErr("------------");
-                curEx = curEx.InnerException;
-            }
-            GD.PrintErr("--------------------------------");
-            GD.PrintErr("-             END              -");
-            GD.PrintErr("--------------------------------");
         }
 
         private void SimpleButtonPressed(Node node, Button btn, bool closeOnClick)
@@ -307,7 +290,7 @@ namespace GodotCSharpToolkit.DebugMenu
                 }
                 catch (Exception ex)
                 {
-                    PrintException(ex);
+                    Logger.Error("Button press failed", ex);
                     return;
                 }
 
@@ -338,7 +321,7 @@ namespace GodotCSharpToolkit.DebugMenu
             }
             if (btnInfo == null)
             {
-                GD.Print($"Could not find ButtonInfo for node '{node.Name}' and button '{btn.Text}'");
+                Logger.Info($"Could not find ButtonInfo for node '{node.Name}' and button '{btn.Text}'");
             }
 
             return btnInfo;
@@ -360,7 +343,7 @@ namespace GodotCSharpToolkit.DebugMenu
             }
             if (btnInfo == null)
             {
-                GD.Print($"Could not find ButtonInfo for node '{node.Name}' and dialog '{dialogId}'");
+                Logger.Info($"Could not find ButtonInfo for node '{node.Name}' and dialog '{dialogId}'");
             }
 
             return btnInfo;

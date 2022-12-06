@@ -151,10 +151,10 @@ namespace GodotCSharpToolkit.EventSystem
             return Instance.CurrentSequence;
         }
 
-        public static void SendEvent(RecordableEvent rEvent, bool fromProvider = false)
+        public static void SendEvent(RecordableEvent rEvent, bool setSender = true)
         {
             // Add our peer ID if this event originates from our client
-            if (!fromProvider)
+            if (setSender)
             {
                 rEvent.Sender = Instance.GetPeerId();
             }

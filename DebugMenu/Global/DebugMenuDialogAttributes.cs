@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.DebugMenu
 {
@@ -90,7 +91,7 @@ namespace GodotCSharpToolkit.DebugMenu
             }
             catch (Exception ex)
             {
-                GD.PrintErr($"Failed to get initial value '{ex.Message}'");
+                Logger.Error($"Failed to get initial value", ex);
             }
             return value;
         }

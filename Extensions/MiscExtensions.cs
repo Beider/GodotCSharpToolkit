@@ -70,5 +70,17 @@ namespace GodotCSharpToolkit.Extensions
         {
             Logger.Info($"{name} took {watch.ElapsedMilliseconds} milliseconds ({watch.ElapsedTicks} ticks)");
         }
+
+        /// <summary>
+        /// Compare two floats with a margin of error
+        /// </summary>
+        /// <param name="value1">First float</param>
+        /// <param name="value2">Second float</param>
+        /// <param name="epsilon">Margin of error</param>
+        /// <returns>True if within the margin</returns>
+        public static bool CompareFloats(this float value1, float value2, float epsilon = 0.0001f)
+        {
+            return Mathf.Abs(value1 - value2) <= epsilon;
+        }
     }
 }

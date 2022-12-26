@@ -34,13 +34,13 @@ namespace GodotCSharpToolkit.EventSystem
         public override void _Ready()
         {
             Instance = this;
-            IToolkitSettings settings = Utils.GetToolkitSettings();
-            if (settings == null)
+            string dataPath = Utils.GetRelativeDataPath();
+            if (dataPath == "")
             {
-                Logger.Error("IToolkitSettings missing, event system aborting");
+                Logger.Error("Data path is null, did you load the toolkit addon?");
                 return;
             }
-            string path = "res://" + settings.GetDataPath();
+            string path = "res://" + dataPath;
             try
             {
                 JsonDataManager.LoadJsonFile<EventIdJsonFile, EventIdJsonDef>(Constants.EVENT_SYSTEM_JSON_KEY, path, false);

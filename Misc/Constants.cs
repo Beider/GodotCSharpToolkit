@@ -14,6 +14,14 @@ namespace GodotCSharpToolkit.Misc
         public static readonly string EVENT_SYSTEM_JSON_KEY = "EVENT_SYSTEM_JSON";
         public const string EVENT_ID_FILE_NAME = "GCSTK_EventIds.json";
 
+        //
+        // Project settings
+        //
+
+        public static readonly string SETTING_PATH_NAME = "csharptoolkit/absolute_project_path";
+        public static readonly string SETTING_DATA_PATH = "csharptoolkit/relative_data_path";
+        public static readonly string DEFAULT_SETTING_DATA_PATH = "Data/Toolkit/";
+
     }
 
     //

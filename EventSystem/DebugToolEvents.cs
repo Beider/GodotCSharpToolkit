@@ -25,14 +25,15 @@ namespace GodotCSharpToolkit.EventSystem
         /// </summary>
         public void Initialize()
         {
-            IToolkitSettings settings = Utils.GetToolkitSettings();
-            if (settings == null)
+            string absPath = Utils.GetAbsoluteProjectPath();
+            string dataPath = Utils.GetRelativeDataPath();
+            if (absPath == "" || dataPath == "")
             {
-                Logger.Error("IToolkitSettings missing, DebugToolEvents aborting");
+                Logger.Error("Data or absolute path is null, did you load the toolkit addon?");
                 return;
             }
-            string path = "res://" + settings.GetDataPath() + Constants.EVENT_ID_FILE_NAME;
-            string fullPath = settings.GetProjectAbsolutePath() + settings.GetDataPath() + Constants.EVENT_ID_FILE_NAME;
+            string path = "res://" + dataPath + Constants.EVENT_ID_FILE_NAME;
+            string fullPath = absPath + dataPath + Constants.EVENT_ID_FILE_NAME;
 
             LoadExistingEvents(path);
             CheckEvents();

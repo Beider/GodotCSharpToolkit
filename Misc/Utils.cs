@@ -11,8 +11,6 @@ namespace GodotCSharpToolkit.Misc
 {
     public static class Utils
     {
-        private static IToolkitSettings ToolkitSettings;
-
         /// <summary>
         /// Load all json files in a folder
         /// </summary>
@@ -48,27 +46,33 @@ namespace GodotCSharpToolkit.Misc
         }
 
         /// <summary>
-        /// Get the toolkit settings
+        /// Get the absolute project path
         /// </summary>
-        /// <returns></returns>
-        public static IToolkitSettings GetToolkitSettings()
+        public static string GetAbsoluteProjectPath()
         {
-            if (ToolkitSettings == null)
+            return ValidatePathSetting(ProjectSettings.GetSetting(Constants.SETTING_PATH_NAME));
+        }
+
+        /// <summary>
+        /// Get the relative data path
+        /// </summary>
+        public static string GetRelativeDataPath()
+        {
+            return ValidatePathSetting(ProjectSettings.GetSetting(Constants.SETTING_DATA_PATH));
+        }
+
+        private static string ValidatePathSetting(object setting)
+        {
+            if (setting == null)
             {
-                foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
-                {
-                    if (typeof(IToolkitSettings).IsAssignableFrom(type) && !type.IsAbstract)
-                    {
-                        ToolkitSettings = Activator.CreateInstance(type) as IToolkitSettings;
-                        break;
-                    }
-                }
-                if (ToolkitSettings == null)
-                {
-                    Logging.Logger.Error("Could not find toolkit settings, please implement IToolkitSettings");
-                }
+                return null;
             }
-            return ToolkitSettings;
+            string path = setting.ToString();
+            if (!path.EndsWith("/"))
+            {
+                path += "/";
+            }
+            return path;
         }
 
         /// <summary>

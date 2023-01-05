@@ -46,11 +46,14 @@ namespace CSharpDataEditorDll
 
         protected void FillList(CSDataObject dataObject)
         {
-            foreach (Type type in dataObject.Factory.GetAssembly().GetTypes())
+            foreach (var module in dataObject.Factory.GetAssembly().GetModules())
             {
-                if (!type.IsAbstract && GetBaseType().IsAssignableFrom(type))
+                foreach (var type in module.GetTypes())
                 {
-                    ListWithColor.Add(type.Name, GetColor(type.Name));
+                    if (!type.IsAbstract && GetBaseType().IsAssignableFrom(type))
+                    {
+                        ListWithColor.Add(type.Name, GetColor(type.Name));
+                    }
                 }
             }
 

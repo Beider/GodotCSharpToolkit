@@ -8,11 +8,9 @@ namespace GodotCSharpToolkit.EventSystem.Providers
 {
     public class EventProvider : Node
     {
-        public delegate void EventSendWorldInteractionEvent(RecordableEvent rEvent);
-        public event EventSendWorldInteractionEvent OnEvent = delegate { };
+        public event Action<RecordableEvent> OnEvent = delegate { };
 
-        public delegate void EventComplete();
-        public event EventComplete OnComplete = delegate { };
+        public event Action OnComplete = delegate { };
 
         /// <summary>
         /// Should be set to the last tick this provider provides

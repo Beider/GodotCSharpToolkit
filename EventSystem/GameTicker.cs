@@ -7,8 +7,7 @@ namespace GodotCSharpToolkit.EventSystem
     {
         public static GameTicker Instance;
 
-        public delegate void EventTick(ulong tick);
-        public event EventTick OnTick = delegate { };
+        public event Action<ulong> OnTick = delegate { };
 
         public static ulong Tick { get; private set; } = 0;
 

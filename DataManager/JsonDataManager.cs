@@ -11,8 +11,7 @@ namespace GodotCSharpToolkit.DataManager
     {
         public static JsonDataManager Instance;
 
-        public delegate void EventDebugReloadJson();
-        public event EventDebugReloadJson OnReloadJson = delegate { };
+        public event Action OnReloadJson = delegate { };
 
         /// <summary>
         /// Outer key = Key for the data type

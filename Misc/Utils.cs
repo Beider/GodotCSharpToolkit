@@ -81,7 +81,34 @@ namespace GodotCSharpToolkit.Misc
         public static List<T> LoadAllJsonFilesInFolderGodot<T>(string pathToFile, bool includeSubFolders)
         {
             List<T> retList = new List<T>();
+            var fileList = Utils.LoadAllFilesInFolderGodot(pathToFile, includeSubFolders, ".json");
+
+            // Load json files
+            foreach (var file in fileList)
+            {
+                string fileContent = LoadTextFile(file);
+                T jsonObj = (T)Utils.FromJson(fileContent, typeof(T));
+                if (jsonObj == null)
+                {
+                    Logger.Info($"Failed to deserialize json to {typeof(T).Name}");
+                }
+                else
+                {
+                    retList.Add(jsonObj);
+                }
+            }
+
+            return retList;
+        }
+
+        /// <summary>
+        /// Uses the godot file reader and directory browser to read all files of the given type in a folder
+        /// </summary>
+        public static List<string> LoadAllFilesInFolderGodot(string pathToFile, bool includeSubFolders, string extension)
+        {
+            List<string> retList = new List<string>();
             Directory dir = new Directory();
+
             // Release builds do not like backslashes
             String path = pathToFile.Replace("\\", "/");
             dir.Open(path);
@@ -96,21 +123,12 @@ namespace GodotCSharpToolkit.Misc
                 if (includeSubFolders && dir.CurrentIsDir())
                 {
                     // Go into all subfolder
-                    retList.AddRange(LoadAllJsonFilesInFolderGodot<T>(path + filePath + "/", includeSubFolders));
+                    retList.AddRange(LoadAllFilesInFolderGodot(path + filePath + "/", includeSubFolders, extension));
                 }
-                else if (filePath.ToLower().EndsWith(".json"))
+                else if (filePath.ToLower().EndsWith(extension))
                 {
-                    // Load all scenes found
-                    string fileContent = LoadTextFile(path + filePath);
-                    T jsonObj = (T)Utils.FromJson(fileContent, typeof(T));
-                    if (jsonObj == null)
-                    {
-                        Logger.Info($"Failed to deserialize json to {typeof(T).Name}");
-                    }
-                    else
-                    {
-                        retList.Add(jsonObj);
-                    }
+                    // Grab name of all files found
+                    retList.Add(path + filePath);
                 }
             }
             dir.ListDirEnd();
@@ -139,28 +157,40 @@ namespace GodotCSharpToolkit.Misc
         public static List<T> LoadAllJsonFilesInFolder<T>(string path, bool includeSubFolders)
         {
             List<T> returnList = new List<T>();
-            Logger.Info($"Loading from path: {path}");
+            var fileList = LoadAllFilesInFolder(path, includeSubFolders, "*.json");
             try
             {
-                foreach (var file in System.IO.Directory.GetFiles(path, "*.json", System.IO.SearchOption.AllDirectories))
+                foreach (var file in fileList)
                 {
-                    Logger.Info($"Found file: {file}");
                     string fileContent = System.IO.File.ReadAllText(file);
                     T jsonObj = (T)Utils.FromJson(fileContent, typeof(T));
                     returnList.Add(jsonObj);
-                }
-
-                if (includeSubFolders)
-                {
-                    foreach (var dir in (System.IO.Directory.GetDirectories(path)))
-                    {
-                        returnList.AddRange(LoadAllJsonFilesInFolder<T>(dir, includeSubFolders));
-                    }
                 }
             }
             catch (Exception ex)
             {
                 System.Console.Error.Write(ex);
+            }
+            return returnList;
+        }
+
+        public static List<string> LoadAllFilesInFolder(string path, bool includeSubFolders, string extension)
+        {
+            List<string> returnList = new List<string>();
+            try
+            {
+                System.IO.SearchOption option = includeSubFolders ? System.IO.SearchOption.AllDirectories :
+                                                                    System.IO.SearchOption.TopDirectoryOnly;
+
+                foreach (var file in System.IO.Directory.GetFiles(path, $"*{extension}", option))
+                {
+                    returnList.Add(file);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.Error.Write(ex);
+                throw ex;
             }
             return returnList;
         }

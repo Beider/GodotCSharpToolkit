@@ -43,7 +43,7 @@ namespace CSharpDataEditorDll
 
         protected abstract string GetColor(string name);
 
-        protected void FillListInternal<T>(List<T> defs, string scriptTypeName, bool addEmpty = false) where T : IJsonDefWithName
+        protected void FillListInternal<T>(List<T> defs, bool addEmpty = false) where T : IJsonDefWithName
         {
             if (defs.Count == 0)
             {

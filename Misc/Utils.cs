@@ -213,5 +213,15 @@ namespace GodotCSharpToolkit.Misc
             new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
             }
         };
+
+        public static TEnum GetEnumValue<TEnum>(string value, TEnum defValue) where TEnum : struct
+        {
+            TEnum enumValue;
+            if (Enum.TryParse<TEnum>(value, out enumValue))
+            {
+                return enumValue;
+            }
+            return defValue;
+        }
     }
 }

@@ -65,7 +65,10 @@ namespace GodotCSharpToolkit.DataManager
         {
             var dict = new Dictionary<string, IJsonDefWithName>();
             var list = Utils.LoadJsonFileContent<T, U>(relativePath, includeSubFolders);
-            list.ForEach(value => dict.Add(value.GetName(), value));
+            foreach (string key in list.Keys)
+            {
+                list[key].ForEach(value => dict.Add(value.GetName(), value));
+            }
             return dict;
         }
     }

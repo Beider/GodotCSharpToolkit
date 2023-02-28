@@ -14,6 +14,10 @@ namespace GodotCSharpToolkit.Misc
     public interface IJsonDefWithName
     {
         string GetName();
+
+        void SetSource(string filePath);
+
+        string GetSource();
     }
 
     public class Vector2Json

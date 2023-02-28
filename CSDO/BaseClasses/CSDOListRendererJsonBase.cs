@@ -79,9 +79,10 @@ namespace CSharpDataEditorDll
             List<U> returnList = new List<U>();
             try
             {
-                List<T> files = Utils.LoadAllJsonFilesInFolder<T>(path, false);
-                foreach (T def in files)
+                var files = Utils.LoadAllJsonFilesInFolder<T>(path, false);
+                foreach (string key in files.Keys)
                 {
+                    T def = files[key];
                     returnList.AddRange(def.GetValues());
                 }
             }

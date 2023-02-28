@@ -19,7 +19,7 @@ namespace GodotCSharpToolkit.EventSystem
         }
     }
 
-    public class EventIdJsonDef : IJsonDefWithName
+    public class EventIdJsonDef : JsonDefWithName
     {
         public EventIdJsonDef() { }
 
@@ -29,7 +29,7 @@ namespace GodotCSharpToolkit.EventSystem
         [JsonProperty("ClassName")]
         public string ClassName = "";
 
-        public string GetName()
+        public override string GetName()
         {
             return ClassName;
         }

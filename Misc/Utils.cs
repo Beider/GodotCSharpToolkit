@@ -16,12 +16,12 @@ namespace GodotCSharpToolkit.Misc
         /// </summary>
         /// <param name="path">Path should be relative</param>
         /// <param name="includeSubFolders">Should we include sub folders</param>
-        /// <returns>A list of content</returns>
-        public static List<U> LoadJsonFileContent<T, U>(string path, bool includeSubFolders) where T : IJsonFile<U> where U : IJsonDefWithName
+        /// <returns>A dictionary of file path, content</returns>
+        public static Dictionary<string, List<U>> LoadJsonFileContent<T, U>(string path, bool includeSubFolders) where T : IJsonFile<U> where U : IJsonDefWithName
         {
             // Load a generic json file
-            List<U> resultList = new List<U>();
-            List<T> files;
+            var resultList = new Dictionary<string, List<U>>();
+            Dictionary<string, T> files;
             if (path.ToLower().StartsWith("res://") || path.ToLower().StartsWith("user://"))
             {
                 Logger.Info($"Godot path: {path}");
@@ -34,12 +34,16 @@ namespace GodotCSharpToolkit.Misc
             }
             if (files != null)
             {
-                foreach (T sDefJsonFile in files)
+                foreach (var key in files.Keys)
                 {
+                    T sDefJsonFile = files[key];
+                    var list = new List<U>();
                     foreach (U def in sDefJsonFile.GetValues())
                     {
-                        resultList.Add(def);
+                        def.SetSource(key);
+                        list.Add(def);
                     }
+                    resultList.Add(key, list);
                 }
             }
             return resultList;
@@ -78,10 +82,10 @@ namespace GodotCSharpToolkit.Misc
         /// <summary>
         /// Uses the godot file reader and directory browser to read all json files of a given type in a folder.
         /// </summary>
-        public static List<T> LoadAllJsonFilesInFolderGodot<T>(string pathToFile, bool includeSubFolders)
+        public static Dictionary<string, T> LoadAllJsonFilesInFolderGodot<T>(string path, bool includeSubFolders)
         {
-            List<T> retList = new List<T>();
-            var fileList = Utils.LoadAllFilesInFolderGodot(pathToFile, includeSubFolders, ".json");
+            Dictionary<string, T> retList = new Dictionary<string, T>();
+            var fileList = Utils.LoadAllFilesInFolderGodot(path, includeSubFolders, ".json");
 
             // Load json files
             foreach (var file in fileList)
@@ -94,7 +98,7 @@ namespace GodotCSharpToolkit.Misc
                 }
                 else
                 {
-                    retList.Add(jsonObj);
+                    retList.Add(file, jsonObj);
                 }
             }
 
@@ -154,9 +158,9 @@ namespace GodotCSharpToolkit.Misc
         /// <summary>
         /// Only use for loading files from an absolute path
         /// </summary>
-        public static List<T> LoadAllJsonFilesInFolder<T>(string path, bool includeSubFolders)
+        public static Dictionary<string, T> LoadAllJsonFilesInFolder<T>(string path, bool includeSubFolders)
         {
-            List<T> returnList = new List<T>();
+            var returnList = new Dictionary<string, T>();
             var fileList = LoadAllFilesInFolder(path, includeSubFolders, "*.json");
             try
             {
@@ -164,7 +168,7 @@ namespace GodotCSharpToolkit.Misc
                 {
                     string fileContent = System.IO.File.ReadAllText(file);
                     T jsonObj = (T)Utils.FromJson(fileContent, typeof(T));
-                    returnList.Add(jsonObj);
+                    returnList.Add(file, jsonObj);
                 }
             }
             catch (Exception ex)
@@ -222,6 +226,21 @@ namespace GodotCSharpToolkit.Misc
                 return enumValue;
             }
             return defValue;
+        }
+
+        public static void SaveToFileGodot(string content, string filePath)
+        {
+            var file = new Godot.File();
+            var error = file.Open(filePath, File.ModeFlags.Write);
+            if (error == Error.Ok)
+            {
+                file.StoreString(content);
+                file.Close();
+            }
+            else
+            {
+                Logger.Error($"Failed to write to file, error code: {error.ToString()}");
+            }
         }
     }
 }

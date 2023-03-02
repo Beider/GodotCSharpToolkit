@@ -9,6 +9,8 @@ namespace GodotCSharpToolkit.Misc
     public interface IJsonFile<T> where T : IJsonDefWithName
     {
         T[] GetValues();
+
+        void SetValues(T[] values);
     }
 
     public interface IJsonDefWithName

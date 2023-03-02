@@ -17,6 +17,11 @@ namespace GodotCSharpToolkit.EventSystem
         {
             return Values.ToArray();
         }
+
+        public void SetValues(EventIdJsonDef[] values)
+        {
+            Values = new List<EventIdJsonDef>(values);
+        }
     }
 
     public class EventIdJsonDef : IJsonDefWithName

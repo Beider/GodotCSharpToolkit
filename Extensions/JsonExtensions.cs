@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -23,6 +24,17 @@ namespace GodotCSharpToolkit.Extensions
             }
 
             return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source, Utils.Settings), Utils.Settings);
+        }
+
+        public static object CloneJsonObject(this object source, Type objectType)
+        {
+            // Don't serialize a null object, simply return null
+            if (System.Object.ReferenceEquals(source, null))
+            {
+                return null;
+            }
+
+            return JsonConvert.DeserializeObject(JsonConvert.SerializeObject(source, Utils.Settings), objectType, Utils.Settings);
         }
     }
 }

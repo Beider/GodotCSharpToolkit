@@ -242,5 +242,27 @@ namespace GodotCSharpToolkit.Misc
                 Logger.Error($"Failed to write to file, error code: {error.ToString()}");
             }
         }
+
+        public static void SaveToFile(string content, string filePath)
+        {
+            try
+            {
+                System.IO.File.WriteAllText(filePath, content);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Failed to write to file", ex);
+            }
+        }
+
+        public static List<string> GetEnumValuesAsString(Type enumType)
+        {
+            var returnList = new List<string>();
+            foreach (var val in Enum.GetValues(enumType))
+            {
+                returnList.Add(val.ToString());
+            }
+            return returnList;
+        }
     }
 }

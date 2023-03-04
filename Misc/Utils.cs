@@ -22,7 +22,7 @@ namespace GodotCSharpToolkit.Misc
             // Load a generic json file
             var resultList = new Dictionary<string, List<U>>();
             Dictionary<string, T> files;
-            if (path.ToLower().StartsWith("res://") || path.ToLower().StartsWith("user://"))
+            if (FileUtils.IsGodotPath(path))
             {
                 Logger.Info($"Godot path: {path}");
                 files = Utils.LoadAllJsonFilesInFolderGodot<T>(path, includeSubFolders);
@@ -90,7 +90,7 @@ namespace GodotCSharpToolkit.Misc
             // Load json files
             foreach (var file in fileList)
             {
-                string fileContent = LoadTextFile(file);
+                string fileContent = FileUtils.LoadTextFile(file);
                 T jsonObj = (T)Utils.FromJson(fileContent, typeof(T));
                 if (jsonObj == null)
                 {
@@ -137,22 +137,6 @@ namespace GodotCSharpToolkit.Misc
             }
             dir.ListDirEnd();
             return retList;
-        }
-
-        /// <summary>
-        /// Uses godot file to load a text file (supports res:// and user:// paths)
-        /// </summary>
-        public static string LoadTextFile(string path)
-        {
-            string text = "";
-            var f = new Godot.File();
-            if (f.FileExists(path))
-            {
-                f.Open(path, Godot.File.ModeFlags.Read);
-                text = f.GetAsText();
-                f.Close();
-            }
-            return text;
         }
 
         /// <summary>
@@ -228,33 +212,6 @@ namespace GodotCSharpToolkit.Misc
             return defValue;
         }
 
-        public static void SaveToFileGodot(string content, string filePath)
-        {
-            var file = new Godot.File();
-            var error = file.Open(filePath, File.ModeFlags.Write);
-            if (error == Error.Ok)
-            {
-                file.StoreString(content);
-                file.Close();
-            }
-            else
-            {
-                Logger.Error($"Failed to write to file, error code: {error.ToString()}");
-            }
-        }
-
-        public static void SaveToFile(string content, string filePath)
-        {
-            try
-            {
-                System.IO.File.WriteAllText(filePath, content);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"Failed to write to file", ex);
-            }
-        }
-
         public static List<string> GetEnumValuesAsString(Type enumType)
         {
             var returnList = new List<string>();
@@ -264,5 +221,7 @@ namespace GodotCSharpToolkit.Misc
             }
             return returnList;
         }
+
+
     }
 }

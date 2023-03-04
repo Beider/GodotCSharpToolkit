@@ -46,7 +46,7 @@ namespace GodotCSharpToolkit.EventSystem
         private void LoadExistingEvents(string path)
         {
             FileContent = new EventIdJsonFile();
-            string fileContent = Utils.LoadTextFile(path);
+            string fileContent = FileUtils.LoadTextFile(path);
             if (!String.IsNullOrEmpty(fileContent))
             {
                 FileContent = (EventIdJsonFile)Utils.FromJson(fileContent, typeof(EventIdJsonFile));

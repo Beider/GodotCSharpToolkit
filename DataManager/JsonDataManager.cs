@@ -26,9 +26,10 @@ namespace GodotCSharpToolkit.DataManager
             Instance = this;
         }
 
-        public static void LoadJsonFile<T, U>(string key, string relativePath, bool includeSubFolders) where T : IJsonFile<U> where U : IJsonDefWithName
+        public static void LoadJsonFile<T, U>(string key, string path, bool includeSubFolders) where T : IJsonFile<U> where U : IJsonDefWithName
         {
-            var dict = Instance.FillDictionary<T, U>(relativePath, includeSubFolders);
+            var dict = new Dictionary<string, IJsonDefWithName>();
+            FillDictionary<T, U>(dict, path, includeSubFolders);
             Instance.JsonData.Add(key, dict);
         }
 
@@ -57,19 +58,43 @@ namespace GodotCSharpToolkit.DataManager
             return (T)dict[name];
         }
 
-
         /// <summary>
-        /// Fill the given dictionary
+        /// Creates a dictionary by combining all json files found in the underlying paths.
         /// </summary>
-        private Dictionary<string, IJsonDefWithName> FillDictionary<T, U>(string relativePath, bool includeSubFolders) where T : IJsonFile<U> where U : IJsonDefWithName
+        public static Dictionary<string, IJsonDefWithName> FillDictionary<T, U>(List<string> paths, bool includeSubFolders, bool replaceDuplicates = true) where T : IJsonFile<U> where U : IJsonDefWithName
         {
             var dict = new Dictionary<string, IJsonDefWithName>();
-            var list = Utils.LoadJsonFileContent<T, U>(relativePath, includeSubFolders);
-            foreach (string key in list.Keys)
+            foreach (string path in paths)
             {
-                list[key].ForEach(value => dict.Add(value.GetName(), value));
+                FillDictionary<T, U>(dict, path, includeSubFolders, replaceDuplicates);
             }
             return dict;
+        }
+
+        /// <summary>
+        /// Fill the given dictionary.
+        /// If replace duplicates is set then subsequent folders will override the first one
+        /// </summary>
+        private static void FillDictionary<T, U>(Dictionary<string, IJsonDefWithName> dict, string path, bool includeSubFolders, bool replaceDuplicates = true) where T : IJsonFile<U> where U : IJsonDefWithName
+        {
+            var list = Utils.LoadJsonFileContent<T, U>(path, includeSubFolders);
+            foreach (string key in list.Keys)
+            {
+                foreach (var value in list[key])
+                {
+                    if (dict.ContainsKey(value.GetName()))
+                    {
+                        if (replaceDuplicates)
+                        {
+                            dict[value.GetName()] = value;
+                        }
+                    }
+                    else
+                    {
+                        dict.Add(value.GetName(), value);
+                    }
+                }
+            }
         }
     }
 

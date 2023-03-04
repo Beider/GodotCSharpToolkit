@@ -1,0 +1,144 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://HUD/assets/godot_theme/gui.theme" type="Theme" id=1]
+[ext_resource path="res://GodotCSharpToolkit/DataEditor/EditorMainScene/EditorMainScene.cs" type="Script" id=2]
+[ext_resource path="res://GodotCSharpToolkit/DataEditor/EditorMainScene/EditorTreeView.cs" type="Script" id=3]
+[ext_resource path="res://GodotCSharpToolkit/DataEditor/Assets/Icons/settings.png" type="Texture" id=4]
+[ext_resource path="res://GodotCSharpToolkit/DataEditor/EditorMainScene/EditorToolbar.cs" type="Script" id=5]
+[ext_resource path="res://GodotCSharpToolkit/DataEditor/Assets/Icons/save.png" type="Texture" id=6]
+[ext_resource path="res://GodotCSharpToolkit/DataEditor/Assets/Icons/toggle_json_names_key.png" type="Texture" id=7]
+[ext_resource path="res://GodotCSharpToolkit/DataEditor/Assets/Icons/sort.png" type="Texture" id=8]
+[ext_resource path="res://GodotCSharpToolkit/DataEditor/Assets/Icons/local_only.png" type="Texture" id=9]
+[ext_resource path="res://GodotCSharpToolkit/DataEditor/Assets/Icons/refresh.png" type="Texture" id=10]
+
+[node name="EditorMainScene" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Background" type="Panel" parent="."]
+self_modulate = Color( 0.564706, 0.564706, 0.564706, 0.588235 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ToolBarSplit" type="VSplitContainer" parent="Background"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+dragger_visibility = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Toolbar" type="Panel" parent="Background/ToolBarSplit"]
+margin_right = 960.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 200, 50 )
+script = ExtResource( 5 )
+
+[node name="GridLeft" type="GridContainer" parent="Background/ToolBarSplit/Toolbar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 5.0
+margin_right = -287.0
+mouse_filter = 2
+columns = 20
+
+[node name="BtnSort" type="Button" parent="Background/ToolBarSplit/Toolbar/GridLeft"]
+margin_right = 66.0
+margin_bottom = 37.0
+hint_tooltip = "Toggle sorting of the tree"
+focus_mode = 0
+toggle_mode = true
+text = "Sort "
+icon = ExtResource( 8 )
+
+[node name="BtnDisplayName" type="Button" parent="Background/ToolBarSplit/Toolbar/GridLeft"]
+margin_left = 70.0
+margin_right = 156.0
+margin_bottom = 37.0
+hint_tooltip = "Toggle between name and key for json items that use keys"
+focus_mode = 0
+toggle_mode = true
+text = "Names "
+icon = ExtResource( 7 )
+
+[node name="BtnLocalOnly" type="Button" parent="Background/ToolBarSplit/Toolbar/GridLeft"]
+margin_left = 160.0
+margin_right = 268.0
+margin_bottom = 37.0
+hint_tooltip = "Toggle between name and key for json items that use keys"
+focus_mode = 0
+toggle_mode = true
+text = "Local Only "
+icon = ExtResource( 9 )
+
+[node name="GridRight" type="GridContainer" parent="Background/ToolBarSplit/Toolbar"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -278.0
+margin_top = -20.0
+margin_right = -10.0
+margin_bottom = 20.0
+columns = 40
+
+[node name="BtnRefresh" type="Button" parent="Background/ToolBarSplit/Toolbar/GridRight"]
+margin_right = 85.0
+margin_bottom = 37.0
+hint_tooltip = "Refresh from drive, this will revert all unsaved changes."
+focus_mode = 0
+text = "Refresh"
+icon = ExtResource( 10 )
+
+[node name="BtnSave" type="Button" parent="Background/ToolBarSplit/Toolbar/GridRight"]
+margin_left = 89.0
+margin_right = 176.0
+margin_bottom = 37.0
+hint_tooltip = "Save all changes"
+focus_mode = 0
+text = "Save All"
+icon = ExtResource( 6 )
+
+[node name="BtnSettings" type="Button" parent="Background/ToolBarSplit/Toolbar/GridRight"]
+margin_left = 180.0
+margin_right = 268.0
+margin_bottom = 37.0
+focus_mode = 0
+text = "Settings"
+icon = ExtResource( 4 )
+
+[node name="MainArea" type="Control" parent="Background/ToolBarSplit"]
+margin_top = 50.0
+margin_right = 960.0
+margin_bottom = 540.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="EditorTreeSplit" type="HSplitContainer" parent="Background/ToolBarSplit/MainArea"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="EditorTreeView" type="Tree" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit"]
+margin_right = 200.0
+margin_bottom = 490.0
+rect_min_size = Vector2( 200, 0 )
+focus_mode = 0
+script = ExtResource( 3 )
+
+[node name="EditorArea" type="Control" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit"]
+margin_left = 208.0
+margin_right = 960.0
+margin_bottom = 490.0

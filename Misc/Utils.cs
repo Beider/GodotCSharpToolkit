@@ -167,6 +167,10 @@ namespace GodotCSharpToolkit.Misc
             List<string> returnList = new List<string>();
             try
             {
+                if (!System.IO.Directory.Exists(path))
+                {
+                    return returnList;
+                }
                 System.IO.SearchOption option = includeSubFolders ? System.IO.SearchOption.AllDirectories :
                                                                     System.IO.SearchOption.TopDirectoryOnly;
 

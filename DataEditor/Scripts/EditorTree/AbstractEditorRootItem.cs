@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.Editor
@@ -49,20 +50,6 @@ namespace GodotCSharpToolkit.Editor
         public virtual void Save()
         {
 
-        }
-
-        protected DelegateEditorTreeItem CreateDelegateTreeItem(TreeItem parent, string name, bool collapsed,
-                    Color defaultColor, Color defaultBgColor, Action<DelegateEditorTreeItem> onSelection, object relatedData = null)
-        {
-            var newItem = new DelegateEditorTreeItem();
-            newItem.Init(parent, Editor);
-            newItem.Name = name;
-            newItem.Collapsed = collapsed;
-            newItem.Color = defaultColor;
-            newItem.ColorBg = defaultBgColor;
-            newItem.OnSelection = onSelection;
-            newItem.RelatedData = relatedData;
-            return newItem;
         }
 
     }

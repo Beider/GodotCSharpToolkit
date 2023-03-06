@@ -17,9 +17,9 @@ public abstract class JsonDefWithName : IJsonDefWithName
     [JsonIgnore]
     public string TreeIdentifier;
 
-    public abstract string GetName();
+    public abstract string GetKey();
 
-    public abstract string GetDisplayName();
+    public abstract string GetName();
 
     [JsonIgnore]
     public bool IsNew { get; set; } = false;

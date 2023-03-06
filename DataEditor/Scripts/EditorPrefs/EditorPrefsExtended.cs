@@ -20,6 +20,7 @@ namespace GodotCSharpToolkit.Editor
         private const string KEY_COLOR_ERROR = "error_tree_item_color";
         private const string PREF_EDITOR_SORT = "sort_tree_items";
         private const string PREF_EDITOR_SHOW_DISPLAY_NAMES = "show_display_names";
+        private const string PREF_EDITOR_DISPLAY_NAMES = "display_name_delegate_number";
         private const string PREF_EDITOR_IS_LOCAL_ONLY = "is_local_only";
         private const string PREFIX_TREE_COLLAPSED_STATE_PREF = "tree_col_state_";
         private const string PREFIX_TREE_COLOR_PREF = "tree_color_";
@@ -32,22 +33,34 @@ namespace GodotCSharpToolkit.Editor
 
         public void SetTreeItemColor(string name, Color value)
         {
-            SetColorValue($"{PREFIX_TREE_COLOR_PREF}{name}", value);
+            SetValue($"{PREFIX_TREE_COLOR_PREF}{name}", value);
         }
 
         public Color GetTreeItemColor(string name, Color defaultValue)
         {
-            return GetColorValue($"{PREFIX_TREE_COLOR_PREF}{name}", defaultValue);
+            return GetValue($"{PREFIX_TREE_COLOR_PREF}{name}", defaultValue);
         }
 
-        public void SetTreeItemCollapsedState(string name, bool state)
+        public void SetTreeItemCollapsedState(TreeItem item)
         {
-            SetBoolValue($"{PREFIX_TREE_COLLAPSED_STATE_PREF}{name}", state);
+            SetValue($"{PREFIX_TREE_COLLAPSED_STATE_PREF}{GetItemPath(item)}", item.Collapsed);
         }
 
-        public bool GetTreeItemCollapsedState(string name, bool defaultValue)
+        public bool GetTreeItemCollapsedState(TreeItem item, bool defaultValue)
         {
-            return GetBoolValue($"{PREFIX_TREE_COLLAPSED_STATE_PREF}{name}", defaultValue);
+            return GetValue($"{PREFIX_TREE_COLLAPSED_STATE_PREF}{GetItemPath(item)}", defaultValue);
+        }
+
+        private string GetItemPath(TreeItem item)
+        {
+            var name = item.GetText(0);
+            var parent = item.GetParent();
+            while (parent != null)
+            {
+                name = $"{parent.GetText(0)}.{name}";
+                parent = parent.GetParent();
+            }
+            return name;
         }
 
         public bool IsPathValid(string path)
@@ -62,8 +75,8 @@ namespace GodotCSharpToolkit.Editor
 
         public bool SettingIsLoadLocalData
         {
-            get { return GetBoolValue(SETTING_AUTOLOAD, true); }
-            set { SetBoolValue(SETTING_AUTOLOAD, value); }
+            get { return GetValue(SETTING_AUTOLOAD, true); }
+            set { SetValue(SETTING_AUTOLOAD, value); }
         }
 
         public string SettingLocalSavePath
@@ -74,20 +87,20 @@ namespace GodotCSharpToolkit.Editor
 
         public bool PrefSortTree
         {
-            get { return GetBoolValue(PREF_EDITOR_SORT, true); }
-            set { SetBoolValue(PREF_EDITOR_SORT, value); OnPrefsChanged(); }
+            get { return GetValue(PREF_EDITOR_SORT, true); }
+            set { SetValue(PREF_EDITOR_SORT, value); OnPrefsChanged(); }
         }
 
-        public bool PrefUseDisplayNames
+        public string PrefDisplayNameDelegateName
         {
-            get { return GetBoolValue(PREF_EDITOR_SHOW_DISPLAY_NAMES, true); }
-            set { SetBoolValue(PREF_EDITOR_SHOW_DISPLAY_NAMES, value); OnPrefsChanged(); }
+            get { return GetValue(PREF_EDITOR_DISPLAY_NAMES, "Key"); }
+            set { SetValue(PREF_EDITOR_DISPLAY_NAMES, value); OnPrefsChanged(); }
         }
 
         public bool PrefIsLocalOnly
         {
-            get { return GetBoolValue(PREF_EDITOR_IS_LOCAL_ONLY, false); }
-            set { SetBoolValue(PREF_EDITOR_IS_LOCAL_ONLY, value); OnPrefsChanged(); }
+            get { return GetValue(PREF_EDITOR_IS_LOCAL_ONLY, false); }
+            set { SetValue(PREF_EDITOR_IS_LOCAL_ONLY, value); OnPrefsChanged(); }
         }
 
         /// <summary>
@@ -104,37 +117,37 @@ namespace GodotCSharpToolkit.Editor
 
         public Color GetDefaultColor()
         {
-            return GetColorValue(KEY_COLOR_DEFAULT, DataEditorConstants.COLOR_DEFAULT);
+            return GetValue(KEY_COLOR_DEFAULT, DataEditorConstants.COLOR_DEFAULT);
         }
 
         public Color GetDefaultBgColor()
         {
-            return GetColorValue(KEY_COLOR_BG_DEFAULT, DataEditorConstants.COLOR_BG_DEFAULT);
+            return GetValue(KEY_COLOR_BG_DEFAULT, DataEditorConstants.COLOR_BG_DEFAULT);
         }
 
         public Color GetIsLocalColor()
         {
-            return GetColorValue(KEY_COLOR_ISLOCAL, DataEditorConstants.COLOR_ISLOCAL);
+            return GetValue(KEY_COLOR_ISLOCAL, DataEditorConstants.COLOR_ISLOCAL);
         }
 
         public Color GetDeleteColor()
         {
-            return GetColorValue(KEY_COLOR_DELETE, DataEditorConstants.COLOR_DELETE);
+            return GetValue(KEY_COLOR_DELETE, DataEditorConstants.COLOR_DELETE);
         }
 
         public Color GetNewColor()
         {
-            return GetColorValue(KEY_COLOR_NEW, DataEditorConstants.COLOR_NEW);
+            return GetValue(KEY_COLOR_NEW, DataEditorConstants.COLOR_NEW);
         }
 
         public Color GetModifiedColor()
         {
-            return GetColorValue(KEY_COLOR_MODIFIED, DataEditorConstants.COLOR_MODIFIED);
+            return GetValue(KEY_COLOR_MODIFIED, DataEditorConstants.COLOR_MODIFIED);
         }
 
         public Color GetErrorColor()
         {
-            return GetColorValue(KEY_COLOR_ERROR, DataEditorConstants.COLOR_ERROR);
+            return GetValue(KEY_COLOR_ERROR, DataEditorConstants.COLOR_ERROR);
         }
 
         #endregion

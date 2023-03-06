@@ -36,7 +36,7 @@ namespace GodotCSharpToolkit.EventSystem
 
         private string Source;
 
-        public string GetName()
+        public string GetKey()
         {
             return ClassName;
         }

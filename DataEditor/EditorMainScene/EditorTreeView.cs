@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using GodotCSharpToolkit.Extensions;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -14,6 +15,8 @@ namespace GodotCSharpToolkit.Editor
         private Dictionary<string, AbstractEditorTreeItem> TreeItemLookup = new Dictionary<string, AbstractEditorTreeItem>();
         private List<AbstractEditorRootItem> RootItems = new List<AbstractEditorRootItem>();
         private Dictionary<string, TreeItem> Categories = new Dictionary<string, TreeItem>();
+        private AbstractEditorTreeModFolderProvider Provider = null;
+        public Dictionary<string, Func<AbstractEditorTreeItem, string>> DisplayNameDelegates = new Dictionary<string, Func<AbstractEditorTreeItem, string>>();
 
         /// <summary>
         /// Workaround for some godot bugs with signals triggering from code on trees
@@ -26,6 +29,8 @@ namespace GodotCSharpToolkit.Editor
             ResolveRootItems();
             this.Connect("item_collapsed", this, nameof(OnTreeItemCollapsed));
             this.Connect("item_selected", this, nameof(OnTreeItemSelected));
+
+            DisplayNameDelegates.Add("Name", i => i.Name);
         }
 
         public void Init(IDataEditor editor)
@@ -51,16 +56,40 @@ namespace GodotCSharpToolkit.Editor
 
         public void RefreshTree(bool reload = true)
         {
+            if (Provider == null)
+            {
+                Logger.Error($"Please provide a AbstractEditorTreeModFolderProvider provider for the editor.");
+                return;
+            }
             Clear();
             TreeItemLookup.Clear();
             InCode = true;
             HideRoot = true;
             Root = CreateItem(null);
-            foreach (var item in RootItems)
+
+            // Get mod folders
+            var mods = Provider.GetRootItemList();
+
+            // Add local path
+            if (Editor.Preferences.ShouldUseLocalPath())
             {
-                item.Init(GetParent(item), Editor);
-                if (reload) { item.Reload(); }
-                item.CreateRootItem();
+                foreach (var key in mods.Keys)
+                {
+                    mods[key].Add($"{Editor.Preferences.SettingLocalSavePath}{key}");
+                }
+            }
+
+            // Create items
+            foreach (var key in mods.Keys)
+            {
+                var delegateItem = CreateModItem(Root, key, mods[key]);
+                var modItem = CreateTreeItem(Root, delegateItem);
+                foreach (var item in RootItems)
+                {
+                    item.Init(GetParent(item, modItem), Editor, mods[key]);
+                    if (reload) { item.Reload(); }
+                    item.CreateRootItem();
+                }
             }
             InCode = false;
         }

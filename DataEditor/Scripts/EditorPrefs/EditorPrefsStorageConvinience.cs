@@ -5,12 +5,12 @@ namespace GodotCSharpToolkit.Editor
 {
     public partial class EditorPrefsStorage
     {
-        public void SetColorValue(string name, Color value)
+        public void SetValue(string name, Color value)
         {
             SetValue(name, GD.Var2Str(value));
         }
 
-        public Color GetColorValue(string name, Color defaultValue)
+        public Color GetValue(string name, Color defaultValue)
         {
             if (SettingExists(name))
             {
@@ -19,17 +19,35 @@ namespace GodotCSharpToolkit.Editor
             return defaultValue;
         }
 
-        public void SetBoolValue(string name, bool value)
+        public void SetValue(string name, bool value)
         {
             SetValue(name, value.ToString());
         }
 
-        public bool GetBoolValue(string name, bool defaultValue)
+        public bool GetValue(string name, bool defaultValue)
         {
             if (SettingExists(name))
             {
                 bool value = defaultValue;
                 if (Boolean.TryParse(GetValue(name), out value))
+                {
+                    return value;
+                }
+            }
+            return defaultValue;
+        }
+
+        public void SetValue(string name, int value)
+        {
+            SetValue(name, value.ToString());
+        }
+
+        public int GetValue(string name, int defaultValue)
+        {
+            if (SettingExists(name))
+            {
+                int value = defaultValue;
+                if (int.TryParse(GetValue(name), out value))
                 {
                     return value;
                 }

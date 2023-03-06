@@ -38,11 +38,13 @@ namespace GodotCSharpToolkit.Editor
         {
             this.Editor = editor;
             BtnSort.Pressed = Editor.Preferences.PrefSortTree;
-            BtnDisplayName.Pressed = Editor.Preferences.PrefUseDisplayNames;
+            BtnDisplayName.Text = Editor.Preferences.PrefDisplayNameDelegateName;
             BtnLocalOnly.Pressed = Editor.Preferences.PrefIsLocalOnly;
 
             BtnSave.Disabled = !Editor.Preferences.SettingIsLoadLocalData;
             BtnRefresh.Disabled = !Editor.Preferences.SettingIsLoadLocalData;
+
+            BtnDisplayName.Visible = Editor.Tree.DisplayNameDelegates.Count > 1;
         }
 
         private void OnRefreshPressed()
@@ -57,7 +59,8 @@ namespace GodotCSharpToolkit.Editor
 
         private void OnToggleNamesPressed()
         {
-            Editor.Preferences.PrefUseDisplayNames = !Editor.Preferences.PrefUseDisplayNames;
+            Editor.Tree.NextDisplayName();
+            BtnDisplayName.Text = Editor.Preferences.PrefDisplayNameDelegateName;
         }
 
         private void OnLocalOnlyPressed()

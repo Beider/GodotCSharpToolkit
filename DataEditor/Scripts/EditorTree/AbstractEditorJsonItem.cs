@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GodotCSharpToolkit.Misc;
 using GodotCSharpToolkit.Logging;
 using GodotCSharpToolkit.DataManager;
+using GodotCSharpToolkit.Extensions;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -85,13 +86,15 @@ namespace GodotCSharpToolkit.Editor
 
         protected bool SaveToDisk<X, R>(string rootPath, bool localOnly) where X : IJsonFile<R> where R : JsonDefWithName
         {
-            var path = $"{rootPath}{GetRelativeDataPath()}";
+            if (!Editor.Preferences.ShouldUseLocalPath()) { return false; }
+            var path = ModPaths.Find(p => p.StartsWith(Editor.Preferences.SettingLocalSavePath));
+            if (path.IsNullOrEmpty()) { return false; }
+
+            path += GetRelativeDataPath();
+
             System.IO.Directory.CreateDirectory(path);
 
-            var cats = new List<string>(Categories);
-            if (Editor.Preferences.PrefSortTree) { cats.Sort(); }
-
-            foreach (var cat in cats)
+            foreach (var cat in Categories)
             {
                 var fileName = path + GetFileName(cat);
                 var list = GetFilteredListInCategory<R>(cat, localOnly);
@@ -120,10 +123,10 @@ namespace GodotCSharpToolkit.Editor
         {
             var relativePath = GetRelativeDataPath();
             var list = new List<string>();
-            list.Add($"res://{relativePath}");
-            if (Editor.Preferences.ShouldUseLocalPath())
+            foreach (var path in ModPaths)
             {
-                list.Add($"{Editor.Preferences.SettingLocalSavePath}{relativePath}");
+
+                list.Add(FileUtils.NormalizePath($"{path}{relativePath}"));
             }
 
             return list;
@@ -166,32 +169,45 @@ namespace GodotCSharpToolkit.Editor
 
         public override TreeItem CreateRootItem()
         {
-            var item = base.CreateRootItem();
+            var rootItem = base.CreateRootItem();
 
-            foreach (var cat in Categories)
+            var cats = new List<string>(Categories);
+            if (Editor.Preferences.PrefSortTree) { cats.Sort(); }
+
+            foreach (var cat in cats)
             {
+                // Get items, skip if we have none, if not create category
                 var list = GetFilteredListInCategory<JsonDefWithName>(cat, Editor.Preferences.PrefIsLocalOnly, true);
                 if (list.Count == 0) { continue; }
-                var catItem = CreateCategoryItem(item, cat);
-                if (Editor.Preferences.PrefSortTree) { SortJsonDefList(list); }
+                var catItem = CreateCategoryItem(rootItem, cat);
 
+                // Create tree items
+                var itemList = new List<DelegateEditorTreeItem>();
                 foreach (var jDef in list)
                 {
-                    CreateJsonEntryItem(catItem, jDef);
+                    var aTreeItem = Editor.Tree.CreateDelegateTreeItem(catItem, jDef.GetName(), jDef.GetKey(), true, GetItemColor(jDef, true),
+                                    GetItemColor(jDef, false), OnJsonItemSelected, ModPaths, jDef);
+                    itemList.Add(aTreeItem);
+                }
+                if (Editor.Preferences.PrefSortTree) { SortTreeItemList(itemList); }
+
+                foreach (var aItem in itemList)
+                {
+                    var treeItem = CreateJsonEntryItem(catItem, aItem);
+                    ((JsonDefWithName)aItem.RelatedData).TreeIdentifier = (string)treeItem.GetMetadata(0);
                 }
 
             }
 
-            return item;
+            return rootItem;
         }
 
-        protected virtual void SortJsonDefList(List<JsonDefWithName> list)
+        protected virtual void SortTreeItemList(List<DelegateEditorTreeItem> list)
         {
-            list.Sort((j1, j2) =>
+            var nameDelegate = Editor.Tree.GetDisplayNameDelegate();
+            list.Sort((i1, i2) =>
             {
-                var name1 = GetJsonDefName(j1);
-                var name2 = GetJsonDefName(j2);
-                return name1.CompareTo(name2);
+                return nameDelegate(i1).CompareTo(nameDelegate(i2));
             });
         }
 
@@ -254,25 +270,16 @@ namespace GodotCSharpToolkit.Editor
             return Editor.Preferences.GetDefaultBgColor();
         }
 
-        /// <summary>
-        /// Can be overriden to provide different names
-        /// </summary>
-        protected virtual String GetJsonDefName(JsonDefWithName jDef)
+        private TreeItem CreateJsonEntryItem(TreeItem parent, AbstractEditorTreeItem item)
         {
-            return Editor.Preferences.PrefUseDisplayNames ? jDef.GetDisplayName() : jDef.GetName();
-        }
-
-        private TreeItem CreateJsonEntryItem(TreeItem parent, JsonDefWithName jDef)
-        {
-            var item = CreateDelegateTreeItem(parent, GetJsonDefName(jDef), true, GetItemColor(jDef, true), GetItemColor(jDef, false), OnJsonItemSelected, jDef);
             var treeItem = Editor.Tree.CreateTreeItem(parent, item);
-            jDef.TreeIdentifier = (string)treeItem.GetMetadata(0);
             return treeItem;
         }
 
         private TreeItem CreateCategoryItem(TreeItem parent, string name)
         {
-            var item = CreateDelegateTreeItem(parent, name, true, GetCategoryColor(name, true), GetCategoryColor(name, false), OnCategorySelected);
+            var item = Editor.Tree.CreateDelegateTreeItem(parent, name, name, true,
+                    GetCategoryColor(name, true), GetCategoryColor(name, false), OnCategorySelected, ModPaths);
             return Editor.Tree.CreateTreeItem(parent, item);
         }
 

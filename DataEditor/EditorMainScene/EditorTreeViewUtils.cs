@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using GodotCSharpToolkit.Extensions;
@@ -12,11 +13,11 @@ namespace GodotCSharpToolkit.Editor
         /// <summary>
         /// Get the parent for a root item. If the item has a category that will be the parent.
         /// </summary>
-        private TreeItem GetParent(AbstractEditorRootItem item)
+        private TreeItem GetParent(AbstractEditorRootItem item, TreeItem defaultParent)
         {
             if (item.Category.IsNullOrEmpty())
             {
-                return Root;
+                return defaultParent;
             }
 
             if (!Categories.ContainsKey(item.Category))
@@ -37,7 +38,8 @@ namespace GodotCSharpToolkit.Editor
             // Add so we can find it again
             var key = Guid.NewGuid().ToString();
             TreeItemLookup.Add(key, item);
-            var treeItem = CreateTreeItem(parent, item.Name, item.Color, item.ColorBg, item.Collapsed, key);
+            var nameDelegate = Editor.Tree.GetDisplayNameDelegate();
+            var treeItem = CreateTreeItem(parent, nameDelegate(item), item.Color, item.ColorBg, item.Collapsed, key);
             item.TreeItemSelf = treeItem;
             return treeItem;
         }
@@ -48,14 +50,36 @@ namespace GodotCSharpToolkit.Editor
         public TreeItem CreateTreeItem(TreeItem parent, string name, Color color, Color bgColor, bool collapsed, string key = "")
         {
             var treeItem = CreateItem(parent);
-            var isCollapsed = Editor.Preferences.GetTreeItemCollapsedState(name, collapsed);
             var itemColor = Editor.Preferences.GetTreeItemColor(name, color);
             treeItem.SetText(0, name);
+            var isCollapsed = Editor.Preferences.GetTreeItemCollapsedState(treeItem, collapsed);
             treeItem.SetCustomColor(0, itemColor);
             treeItem.SetCustomBgColor(0, bgColor);
             treeItem.Collapsed = isCollapsed;
             treeItem.SetMetadata(0, key);
             return treeItem;
+        }
+
+        protected DelegateEditorTreeItem CreateModItem(TreeItem parent, string name, List<string> modPaths)
+        {
+            return CreateDelegateTreeItem(parent, name, $"mod_{name}", true,
+                    DataEditorConstants.COLOR_DEFAULT, DataEditorConstants.COLOR_BG_DEFAULT, null, modPaths);
+        }
+
+        public DelegateEditorTreeItem CreateDelegateTreeItem(TreeItem parent, string name, string key, bool collapsed,
+                    Color defaultColor, Color defaultBgColor, Action<DelegateEditorTreeItem> onSelection, List<string> modPaths,
+                    object relatedData = null)
+        {
+            var newItem = new DelegateEditorTreeItem();
+            newItem.Init(parent, Editor, modPaths);
+            newItem.Name = name;
+            newItem.Key = key;
+            newItem.Collapsed = collapsed;
+            newItem.Color = defaultColor;
+            newItem.ColorBg = defaultBgColor;
+            newItem.OnSelection = onSelection;
+            newItem.RelatedData = relatedData;
+            return newItem;
         }
 
         private void ResolveRootItems()
@@ -65,6 +89,10 @@ namespace GodotCSharpToolkit.Editor
                 if (typeof(AbstractEditorRootItem).IsAssignableFrom(type) && !type.IsAbstract)
                 {
                     RootItems.Add(Activator.CreateInstance(type) as AbstractEditorRootItem);
+                }
+                else if (typeof(AbstractEditorTreeModFolderProvider).IsAssignableFrom(type) && !type.IsAbstract)
+                {
+                    Provider = Activator.CreateInstance(type) as AbstractEditorTreeModFolderProvider;
                 }
             }
         }
@@ -81,6 +109,54 @@ namespace GodotCSharpToolkit.Editor
                 return TreeItemLookup[key];
             }
             return null;
+        }
+
+        /// <summary>
+        /// Adds a delegate that is used to get the name of an AbstractEditorTreeItem,
+        /// will automatically let you cycle through any you add in the toolbar menu.
+        /// </summary>
+        public void AddDisplayDelegate(string name, Func<AbstractEditorTreeItem, string> del)
+        {
+            DisplayNameDelegates.Add(name, del);
+        }
+
+        public Func<AbstractEditorTreeItem, string> GetDisplayNameDelegate()
+        {
+            var key = Editor.Preferences.PrefDisplayNameDelegateName;
+            if (!DisplayNameDelegates.ContainsKey(key))
+            {
+                key = DisplayNameDelegates.Keys.First();
+                Editor.Preferences.PrefDisplayNameDelegateName = key;
+            }
+            return DisplayNameDelegates[key];
+        }
+
+        /// <summary>
+        /// Switch to the next display name mode
+        /// </summary>
+        public void NextDisplayName()
+        {
+            var key = Editor.Preferences.PrefDisplayNameDelegateName;
+            if (DisplayNameDelegates.ContainsKey(key))
+            {
+                bool pick = false;
+
+                foreach (var keyName in DisplayNameDelegates.Keys)
+                {
+                    if (keyName.Equals(key))
+                    {
+                        pick = true;
+                    }
+                    else if (pick)
+                    {
+                        Editor.Preferences.PrefDisplayNameDelegateName = keyName;
+                        return;
+                    }
+                }
+            }
+
+            Editor.Preferences.PrefDisplayNameDelegateName = DisplayNameDelegates.Keys.First();
+            return;
         }
     }
 }

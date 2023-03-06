@@ -82,16 +82,16 @@ namespace GodotCSharpToolkit.DataManager
             {
                 foreach (var value in list[key])
                 {
-                    if (dict.ContainsKey(value.GetName()))
+                    if (dict.ContainsKey(value.GetKey()))
                     {
                         if (replaceDuplicates)
                         {
-                            dict[value.GetName()] = value;
+                            dict[value.GetKey()] = value;
                         }
                     }
                     else
                     {
-                        dict.Add(value.GetName(), value);
+                        dict.Add(value.GetKey(), value);
                     }
                 }
             }

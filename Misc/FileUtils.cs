@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using GodotCSharpToolkit.Logging;
 
 /// <summary>
@@ -9,6 +10,63 @@ namespace GodotCSharpToolkit.Misc
 {
     public static class FileUtils
     {
+        /// <summary>
+        /// Will fix the slashes in the path name
+        /// </summary>
+        public static string NormalizePath(string path)
+        {
+            if (IsGodotPath(path))
+            {
+                return path.Replace("\\", "/");
+            }
+            return path.Replace("/", "\\");
+        }
+        /// <summary>
+        /// Get all subdirectories of the given path.
+        /// </summary>
+        public static List<string> GetSubDirectories(string parentPath)
+        {
+            List<string> retList = new List<string>();
+            Directory dir = new Directory();
+
+            // Release builds do not like backslashes
+            String path = parentPath.Replace("\\", "/");
+            dir.Open(path);
+            dir.ListDirBegin(true, true);
+            while (true)
+            {
+                String filePath = dir.GetNext();
+                if (filePath == "")
+                {
+                    break;
+                }
+                if (dir.CurrentIsDir())
+                {
+                    // Grab the subfolders
+                    var subfolder = path + filePath + "/";
+                    if (!IsGodotPath(subfolder))
+                    {
+                        subfolder = subfolder.Replace("/", "\\");
+                    }
+                    retList.Add(subfolder);
+                }
+            }
+            dir.ListDirEnd();
+            return retList;
+        }
+
+        /// <summary>
+        /// Checks if the directory exists
+        /// </summary>
+        public static bool DirectoryExists(string path)
+        {
+            if (IsGodotPath(path))
+            {
+                return (new Godot.Directory()).DirExists(path);
+            }
+            return System.IO.Directory.Exists(path);
+        }
+
         /// <summary>
         /// Checks if the file exists
         /// </summary>
@@ -20,6 +78,7 @@ namespace GodotCSharpToolkit.Misc
             }
             return System.IO.File.Exists(path);
         }
+
         /// <summary>
         /// Loads the file content into a string. 
         /// Returns an empty string if file is not found.

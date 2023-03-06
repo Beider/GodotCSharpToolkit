@@ -11,7 +11,10 @@ namespace GodotCSharpToolkit.Editor
         private void OnTreeItemSelected()
         {
             var item = GetAbstractTreeItem(GetSelected());
-            item.OnItemSelected();
+            if (item != null)
+            {
+                item.OnItemSelected();
+            }
         }
 
         private void OnTreeItemCollapsed(TreeItem item)
@@ -19,7 +22,7 @@ namespace GodotCSharpToolkit.Editor
             if (InCode) { return; }
             var aItem = GetAbstractTreeItem(item);
             string text = aItem == null ? item.GetText(0) : aItem.Name;
-            Editor.Preferences.SetTreeItemCollapsedState(text, item.Collapsed);
+            Editor.Preferences.SetTreeItemCollapsedState(item);
         }
     }
 }

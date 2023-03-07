@@ -114,7 +114,7 @@ namespace GodotCSharpToolkit.Misc
             Directory dir = new Directory();
 
             // Release builds do not like backslashes
-            String path = pathToFile.Replace("\\", "/");
+            String path = FileUtils.NormalizePath(pathToFile);
             dir.Open(path);
             dir.ListDirBegin(true, true);
             while (true)
@@ -124,7 +124,7 @@ namespace GodotCSharpToolkit.Misc
                 {
                     break;
                 }
-                if (includeSubFolders && dir.CurrentIsDir())
+                if (includeSubFolders && dir.CurrentIsDir() && !filePath.Equals(".import"))
                 {
                     // Go into all subfolder
                     retList.AddRange(LoadAllFilesInFolderGodot(path + filePath + "/", includeSubFolders, extension));

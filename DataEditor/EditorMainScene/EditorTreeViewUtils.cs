@@ -36,10 +36,9 @@ namespace GodotCSharpToolkit.Editor
         public TreeItem CreateTreeItem(TreeItem parent, AbstractEditorTreeItem item)
         {
             // Add so we can find it again
-            var key = Guid.NewGuid().ToString();
-            TreeItemLookup.Add(key, item);
+            TreeItemLookup.Add(item.Key, item);
             var nameDelegate = Editor.Tree.GetDisplayNameDelegate();
-            var treeItem = CreateTreeItem(parent, nameDelegate(item), item.Color, item.ColorBg, item.Collapsed, key);
+            var treeItem = CreateTreeItem(parent, nameDelegate(item), item.Color, item.ColorBg, item.Collapsed, item.Key);
             item.TreeItemSelf = treeItem;
             return treeItem;
         }
@@ -62,16 +61,17 @@ namespace GodotCSharpToolkit.Editor
 
         protected DelegateEditorTreeItem CreateModItem(TreeItem parent, string name, List<string> modPaths)
         {
-            return CreateDelegateTreeItem(parent, name, $"mod_{name}", true,
-                    DataEditorConstants.COLOR_DEFAULT, DataEditorConstants.COLOR_BG_DEFAULT, null, modPaths);
+            var key = GetUniqueKey(parent, name);
+            return CreateDelegateTreeItem(parent, name, key, true,
+                    DataEditorConstants.COLOR_DEFAULT, DataEditorConstants.COLOR_BG_DEFAULT, null, modPaths, name);
         }
 
         public DelegateEditorTreeItem CreateDelegateTreeItem(TreeItem parent, string name, string key, bool collapsed,
                     Color defaultColor, Color defaultBgColor, Action<DelegateEditorTreeItem> onSelection, List<string> modPaths,
-                    object relatedData = null)
+                    string modName, object relatedData = null)
         {
             var newItem = new DelegateEditorTreeItem();
-            newItem.Init(parent, Editor, modPaths);
+            newItem.Init(parent, Editor, modPaths, modName);
             newItem.Name = name;
             newItem.Key = key;
             newItem.Collapsed = collapsed;
@@ -88,7 +88,7 @@ namespace GodotCSharpToolkit.Editor
             {
                 if (typeof(AbstractEditorRootItem).IsAssignableFrom(type) && !type.IsAbstract)
                 {
-                    RootItems.Add(Activator.CreateInstance(type) as AbstractEditorRootItem);
+                    RootItemTypes.Add(type);
                 }
                 else if (typeof(AbstractEditorTreeModFolderProvider).IsAssignableFrom(type) && !type.IsAbstract)
                 {
@@ -157,6 +157,23 @@ namespace GodotCSharpToolkit.Editor
 
             Editor.Preferences.PrefDisplayNameDelegateName = DisplayNameDelegates.Keys.First();
             return;
+        }
+
+        /// <summary>
+        /// Creates a unique key for the tree item based on parents keys.
+        /// Should only be used for things where a unique UUID is not available
+        /// </summary>
+        public string GetUniqueKey(TreeItem parent, string itemName)
+        {
+            string key = itemName;
+            var item = parent;
+            while (item != null)
+            {
+                key = $"{item.GetMetadata(0)}.{key}";
+                item = item.GetParent();
+            }
+
+            return key;
         }
     }
 }

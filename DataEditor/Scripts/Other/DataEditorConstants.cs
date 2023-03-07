@@ -16,7 +16,7 @@ namespace GodotCSharpToolkit.Editor
         public static readonly Color COLOR_BG_DEFAULT = Colors.Transparent;
         public static readonly Color COLOR_ISLOCAL = Colors.Cyan;
         public static readonly Color COLOR_DELETE = new Color(0.2f, 0, 0, 1);
-        public static readonly Color COLOR_NEW = Colors.GreenYellow;
+        public static readonly Color COLOR_NEW = new Color(0.0f, 0.3f, 0.3f, 1);
         public static readonly Color COLOR_MODIFIED = new Color(0.3f, 0.24902f, 0, 1);
 
         //
@@ -41,5 +41,23 @@ namespace GodotCSharpToolkit.Editor
 
         public static readonly PackedScene SCENE_DIALOG_CONFIRM =
                 ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Dialogs/ConfirmDialog/DataEditorConfirmDialog.tscn") as PackedScene;
+
+        public static readonly PackedScene SCENE_DIALOG_TEXT_ENTRY =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Dialogs/TextEntryDialog/TextEntryDialog.tscn") as PackedScene;
+
+        private static readonly PackedScene SCENE_INPUT_TEXT =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputText/DataEditorInputText.tscn") as PackedScene;
+        private static readonly PackedScene SCENE_INPUT_LIST =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputList/DataEditorInputList.tscn") as PackedScene;
+
+        public static DataEditorInputText CreateInputText()
+        {
+            return DataEditorConstants.SCENE_INPUT_TEXT.Instance() as DataEditorInputText;
+        }
+
+        public static DataEditorInputList CreateInputList()
+        {
+            return DataEditorConstants.SCENE_INPUT_LIST.Instance() as DataEditorInputList;
+        }
     }
 }

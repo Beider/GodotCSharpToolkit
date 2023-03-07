@@ -16,6 +16,6 @@ namespace GodotCSharpToolkit.Editor
         /// Should return a list of root items.
         /// Values are name + a list of paths to look for items for this root item
         /// </summary>
-        public abstract Dictionary<string, List<string>> GetRootItemList();
+        public abstract Dictionary<string, List<string>> GetModFolders();
     }
 }

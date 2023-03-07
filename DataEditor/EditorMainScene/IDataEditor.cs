@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -11,6 +12,7 @@ namespace GodotCSharpToolkit.Editor
         EditorPrefsExtended Preferences { get; }
         EditorTreeView Tree { get; }
         EditorToolbar Toolbar { get; }
+        PopupMenu PopupMenu { get; }
 
         /// <summary>
         /// Show the editor, must implement IDataEditorContent
@@ -32,5 +34,12 @@ namespace GodotCSharpToolkit.Editor
         /// The corresponding callback will be called with the result (true for ok, false for not ok)
         /// </summary>
         void ShowConfirmDialog(string message, Action<bool> callback);
+
+        /// <summary>
+        /// Shows a dialog with a text entry field and an optional list of values
+        /// </summary>
+        void ShowTextEntryDialog(string title, string textName,
+                    Action<string, string> callback, Func<string, bool> nameValidator,
+                    string listName = "", List<string> itemList = null);
     }
 }

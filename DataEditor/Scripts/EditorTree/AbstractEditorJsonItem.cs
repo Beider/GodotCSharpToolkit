@@ -15,10 +15,8 @@ namespace GodotCSharpToolkit.Editor
     {
         private List<JsonDefWithName> Values = new List<JsonDefWithName>();
         private List<JsonDefWithName> ChangedObjects = new List<JsonDefWithName>();
-        public List<String> Categories = new List<string>();
-
-        protected bool AllowReplaceOfLocalData = true;
-        protected bool SortList = true;
+        public List<String> FileNames = new List<string>();
+        public TreeItem RootItem = null;
 
         /// <summary>
         /// Get the data path relative to res://
@@ -31,20 +29,38 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         protected abstract Control GetEditor(JsonDefWithName jDef);
 
+        /// <summary>
+        /// Called to revert the data. Returns the new data.
+        /// </summary>
+        public abstract JsonDefWithName Revert(JsonDefWithName item);
+
+        /// <summary>
+        /// Duplicates a piece of data and sets the new name
+        /// </summary>
+        public abstract JsonDefWithName Duplicate(JsonDefWithName item, string category = null);
+
+        /// <summary>
+        /// Create a new data with the given name
+        /// </summary>
+        public abstract JsonDefWithName CreateNew(string currentCategory);
+
+        protected string JsonItemName = "item";
+
         public override void Reload()
         {
             ChangedObjects.Clear();
             Values.Clear();
-            Categories.Clear();
+            FileNames.Clear();
             var paths = GetDataPaths();
-            var data = JsonDataManager.FillDictionary<T, U>(paths, true, AllowReplaceOfLocalData);
+            var data = JsonDataManager.GetDictionary<T, U>(paths, true, true);
             foreach (var key in data.Keys)
             {
                 var jDef = (JsonDefWithName)data[key];
+                jDef.Original = (U)jDef.Clone(typeof(U));
                 jDef.OnStatusChange += OnStatusChange;
-                if (!Categories.Contains(jDef.GetCategory()))
+                if (!FileNames.Contains(jDef.GetCategory()))
                 {
-                    Categories.Add(jDef.GetCategory());
+                    FileNames.Add(jDef.GetCategory());
                 }
                 Values.Add(jDef);
             }
@@ -69,7 +85,7 @@ namespace GodotCSharpToolkit.Editor
                 ChangedObjects.Remove(def);
             }
 
-            var item = Editor.Tree.GetTreeItemById(def.TreeIdentifier);
+            var item = Editor.Tree.GetTreeItemById(def.GetUniqueId());
             if (item != null)
             {
                 RefreshItem(item, def);
@@ -91,10 +107,11 @@ namespace GodotCSharpToolkit.Editor
             if (path.IsNullOrEmpty()) { return false; }
 
             path += GetRelativeDataPath();
+            path = FileUtils.NormalizePath(path);
 
             System.IO.Directory.CreateDirectory(path);
 
-            foreach (var cat in Categories)
+            foreach (var cat in FileNames)
             {
                 var fileName = path + GetFileName(cat);
                 var list = GetFilteredListInCategory<R>(cat, localOnly);
@@ -169,24 +186,27 @@ namespace GodotCSharpToolkit.Editor
 
         public override TreeItem CreateRootItem()
         {
-            var rootItem = base.CreateRootItem();
+            Key = Editor.Tree.GetUniqueKey(Parent, Name);
+            RootItem = base.CreateRootItem();
 
-            var cats = new List<string>(Categories);
+            var cats = new List<string>(FileNames);
             if (Editor.Preferences.PrefSortTree) { cats.Sort(); }
 
             foreach (var cat in cats)
             {
                 // Get items, skip if we have none, if not create category
                 var list = GetFilteredListInCategory<JsonDefWithName>(cat, Editor.Preferences.PrefIsLocalOnly, true);
+                var catItem = CreateCategoryItem(RootItem, cat, FillContextMenuForFile);
                 if (list.Count == 0) { continue; }
-                var catItem = CreateCategoryItem(rootItem, cat);
+
 
                 // Create tree items
                 var itemList = new List<DelegateEditorTreeItem>();
                 foreach (var jDef in list)
                 {
-                    var aTreeItem = Editor.Tree.CreateDelegateTreeItem(catItem, jDef.GetName(), jDef.GetKey(), true, GetItemColor(jDef, true),
-                                    GetItemColor(jDef, false), OnJsonItemSelected, ModPaths, jDef);
+                    var aTreeItem = Editor.Tree.CreateDelegateTreeItem(catItem, jDef.GetName(), jDef.GetUniqueId(), true, GetItemColor(jDef, true),
+                                    GetItemColor(jDef, false), OnJsonItemSelected, ModPaths, ModName, jDef);
+                    aTreeItem.OnContextMenuFill = FillContextMenuForItem;
                     itemList.Add(aTreeItem);
                 }
                 if (Editor.Preferences.PrefSortTree) { SortTreeItemList(itemList); }
@@ -194,12 +214,11 @@ namespace GodotCSharpToolkit.Editor
                 foreach (var aItem in itemList)
                 {
                     var treeItem = CreateJsonEntryItem(catItem, aItem);
-                    ((JsonDefWithName)aItem.RelatedData).TreeIdentifier = (string)treeItem.GetMetadata(0);
                 }
 
             }
 
-            return rootItem;
+            return RootItem;
         }
 
         protected virtual void SortTreeItemList(List<DelegateEditorTreeItem> list)
@@ -226,9 +245,14 @@ namespace GodotCSharpToolkit.Editor
         protected virtual void OnJsonItemSelected(DelegateEditorTreeItem treeItem)
         {
             var data = (JsonDefWithName)treeItem.RelatedData;
-            var editor = GetEditor(data);
+            ShowEditor(data);
+        }
+
+        private void ShowEditor(JsonDefWithName jsonDef)
+        {
+            var editor = GetEditor(jsonDef);
             var content = (IDataEditorContent)editor;
-            content.SetData(data, this);
+            content.SetData(jsonDef, this);
             Editor.ShowEditor(editor);
         }
 
@@ -236,6 +260,8 @@ namespace GodotCSharpToolkit.Editor
         {
             item.TreeItemSelf.SetCustomColor(0, GetItemColor(def, true));
             item.TreeItemSelf.SetCustomBgColor(0, GetItemColor(def, false));
+            item.TreeItemSelf.SetText(0, def.GetName());
+            item.Name = def.GetName();
         }
 
         /// <summary>
@@ -276,10 +302,12 @@ namespace GodotCSharpToolkit.Editor
             return treeItem;
         }
 
-        private TreeItem CreateCategoryItem(TreeItem parent, string name)
+        private TreeItem CreateCategoryItem(TreeItem parent, string name, Func<DelegateEditorTreeItem, bool> contextMenu = null)
         {
-            var item = Editor.Tree.CreateDelegateTreeItem(parent, name, name, true,
-                    GetCategoryColor(name, true), GetCategoryColor(name, false), OnCategorySelected, ModPaths);
+            var key = Editor.Tree.GetUniqueKey(parent, name);
+            var item = Editor.Tree.CreateDelegateTreeItem(parent, name, key, true,
+                    GetCategoryColor(name, true), GetCategoryColor(name, false), OnCategorySelected, ModPaths, ModName);
+            item.OnContextMenuFill = contextMenu;
             return Editor.Tree.CreateTreeItem(parent, item);
         }
 
@@ -293,6 +321,100 @@ namespace GodotCSharpToolkit.Editor
                 }
             }
             return false;
+        }
+
+        public bool FillContextMenuForItem(DelegateEditorTreeItem item)
+        {
+            var data = (JsonDefWithName)item.RelatedData;
+            Editor.Tree.AddContextMenuSeparator(item.Name);
+            Editor.Tree.AddContextMenuEntry("Duplicate", () =>
+            {
+                AddAndShowNewItem(Duplicate(data));
+            });
+            Editor.Tree.AddContextMenuEntry("Copy", () =>
+            {
+                Editor.Tree.CopiedObject = data;
+            });
+            if (data.IsLocal())
+            {
+                Editor.Tree.AddContextMenuEntry("Revert", () => { GD.Print($"Revert"); });
+                var deleteString = data.IsTaggedForDelete ? "Remove delete tag" : "Tag for delete";
+                Editor.Tree.AddContextMenuEntry(deleteString, () =>
+                {
+                    data.IsTaggedForDelete = !data.IsTaggedForDelete;
+                    RefreshItem(item, data);
+                });
+            }
+
+            var parentKey = item.TreeItemSelf.GetParent().GetMetadata(0).ToString();
+            var parent = (DelegateEditorTreeItem)Editor.Tree.GetTreeItemById(parentKey);
+            FillContextMenuForFile(parent);
+
+            return true;
+        }
+
+        public bool FillContextMenuForFile(DelegateEditorTreeItem item)
+        {
+            Editor.Tree.AddContextMenuSeparator(item.Name);
+            Editor.Tree.AddContextMenuEntry($"Add new {JsonItemName}", () =>
+            {
+                AddAndShowNewItem(CreateNew(item.Name));
+            });
+            if (Editor.Tree.CopiedObject != null && typeof(U) == Editor.Tree.CopiedObject.GetType())
+            {
+                Editor.Tree.AddContextMenuEntry($"Paste {Editor.Tree.CopiedObject.GetName()}", () =>
+                {
+                    AddAndShowNewItem(Duplicate(Editor.Tree.CopiedObject, item.Name));
+                });
+            }
+            FillContextMenu();
+            return true;
+        }
+
+        private void AddAndShowNewItem(JsonDefWithName item)
+        {
+            item.OnStatusChange += OnStatusChange;
+            Values.Add(item);
+            Editor.Tree.RefreshTree(false);
+            ShowEditor(item);
+        }
+
+        /// <summary>
+        /// Our own context menu
+        /// </summary>
+        public override bool FillContextMenu()
+        {
+            Editor.Tree.AddContextMenuSeparator(Name);
+            Editor.Tree.AddContextMenuEntry("Add new file", () =>
+            {
+                Action<string, string> addNew = (name, listValue) =>
+                {
+                    FileNames.Add(name);
+                    Editor.Tree.RefreshTree(false);
+
+                };
+                Func<string, bool> nameValidator = (name) =>
+                {
+                    if (name.IsNullOrEmpty()) { return false; }
+                    foreach (var file in FileNames)
+                    {
+                        if (file.ToLower().Equals(name.ToLower()))
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+                Editor.ShowTextEntryDialog("Please enter the file name", "Name", addNew, nameValidator);
+
+
+            });
+            return true;
+        }
+
+        protected string GetSourceFile(string category)
+        {
+            return FileUtils.NormalizePath(Editor.Preferences.SettingLocalSavePath + $"{ModName}\\" + GetRelativeDataPath() + GetFileName(category));
         }
     }
 }

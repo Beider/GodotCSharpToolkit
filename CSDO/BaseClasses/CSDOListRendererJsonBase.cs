@@ -57,7 +57,7 @@ namespace CSharpDataEditorDll
             }
             foreach (T def in defs)
             {
-                ListWithColor.Add(def.GetKey(), GetColor(def.GetKey()));
+                ListWithColor.Add(def.GetUniqueId(), GetColor(def.GetUniqueId()));
             }
         }
 

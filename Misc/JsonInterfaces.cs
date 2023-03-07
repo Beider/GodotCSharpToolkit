@@ -15,7 +15,7 @@ namespace GodotCSharpToolkit.Misc
 
     public interface IJsonDefWithName
     {
-        string GetKey();
+        string GetUniqueId();
 
         void SetSource(string filePath);
 

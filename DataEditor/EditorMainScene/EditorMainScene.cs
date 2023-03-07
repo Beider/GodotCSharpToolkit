@@ -12,6 +12,7 @@ namespace GodotCSharpToolkit.Editor
         public EditorPrefsExtended Preferences { get; private set; } = new EditorPrefsExtended();
         public EditorTreeView Tree { get; private set; }
         public EditorToolbar Toolbar { get; private set; }
+        public PopupMenu PopupMenu { get; private set; }
 
         private IDataEditorContent ActiveEditor = null;
 
@@ -21,6 +22,8 @@ namespace GodotCSharpToolkit.Editor
             Tree = FindNode("EditorTreeView") as EditorTreeView;
             EditorArea = FindNode("EditorArea") as Control;
             Toolbar = FindNode("Toolbar") as EditorToolbar;
+            PopupMenu = FindNode("PopupMenu") as PopupMenu;
+
             Tree.Init(this);
             Toolbar.Init(this);
 

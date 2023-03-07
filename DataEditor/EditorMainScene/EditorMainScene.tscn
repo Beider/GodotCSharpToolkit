@@ -135,9 +135,16 @@ margin_right = 200.0
 margin_bottom = 490.0
 rect_min_size = Vector2( 200, 0 )
 focus_mode = 0
+allow_reselect = true
+allow_rmb_select = true
 script = ExtResource( 3 )
 
 [node name="EditorArea" type="Control" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit"]
 margin_left = 208.0
 margin_right = 960.0
 margin_bottom = 490.0
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+margin_right = 15.0
+margin_bottom = 6.0
+rect_min_size = Vector2( 150, 10 )

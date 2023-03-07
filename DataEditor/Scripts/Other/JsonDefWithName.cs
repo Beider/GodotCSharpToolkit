@@ -11,13 +11,7 @@ public abstract class JsonDefWithName : IJsonDefWithName
     [JsonIgnore]
     public JsonDefWithName Original;
 
-    /// <summary>
-    /// If this is related to a tree item then this will be set
-    /// </summary>
-    [JsonIgnore]
-    public string TreeIdentifier;
-
-    public abstract string GetKey();
+    public abstract string GetUniqueId();
 
     public abstract string GetName();
 

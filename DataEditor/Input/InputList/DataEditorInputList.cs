@@ -1,65 +1,108 @@
 using Godot;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace GodotCSharpToolkit.Editor
 {
     public class DataEditorInputList : DataEditorInput
     {
-        private OptionButton OptButton;
-
-        private Dictionary<string, int> ItemIndexLookup = new Dictionary<string, int>();
+        private ItemList ListField;
+        private Dictionary<int, object> ReturnValueLookup = new Dictionary<int, object>();
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
             base._Ready();
-            OptButton = FindNode("OptionButton") as OptionButton;
-            OptButton.Connect("item_selected", this, nameof(_OnItemChanged));
+            ListField = FindNode("ItemList") as ItemList;
+            ListField.Connect("rmb_clicked", this, nameof(OnRmbClicked));
+            ListField.Connect("item_activated", this, nameof(OnItemActivated));
+            ListField.Connect("item_rmb_selected", this, nameof(ShowPopupMenu));
         }
 
-        private void _OnItemChanged(int index)
+        private void OnRmbClicked(Vector2 pos)
         {
-            var value = OptButton.GetItemText(index);
-            OnValueChanged(value);
+            if (ListField.IsAnythingSelected())
+            {
+                ShowPopupMenu(ListField.GetSelectedItems()[0], pos);
+            }
+            else
+            {
+                ShowPopupMenu(-1, pos);
+            }
         }
 
-        public void RefreshItemList()
+        private void OnItemActivated(int index)
         {
-            OptButton.Clear();
-            ItemIndexLookup.Clear();
             if (InputData is JsonGenericEditorInputRowList iData)
             {
-                if (iData.Sort) { iData.Values.Sort(); }
-                foreach (var item in iData.Values)
+                iData.OnDoubleClick(ReturnValueLookup[index]);
+            }
+        }
+
+        private void ShowPopupMenu(int index, Vector2 pos)
+        {
+            var menu = Editor.PopupMenu;
+            Editor.ClearPopupMenu();
+            menu.RectSize = menu.RectMinSize;
+            FillPopupMenu(index);
+            menu.RectPosition = GetViewport().GetMousePosition();
+            menu.Popup_();
+        }
+
+        private void FillPopupMenu(int index)
+        {
+            if (InputData is JsonGenericEditorInputRowList iData)
+            {
+                Editor.AddPopupMenuSeparator(InputData.Name);
+                Editor.AddPopupMenuEntry($"Add new ", () =>
                 {
-                    OptButton.AddItem(item);
-                    ItemIndexLookup.Add(item, OptButton.GetItemCount() - 1);
-                }
+                    iData.OnAdd(this);
+                }, DataEditorConstants.ICON_NEW);
+                if (index < 0) { return; }
+                Editor.AddPopupMenuEntry($"Remove {ListField.GetItemText(index)} ", () =>
+                {
+                    iData.OnRemove(ReturnValueLookup[index], this);
+                }, DataEditorConstants.ICON_DELETE);
             }
         }
 
         protected override void Init()
         {
-            OptButton.RectMinSize = new Vector2(InputData.EditorWidth, 0f);
-            RefreshItemList();
+            var input = (JsonGenericEditorInputRowList)InputData;
+            ListField.RectMinSize = new Vector2(input.EditorWidth, input.EditorHeight);
             Refresh();
         }
 
         public override void Refresh()
         {
-            object value = InputData.GetValue(Data);
-            string val = "";
-            if (value != null)
-            {
-                val = value.ToString();
-            }
+            ReturnValueLookup.Clear();
+            ListField.Clear();
 
-            if (ItemIndexLookup.ContainsKey(val))
+            if (InputData is JsonGenericEditorInputRowList iData)
             {
-                OptButton.Select(ItemIndexLookup[val]);
-                OnValueChanged(val, false);
+                var valueList = iData.GetListValues().ToList();
+                if (iData.Sort)
+                {
+                    valueList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
+                }
+                foreach (var item in valueList)
+                {
+                    ListField.AddItem(item.Value);
+                    ReturnValueLookup.Add(ListField.GetItemCount() - 1, item.Key);
+                }
             }
         }
+
+        private object GetSelectedItemValue()
+        {
+            if (ListField.IsAnythingSelected())
+            {
+                return ReturnValueLookup[ListField.GetSelectedItems()[0]];
+            }
+            return "";
+        }
+
+
     }
 }

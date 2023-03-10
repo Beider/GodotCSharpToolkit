@@ -6,11 +6,11 @@ using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public abstract class JsonEditorContentBase<T, U> : Panel, IDataEditorContent where T : JsonDefWithName
+    public abstract class JsonEditorContentBase : Panel, IDataEditorContent
     {
         protected IDataEditor Editor;
-        protected T Data;
-        protected U Provider;
+        protected JsonDefWithName Data;
+        protected object Provider;
 
         protected GridContainer CreateRow(Control parent, int columns)
         {
@@ -31,24 +31,15 @@ namespace GodotCSharpToolkit.Editor
             Editor = editor;
         }
 
-        public void SetData(JsonDefWithName data, object provider)
+        public virtual void SetData(object data, object provider)
         {
-            if (provider is U prov)
-            {
-                Provider = prov;
-            }
-            else
-            {
-                Logger.Error($"Provider is not of correct type ({typeof(U)}): {provider.GetType()}");
-            }
-            if (data is T dObj)
-            {
-                Data = dObj;
-            }
-            else
-            {
-                Logger.Error($"Data is not of correct type ({typeof(T)}): {data.GetType()}");
-            }
+            Provider = provider;
+            Data = (JsonDefWithName)data;
+        }
+
+        public string GetUniqueId()
+        {
+            return Data.GetUniqueId();
         }
     }
 }

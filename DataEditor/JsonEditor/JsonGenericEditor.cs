@@ -9,7 +9,7 @@ namespace GodotCSharpToolkit.Editor
     /// <summary>
     /// Generic editor for any type of json object. Simply define the input and it should work.
     /// </summary>
-    public class JsonGenericEditor<T, U> : JsonEditorContentBase<T, U> where T : JsonDefWithName
+    public class JsonGenericEditor : JsonEditorContentBase
     {
         private GridContainer ControlContainer;
 
@@ -63,14 +63,18 @@ namespace GodotCSharpToolkit.Editor
             {
                 input = DataEditorConstants.CreateInputText();
             }
+            else if (data.EditorType == JsonGenericEditorInputRow.EditorTypes.Combo)
+            {
+                input = DataEditorConstants.CreateInputCombo();
+            }
             else if (data.EditorType == JsonGenericEditorInputRow.EditorTypes.List)
             {
                 input = DataEditorConstants.CreateInputList();
             }
             else if (data.EditorType == JsonGenericEditorInputRow.EditorTypes.Custom &&
-                    data.CustomEditorPackedScene != null)
+                    data.GetCustomEditor != null)
             {
-                input = data.CustomEditorPackedScene.Instance() as IDataEditorInput;
+                input = data.GetCustomEditor();
             }
 
             if (input == null)
@@ -80,7 +84,7 @@ namespace GodotCSharpToolkit.Editor
             }
 
             parent.AddChild((Control)input);
-            input.SetInputData(Data, data);
+            input.SetInputData(Data, data, Editor);
 
             InputFields.Add(data.Name, input);
         }

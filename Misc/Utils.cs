@@ -24,12 +24,12 @@ namespace GodotCSharpToolkit.Misc
             Dictionary<string, T> files;
             if (FileUtils.IsGodotPath(path))
             {
-                Logger.Info($"Godot path: {path}");
+                //Logger.Info($"Godot path: {path}");
                 files = Utils.LoadAllJsonFilesInFolderGodot<T>(path, includeSubFolders);
             }
             else
             {
-                Logger.Info($"Absolute path: {path}");
+                //Logger.Info($"Absolute path: {path}");
                 files = Utils.LoadAllJsonFilesInFolder<T>(path, includeSubFolders);
             }
             if (files != null)
@@ -115,6 +115,10 @@ namespace GodotCSharpToolkit.Misc
 
             // Release builds do not like backslashes
             String path = FileUtils.NormalizePath(pathToFile);
+            if (!dir.DirExists(path))
+            {
+                return retList;
+            }
             dir.Open(path);
             dir.ListDirBegin(true, true);
             while (true)
@@ -222,6 +226,19 @@ namespace GodotCSharpToolkit.Misc
             foreach (var val in Enum.GetValues(enumType))
             {
                 returnList.Add(val.ToString());
+            }
+            return returnList;
+        }
+
+        /// <summary>
+        /// Used primarily for the editor
+        /// </summary>
+        public static Dictionary<object, string> EnumToDictionary(Type enumType)
+        {
+            var returnList = new Dictionary<object, string>();
+            foreach (var val in Enum.GetValues(enumType))
+            {
+                returnList.Add(val, val.ToString());
             }
             return returnList;
         }

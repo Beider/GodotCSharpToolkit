@@ -156,5 +156,32 @@ namespace GodotCSharpToolkit.Editor
 
             return key;
         }
+
+        /// <summary>
+        /// Get the root item of the given type
+        /// </summary>
+        public AbstractEditorRootItem GetRootItemByType(string modName, Type type)
+        {
+            string rootKey = $"{modName}_{type.Name}";
+            if (!RootItems.ContainsKey(rootKey)) { return null; }
+            return RootItems[rootKey];
+        }
+
+        /// <summary>
+        /// Get all the root items of the given type
+        /// </summary>
+        public List<T> GetRootAllItemsByType<T>()
+        {
+            var returnList = new List<T>();
+            foreach (var item in RootItems.Values)
+            {
+                if (item is T rItem)
+                {
+                    returnList.Add(rItem);
+                }
+            }
+
+            return returnList;
+        }
     }
 }

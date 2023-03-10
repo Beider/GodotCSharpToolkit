@@ -11,9 +11,17 @@ public abstract class JsonDefWithName : IJsonDefWithName
     [JsonIgnore]
     public JsonDefWithName Original;
 
+    /// <summary>
+    /// We assume this will be a GUID in the editors
+    /// </summary>
     public abstract string GetUniqueId();
 
+    /// <summary>
+    /// We assume this will be a GUID in the editors
+    /// </summary>
+    public abstract void SetUniqueId(string uniqueId);
     public abstract string GetName();
+    public abstract void SetName(string newName);
 
     [JsonIgnore]
     public bool IsNew { get; set; } = false;

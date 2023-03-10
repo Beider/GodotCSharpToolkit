@@ -66,9 +66,14 @@ namespace GodotCSharpToolkit.Editor
             SavePath.Text = path;
         }
 
-        public void SetData(JsonDefWithName data, object provider)
+        public void SetData(object data, object provider)
         {
             // Do nothing we are a special snowflake editor
+        }
+
+        public string GetUniqueId()
+        {
+            return "";
         }
     }
 }

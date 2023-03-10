@@ -43,6 +43,12 @@ namespace GodotCSharpToolkit.Editor
             this.Editor = editor;
             this.ModPaths = modPaths;
             this.ModName = modName;
+            Editor.Tree.OnSelectItemRequest += OnSelectItemRequest;
+        }
+
+        protected virtual void OnSelectItemRequest(string uniqueId)
+        {
+
         }
 
         /// <summary>

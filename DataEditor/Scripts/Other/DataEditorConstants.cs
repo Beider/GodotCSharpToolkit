@@ -71,17 +71,36 @@ namespace GodotCSharpToolkit.Editor
 
         private static readonly PackedScene SCENE_INPUT_TEXT =
                 ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputText/DataEditorInputText.tscn") as PackedScene;
+        private static readonly PackedScene SCENE_INPUT_COMBO =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputCombo/DataEditorInputCombo.tscn") as PackedScene;
+
         private static readonly PackedScene SCENE_INPUT_LIST =
                 ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputList/DataEditorInputList.tscn") as PackedScene;
+
+        private static readonly PackedScene SCENE_GENERIC_EDITOR =
+                        ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/JsonEditor/JsonGenericEditor.tscn") as PackedScene;
+
+
+
 
         public static DataEditorInputText CreateInputText()
         {
             return DataEditorConstants.SCENE_INPUT_TEXT.Instance() as DataEditorInputText;
         }
 
+        public static DataEditorInputCombo CreateInputCombo()
+        {
+            return DataEditorConstants.SCENE_INPUT_COMBO.Instance() as DataEditorInputCombo;
+        }
+
         public static DataEditorInputList CreateInputList()
         {
             return DataEditorConstants.SCENE_INPUT_LIST.Instance() as DataEditorInputList;
+        }
+
+        public static JsonGenericEditor CreateJsonGenericEditor()
+        {
+            return DataEditorConstants.SCENE_GENERIC_EDITOR.Instance() as JsonGenericEditor;
         }
     }
 }

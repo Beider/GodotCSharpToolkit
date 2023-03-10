@@ -39,11 +39,45 @@ namespace GodotCSharpToolkit.Editor
 
         public void ShowTextEntryDialog(string title, string textName,
                     Action<string, string> callback, Func<string, bool> nameValidator,
-                    string listName = "", List<string> itemList = null)
+                    string listName = "", Func<Dictionary<object, string>> getItemList = null)
         {
             var dialog = DataEditorConstants.SCENE_DIALOG_TEXT_ENTRY.Instance() as DataEditorTextEntryDialog;
-            dialog.SetupBeforeAddChild(title, textName, callback, nameValidator, listName, itemList);
+            dialog.SetupBeforeAddChild(title, textName, callback, nameValidator, listName, getItemList);
             AddChild(dialog);
+        }
+
+        public void ClearPopupMenu()
+        {
+            PopupMenu.Clear();
+            PopupMenuDelegates.Clear();
+        }
+
+        public void AddPopupMenuSeparator(string name)
+        {
+            PopupMenu.AddSeparator($" {name} ");
+        }
+
+        public void AddPopupMenuEntry(string name, Action action, Texture icon = null)
+        {
+            if (icon != null)
+            {
+                PopupMenu.AddIconItem(icon, name);
+            }
+            else
+            {
+                PopupMenu.AddItem(name);
+            }
+            PopupMenuDelegates.Add(name, action);
+        }
+
+        private void OnPopupMenuPressed(int index)
+        {
+            string text = PopupMenu.GetItemText(index);
+            if (PopupMenuDelegates.ContainsKey(text))
+            {
+                // Invoke the menu item
+                PopupMenuDelegates[text]();
+            }
         }
     }
 }

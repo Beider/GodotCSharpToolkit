@@ -40,6 +40,22 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         void ShowTextEntryDialog(string title, string textName,
                     Action<string, string> callback, Func<string, bool> nameValidator,
-                    string listName = "", List<string> itemList = null);
+                    string listName = "", Func<Dictionary<object, string>> getItemList = null);
+
+
+        /// <summary>
+        /// Clear the popup menu
+        /// </summary>
+        void ClearPopupMenu();
+
+        /// <summary>
+        /// Adds a separator to the popup menu with the given name
+        /// </summary>
+        void AddPopupMenuSeparator(string name);
+
+        /// <summary>
+        /// Add a new entry to the popup menu.
+        /// </summary>
+        void AddPopupMenuEntry(string name, Action action, Texture icon = null);
     }
 }

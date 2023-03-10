@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -13,6 +14,7 @@ namespace GodotCSharpToolkit.Editor
         public EditorTreeView Tree { get; private set; }
         public EditorToolbar Toolbar { get; private set; }
         public PopupMenu PopupMenu { get; private set; }
+        public Dictionary<string, Action> PopupMenuDelegates = new Dictionary<string, Action>();
 
         private IDataEditorContent ActiveEditor = null;
 
@@ -23,6 +25,7 @@ namespace GodotCSharpToolkit.Editor
             EditorArea = FindNode("EditorArea") as Control;
             Toolbar = FindNode("Toolbar") as EditorToolbar;
             PopupMenu = FindNode("PopupMenu") as PopupMenu;
+            PopupMenu.Connect("id_pressed", this, nameof(OnPopupMenuPressed));
 
             Tree.Init(this);
             Toolbar.Init(this);
@@ -88,12 +91,15 @@ namespace GodotCSharpToolkit.Editor
 
         private void _Refresh()
         {
-            Tree.RefreshTree();
-            Toolbar.Init(this);
+            string uniqueId = "";
             if (ActiveEditor != null && IsInstanceValid(((Control)ActiveEditor)))
             {
+                uniqueId = ActiveEditor.GetUniqueId();
                 ActiveEditor.QueueFree();
             }
+            Tree.RefreshTree(true, uniqueId);
+            Toolbar.Init(this);
+
         }
     }
 }

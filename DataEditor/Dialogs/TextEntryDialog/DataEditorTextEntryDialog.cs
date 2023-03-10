@@ -1,6 +1,8 @@
 using Godot;
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using GodotCSharpToolkit.Extensions;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -20,9 +22,9 @@ namespace GodotCSharpToolkit.Editor
         private string TextFieldName;
         private string ListFieldName;
         private DataEditorInputText TextInput;
-        private DataEditorInputList ListInput;
+        private DataEditorInputCombo ComboInput;
         private string Title;
-        private List<string> ItemList = null;
+        private Func<Dictionary<object, string>> GetItemList = null;
 
         private string TextEntryValue;
         private string ListInputValue = null;
@@ -40,15 +42,18 @@ namespace GodotCSharpToolkit.Editor
             BtnConfirm.Connect("pressed", this, nameof(OnConfirmPressed));
             BtnCancel.Connect("pressed", this, nameof(OnCancelPressed));
 
-            TextInput = DataEditorConstants.CreateInputText();
-            ControlGrid.AddChild(TextInput);
-            TextInput.SetInputData(null, GetTextRowData());
-
-            if (ItemList != null && ItemList.Count > 0)
+            if (!TextFieldName.IsNullOrEmpty())
             {
-                ListInput = DataEditorConstants.CreateInputList();
-                ControlGrid.AddChild(ListInput);
-                TextInput.SetInputData(null, GetListRowData());
+                TextInput = DataEditorConstants.CreateInputText();
+                ControlGrid.AddChild(TextInput);
+                TextInput.SetInputData(null, GetTextRowData(), null);
+            }
+
+            if (GetItemList != null && GetItemList != null)
+            {
+                ComboInput = DataEditorConstants.CreateInputCombo();
+                ControlGrid.AddChild(ComboInput);
+                ComboInput.SetInputData(null, GetListRowData(), null);
             }
 
         }
@@ -56,20 +61,20 @@ namespace GodotCSharpToolkit.Editor
         private JsonGenericEditorInputRow GetTextRowData()
         {
             var genInput = new JsonGenericEditorInput();
-            var val = genInput.AddTextRow(TextFieldName, 1, (v) => TextEntryValue,
+            var val = genInput.AddTextField(TextFieldName, 1, (v) => TextEntryValue,
             (n, d, value) => TextEntryValue = value.ToString(),
             NameValidation);
             val.EditorWidth = 155f;
             return val;
         }
 
-        private JsonGenericEditorInputRowList GetListRowData()
+        private JsonGenericEditorInputRowCombo GetListRowData()
         {
             var genInput = new JsonGenericEditorInput();
-            var val = genInput.AddListRow(TextFieldName, 1, false, ItemList,
-            (v) => TextEntryValue,
-            (n, d, value) => TextEntryValue = value.ToString(),
-            JsonGenericEditorInput.ValidateTextNotNullOrEmpty);
+            var val = genInput.AddComboField(ListFieldName, 1, false, GetItemList,
+            (v) => ListInputValue,
+            (n, d, value) => ListInputValue = value.ToString(),
+            null);
             val.EditorWidth = 155f;
             return val;
         }
@@ -87,12 +92,12 @@ namespace GodotCSharpToolkit.Editor
 
         public void SetupBeforeAddChild(string title, string textFieldName,
                      Action<string, string> callback, Func<string, bool> nameValidator,
-                     string listFieldName = "", List<string> itemList = null)
+                     string listFieldName = "", Func<Dictionary<object, string>> getItemList = null)
         {
             Callback = callback;
             TextValidator = nameValidator;
             Title = title;
-            ItemList = itemList;
+            GetItemList = getItemList;
 
             TextFieldName = textFieldName;
             ListFieldName = listFieldName;

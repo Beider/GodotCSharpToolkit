@@ -5,6 +5,8 @@ namespace GodotCSharpToolkit.Editor
 {
     public interface IDataEditorInput
     {
-        void SetInputData(JsonDefWithName data, JsonGenericEditorInputRow input);
+        void SetInputData(JsonDefWithName data, JsonGenericEditorInputRow input, IDataEditor Editor);
+
+        void Refresh();
     }
 }

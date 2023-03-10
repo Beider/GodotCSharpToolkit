@@ -14,10 +14,7 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         public int RowSpacing { get; set; } = 10;
 
-        /// <summary>
-        /// If onUpdate is not set it will use default onUpdate method
-        /// </summary>
-        public JsonGenericEditorInputRow AddTextRow(string name, int rowNum,
+        public JsonGenericEditorInputRow AddTextField(string name, int rowNum,
                         Func<JsonDefWithName, object> getValue,
                         Action<string, object, object> onSave,
                         Func<string, object, object, bool> onValidate)
@@ -33,21 +30,39 @@ namespace GodotCSharpToolkit.Editor
             return row;
         }
 
-        public JsonGenericEditorInputRowList AddListRow(string name, int rowNum,
-                        bool sort, List<string> values,
-                        Func<JsonDefWithName, object> getValue,
-                        Action<string, object, object> onSave,
-                        Func<string, object, object, bool> onValidate)
+        public JsonGenericEditorInputRowList AddListField(string name, int rowNum,
+                        bool sort, Func<Dictionary<object, string>> getListValues,
+                        Action<IDataEditorInput> onAdd, Action<object, IDataEditorInput> onRemove,
+                        Action<object> onDoubleClick = null)
         {
             var row = new JsonGenericEditorInputRowList();
             row.Name = name;
             row.EditorType = JsonGenericEditorInputRow.EditorTypes.List;
             row.RowNumber = rowNum;
+            row.OnAdd = onAdd;
+            row.OnRemove = onRemove;
+            row.OnDoubleClick = onDoubleClick;
+            row.Sort = sort;
+            row.GetListValues = getListValues;
+            Rows.Add(row);
+            return row;
+        }
+
+        public JsonGenericEditorInputRowCombo AddComboField(string name, int rowNum,
+                        bool sort, Func<Dictionary<object, string>> getListValues,
+                        Func<JsonDefWithName, object> getValue,
+                        Action<string, object, object> onSave,
+                        Func<string, object, object, bool> onValidate)
+        {
+            var row = new JsonGenericEditorInputRowCombo();
+            row.Name = name;
+            row.EditorType = JsonGenericEditorInputRow.EditorTypes.Combo;
+            row.RowNumber = rowNum;
             row.GetValue = getValue;
             row.OnSave = onSave;
             row.OnValidate = onValidate;
             row.Sort = sort;
-            row.Values = values;
+            row.GetListValues = getListValues;
             Rows.Add(row);
             return row;
         }
@@ -72,7 +87,7 @@ namespace GodotCSharpToolkit.Editor
     {
         public enum EditorTypes
         {
-            Text, List, Custom
+            Text, Combo, List, Custom
         }
 
         /// <summary>
@@ -98,7 +113,7 @@ namespace GodotCSharpToolkit.Editor
         /// <summary>
         /// If custom this will be instanced, must implement IDataEditorInput
         /// </summary>
-        public PackedScene CustomEditorPackedScene { get; set; } = null;
+        public Func<IDataEditorInput> GetCustomEditor { get; set; } = null;
 
         /// <summary>
         /// You get the data object and are expected to return the value (usually a string)
@@ -118,10 +133,34 @@ namespace GodotCSharpToolkit.Editor
         public Func<string, JsonDefWithName, object, bool> OnValidate { get; set; } = null;
     }
 
-    public class JsonGenericEditorInputRowList : JsonGenericEditorInputRow
+    public class JsonGenericEditorInputRowCombo : JsonGenericEditorInputRow
     {
-        public List<string> Values { get; set; } = new List<string>();
+        /// <summary>
+        /// First param is the key, second is display name
+        /// </summary>
+        public Func<Dictionary<object, string>> GetListValues { get; set; } = null;
 
         public bool Sort { get; set; } = true;
+    }
+
+    public class JsonGenericEditorInputRowList : JsonGenericEditorInputRowCombo
+    {
+        public float EditorHeight { get; set; } = 100f;
+
+        /// <summary>
+        /// The object is the key value of the item.
+        /// You need to manually call refresh on the IDataEditorInput
+        /// </summary>
+        public Action<object, IDataEditorInput> OnRemove { get; set; } = null;
+
+        /// <summary>
+        /// After adding you need to manually call refresh on the IDataEditorInput
+        /// </summary>
+        public Action<IDataEditorInput> OnAdd { get; set; } = null;
+
+        /// <summary>
+        /// Triggered when this item is double clicked
+        /// </summary>
+        public Action<object> OnDoubleClick { get; set; } = null;
     }
 }

@@ -24,6 +24,7 @@ namespace GodotCSharpToolkit.Editor
             if (TextLabel != null)
             {
                 TextLabel.Text = $"{InputData.Name}: ";
+                TextLabel.RectMinSize = new Vector2(InputData.LabelWidth, 0f);
             }
             Init();
         }

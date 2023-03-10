@@ -44,7 +44,7 @@ namespace GodotCSharpToolkit.Editor
         {
             var key = GetUniqueKey(parent, name);
             return CreateDelegateTreeItem(parent, name, key, true,
-                    DataEditorConstants.COLOR_DEFAULT, DataEditorConstants.COLOR_BG_DEFAULT, null, modPaths, name);
+                    Editor.Preferences.GetModColor(), DataEditorConstants.COLOR_BG_DEFAULT, null, modPaths, name);
         }
 
         public DelegateEditorTreeItem CreateDelegateTreeItem(TreeItem parent, string name, string key, bool collapsed,

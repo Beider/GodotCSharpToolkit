@@ -18,6 +18,7 @@ namespace GodotCSharpToolkit.Editor
         private const string KEY_COLOR_NEW = "new_tree_item_color";
         private const string KEY_COLOR_MODIFIED = "modified_tree_item_color";
         private const string KEY_COLOR_ERROR = "error_tree_item_color";
+        private const string KEY_COLOR_MODS = "mods_tree_item_color";
         private const string PREF_EDITOR_SORT = "sort_tree_items";
         private const string PREF_EDITOR_SHOW_DISPLAY_NAMES = "show_display_names";
         private const string PREF_EDITOR_DISPLAY_NAMES = "display_name_delegate_number";
@@ -148,6 +149,11 @@ namespace GodotCSharpToolkit.Editor
         public Color GetErrorColor()
         {
             return GetValue(KEY_COLOR_ERROR, DataEditorConstants.COLOR_ERROR);
+        }
+
+        public Color GetModColor()
+        {
+            return GetValue(KEY_COLOR_MODS, DataEditorConstants.COLOR_MODS);
         }
 
         #endregion

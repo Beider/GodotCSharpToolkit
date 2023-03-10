@@ -235,7 +235,7 @@ namespace GodotCSharpToolkit.Editor
             {
                 // Get items, skip if we have none, if not create category
                 var list = GetFilteredListInCategory<JsonDefWithName>(file, Editor.Preferences.PrefIsLocalOnly, true);
-                var catItem = CreateFileItem(RootItem, file, FillContextMenuForFile);
+                var fileItem = CreateFileItem(RootItem, file, FillContextMenuForFile);
                 if (list.Count == 0) { continue; }
 
 
@@ -243,7 +243,7 @@ namespace GodotCSharpToolkit.Editor
                 var itemList = new List<DelegateEditorTreeItem>();
                 foreach (var jDef in list)
                 {
-                    var aTreeItem = Editor.Tree.CreateDelegateTreeItem(catItem, jDef.GetName(), jDef.GetUniqueId(), true, GetItemColor(jDef, true),
+                    var aTreeItem = Editor.Tree.CreateDelegateTreeItem(fileItem, jDef.GetName(), jDef.GetUniqueId(), true, GetItemColor(jDef, true),
                                     GetItemColor(jDef, false), OnJsonItemSelected, ModPaths, ModName, jDef);
                     aTreeItem.OnContextMenuFill = FillContextMenuForItem;
                     itemList.Add(aTreeItem);
@@ -252,7 +252,7 @@ namespace GodotCSharpToolkit.Editor
 
                 foreach (var aItem in itemList)
                 {
-                    var treeItem = CreateJsonEntryItem(catItem, aItem);
+                    var treeItem = CreateJsonEntryItem(fileItem, aItem);
                 }
 
             }
@@ -381,7 +381,8 @@ namespace GodotCSharpToolkit.Editor
             var item = Editor.Tree.CreateDelegateTreeItem(parent, name, key, true,
                     GetCategoryColor(name, true), GetCategoryColor(name, false), OnFileItemSelected, ModPaths, ModName);
             item.OnContextMenuFill = contextMenu;
-            return Editor.Tree.CreateTreeItem(parent, item);
+            item.Color = Color;
+            return Editor.Tree.CreateTreeItem(parent, item); ;
         }
 
         public bool AnyMatchInData(Func<JsonDefWithName, bool> MatchingFunction)
@@ -449,7 +450,7 @@ namespace GodotCSharpToolkit.Editor
             }, DataEditorConstants.ICON_NEW);
             if (Editor.Tree.CopiedObject != null && typeof(U) == Editor.Tree.CopiedObject.GetType())
             {
-                Editor.AddPopupMenuEntry($"Paste '{Editor.Tree.CopiedObject.GetName()}'", () =>
+                Editor.AddPopupMenuEntry($"Paste '{Editor.Tree.CopiedObject.GetName()}' ", () =>
                 {
                     AddAndShowNewItem(Duplicate(Editor.Tree.CopiedObject, item.Name));
                 }, DataEditorConstants.ICON_PASTE);

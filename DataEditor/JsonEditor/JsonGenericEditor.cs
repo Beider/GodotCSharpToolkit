@@ -83,6 +83,7 @@ namespace GodotCSharpToolkit.Editor
                 return;
             }
 
+            if (data.LabelWidth == 0) { data.LabelWidth = Input.LabelWidth; }
             parent.AddChild((Control)input);
             input.SetInputData(Data, data, Editor);
 

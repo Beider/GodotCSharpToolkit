@@ -15,6 +15,7 @@ namespace GodotCSharpToolkit.Editor
         public static readonly Color COLOR_DEFAULT = Colors.White;
         public static readonly Color COLOR_BG_DEFAULT = Colors.Transparent;
         public static readonly Color COLOR_ISLOCAL = Colors.Cyan;
+        public static readonly Color COLOR_MODS = Colors.MediumPurple;
         public static readonly Color COLOR_DELETE = new Color(0.2f, 0, 0, 1);
         public static readonly Color COLOR_NEW = new Color(0.0f, 0.3f, 0.3f, 1);
         public static readonly Color COLOR_MODIFIED = new Color(0.3f, 0.24902f, 0, 1);

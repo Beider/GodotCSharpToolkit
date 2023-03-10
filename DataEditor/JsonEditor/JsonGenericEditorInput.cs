@@ -14,6 +14,8 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         public int RowSpacing { get; set; } = 10;
 
+        public float LabelWidth = 0f;
+
         public JsonGenericEditorInputRow AddTextField(string name, int rowNum,
                         Func<JsonDefWithName, object> getValue,
                         Action<string, object, object> onSave,
@@ -109,6 +111,11 @@ namespace GodotCSharpToolkit.Editor
         /// Set the width of the editor
         /// </summary>
         public float EditorWidth { get; set; } = 100f;
+
+        /// <summary>
+        /// If this is 0 it will be overridden by the JsonGenericEditorInput.LabelWidth
+        /// </summary>
+        public float LabelWidth { get; set; } = 0f;
 
         /// <summary>
         /// If custom this will be instanced, must implement IDataEditorInput

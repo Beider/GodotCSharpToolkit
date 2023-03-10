@@ -9,7 +9,7 @@ namespace GodotCSharpToolkit.Editor
 
         void QueueFree();
 
-        void SetData(object data, object provider);
+        void SetData(JsonDefWithName data, object provider);
 
         void Init(IDataEditor editor);
     }

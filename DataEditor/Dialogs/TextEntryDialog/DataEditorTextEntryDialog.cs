@@ -42,38 +42,39 @@ namespace GodotCSharpToolkit.Editor
 
             TextInput = DataEditorConstants.CreateInputText();
             ControlGrid.AddChild(TextInput);
-            TextInput.SetInputWidth(155f);
-            TextInput.SetValidator(NameValidation);
-            TextInput.SetSaveAction(UpdateName);
-            TextInput.SetValue("");
-            TextInput.SetText(TextFieldName);
-            TextInput.SetKey(TextFieldName);
+            TextInput.SetInputData(null, GetTextRowData());
 
             if (ItemList != null && ItemList.Count > 0)
             {
                 ListInput = DataEditorConstants.CreateInputList();
                 ControlGrid.AddChild(ListInput);
-                ListInput.SetItemList(ItemList, false);
-                ListInput.SetValue(ItemList[0]);
-                ListInput.SetInputWidth(155f);
-                ListInput.SetSaveAction(UpdateListValue);
-                ListInput.SetText(ListFieldName);
-                ListInput.SetKey(ListFieldName);
+                TextInput.SetInputData(null, GetListRowData());
             }
 
         }
 
-        private void UpdateName(object value, string key)
+        private JsonGenericEditorInputRow GetTextRowData()
         {
-            TextEntryValue = value.ToString();
+            var genInput = new JsonGenericEditorInput();
+            var val = genInput.AddTextRow(TextFieldName, 1, (v) => TextEntryValue,
+            (n, d, value) => TextEntryValue = value.ToString(),
+            NameValidation);
+            val.EditorWidth = 155f;
+            return val;
         }
 
-        private void UpdateListValue(object value, string key)
+        private JsonGenericEditorInputRowList GetListRowData()
         {
-            ListInputValue = value.ToString();
+            var genInput = new JsonGenericEditorInput();
+            var val = genInput.AddListRow(TextFieldName, 1, false, ItemList,
+            (v) => TextEntryValue,
+            (n, d, value) => TextEntryValue = value.ToString(),
+            JsonGenericEditorInput.ValidateTextNotNullOrEmpty);
+            val.EditorWidth = 155f;
+            return val;
         }
 
-        private bool NameValidation(object value, string key)
+        private bool NameValidation(string name, object data, object value)
         {
             if (value == null || !TextValidator.Invoke(value.ToString()))
             {

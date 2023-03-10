@@ -8,8 +8,6 @@ namespace GodotCSharpToolkit.Editor
 {
     public class DataEditorSettings : Control, IDataEditorContent
     {
-        private CheckBox AutoRefresh;
-        private CheckBox AutoSave;
         private CheckBox LoadLocalData;
         private LineEdit SavePath;
         private Label SaveLabel;
@@ -24,8 +22,6 @@ namespace GodotCSharpToolkit.Editor
             var btn = FindNode("BtnSave") as Button;
             btn.Connect("pressed", this, nameof(SavePressed));
 
-            AutoRefresh = FindNode("AutoRefresh") as CheckBox;
-            AutoSave = FindNode("AutoSave") as CheckBox;
             LoadLocalData = FindNode("AutoLoad") as CheckBox;
             SavePath = FindNode("SavePath") as LineEdit;
             SaveLabel = FindNode("SaveLabel") as Label;
@@ -70,7 +66,7 @@ namespace GodotCSharpToolkit.Editor
             SavePath.Text = path;
         }
 
-        public void SetData(object data, object provider)
+        public void SetData(JsonDefWithName data, object provider)
         {
             // Do nothing we are a special snowflake editor
         }

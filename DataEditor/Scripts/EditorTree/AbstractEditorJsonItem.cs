@@ -44,7 +44,10 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         public abstract JsonDefWithName CreateNew(string currentCategory);
 
-        protected string JsonItemName = "item";
+        /// <summary>
+        /// Used to build the context menu so we can say "Add new <JsonItemName>"
+        /// </summary>
+        protected string ContextMenuAddNewItemName = "item";
 
         public override void Reload()
         {
@@ -330,20 +333,34 @@ namespace GodotCSharpToolkit.Editor
             Editor.Tree.AddContextMenuEntry("Duplicate", () =>
             {
                 AddAndShowNewItem(Duplicate(data));
-            });
+            }, DataEditorConstants.ICON_DUPLICATE);
             Editor.Tree.AddContextMenuEntry("Copy", () =>
             {
                 Editor.Tree.CopiedObject = data;
-            });
+            }, DataEditorConstants.ICON_COPY);
             if (data.IsLocal())
             {
-                Editor.Tree.AddContextMenuEntry("Revert", () => { GD.Print($"Revert"); });
-                var deleteString = data.IsTaggedForDelete ? "Remove delete tag" : "Tag for delete";
+                if ((data.IsModified || data.IsTaggedForDelete) && !data.IsNew)
+                {
+                    Editor.Tree.AddContextMenuEntry("Revert", () =>
+                    {
+                        Editor.ShowConfirmDialog($"Are you sure you wish to revert {data.GetName()}? All unsaved changes will be lost.",
+                        accept =>
+                        {
+                            if (accept)
+                            {
+                                Values.Remove(data);
+                                AddAndShowNewItem(Revert(data));
+                            }
+                        });
+                    }, DataEditorConstants.ICON_REVERT);
+                }
+                var deleteString = data.IsTaggedForDelete ? "Remove delete tag " : "Tag for delete ";
                 Editor.Tree.AddContextMenuEntry(deleteString, () =>
                 {
                     data.IsTaggedForDelete = !data.IsTaggedForDelete;
                     RefreshItem(item, data);
-                });
+                }, DataEditorConstants.ICON_DELETE);
             }
 
             var parentKey = item.TreeItemSelf.GetParent().GetMetadata(0).ToString();
@@ -356,16 +373,16 @@ namespace GodotCSharpToolkit.Editor
         public bool FillContextMenuForFile(DelegateEditorTreeItem item)
         {
             Editor.Tree.AddContextMenuSeparator(item.Name);
-            Editor.Tree.AddContextMenuEntry($"Add new {JsonItemName}", () =>
+            Editor.Tree.AddContextMenuEntry($"Add new {ContextMenuAddNewItemName}", () =>
             {
                 AddAndShowNewItem(CreateNew(item.Name));
-            });
+            }, DataEditorConstants.ICON_NEW);
             if (Editor.Tree.CopiedObject != null && typeof(U) == Editor.Tree.CopiedObject.GetType())
             {
-                Editor.Tree.AddContextMenuEntry($"Paste {Editor.Tree.CopiedObject.GetName()}", () =>
+                Editor.Tree.AddContextMenuEntry($"Paste '{Editor.Tree.CopiedObject.GetName()}'", () =>
                 {
                     AddAndShowNewItem(Duplicate(Editor.Tree.CopiedObject, item.Name));
-                });
+                }, DataEditorConstants.ICON_PASTE);
             }
             FillContextMenu();
             return true;
@@ -408,7 +425,7 @@ namespace GodotCSharpToolkit.Editor
                 Editor.ShowTextEntryDialog("Please enter the file name", "Name", addNew, nameValidator);
 
 
-            });
+            }, DataEditorConstants.ICON_NEW);
             return true;
         }
 

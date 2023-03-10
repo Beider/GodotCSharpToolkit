@@ -14,10 +14,9 @@ namespace GodotCSharpToolkit.Editor
         private TreeItem Root;
         private IDataEditor Editor;
         private Dictionary<string, AbstractEditorTreeItem> TreeItemLookup = new Dictionary<string, AbstractEditorTreeItem>();
-        private Dictionary<string, List<string>> ModFolders = new Dictionary<string, List<string>>();
+        public Dictionary<string, List<string>> ModFolders = new Dictionary<string, List<string>>();
         private List<Type> RootItemTypes = new List<Type>();
         private Dictionary<string, AbstractEditorRootItem> RootItems = new Dictionary<string, AbstractEditorRootItem>();
-        private Dictionary<string, TreeItem> Categories = new Dictionary<string, TreeItem>();
         private AbstractEditorTreeModFolderProvider Provider = null;
         public Dictionary<string, Func<AbstractEditorTreeItem, string>> DisplayNameDelegates = new Dictionary<string, Func<AbstractEditorTreeItem, string>>();
 
@@ -43,20 +42,12 @@ namespace GodotCSharpToolkit.Editor
             AllowRmbSelect = true;
 
             DisplayNameDelegates.Add("Name", i => i.Name);
-            DisplayNameDelegates.Add("Key", i => i.Key);
+            //DisplayNameDelegates.Add("Key", i => i.Key);
         }
 
         private void OnEmptyTreeRmbSelected(Vector2 pos)
         {
-            if (!Editor.Preferences.ShouldUseLocalPath()) { return; }
-            var menu = Editor.PopupMenu;
-            menu.Clear();
-            ContextMenuDelegates.Clear();
-            menu.RectSize = menu.RectMinSize;
-            FillMenu();
-
-            menu.RectPosition = GetViewport().GetMousePosition();
-            menu.Popup_();
+            // Do nothing
         }
 
         private void OnItemRmbSelected(Vector2 pos)
@@ -77,45 +68,23 @@ namespace GodotCSharpToolkit.Editor
                 menu.RectPosition = GetViewport().GetMousePosition();
                 menu.Popup_();
             }
-
-            FillMenu();
         }
         public void AddContextMenuSeparator(string name)
         {
-            Editor.PopupMenu.AddSeparator($"- {name} -");
+            Editor.PopupMenu.AddSeparator($" {name} ");
         }
 
-        public void AddContextMenuEntry(string name, Action action)
+        public void AddContextMenuEntry(string name, Action action, Texture icon = null)
         {
-            Editor.PopupMenu.AddItem(name);
-            ContextMenuDelegates.Add(name, action);
-        }
-
-        private void FillMenu()
-        {
-            AddContextMenuSeparator("General");
-            AddContextMenuEntry("Add new mod", () =>
+            if (icon != null)
             {
-                Func<string, bool> nameValidator = (name) =>
-                {
-                    if (name.IsNullOrEmpty()) { return false; }
-                    foreach (var mod in ModFolders.Keys)
-                    {
-                        if (mod.ToLower().Equals(name.ToLower()))
-                        {
-                            return false;
-                        }
-                    }
-                    return true;
-                };
-                Editor.ShowTextEntryDialog("Please enter the mod name", "Name", AddNewModule, nameValidator);
-            });
-        }
-
-        private void AddNewModule(string name, string listValue)
-        {
-            System.IO.Directory.CreateDirectory($"{Editor.Preferences.SettingLocalSavePath}{name}");
-            RefreshTree(false);
+                Editor.PopupMenu.AddIconItem(icon, name);
+            }
+            else
+            {
+                Editor.PopupMenu.AddItem(name);
+            }
+            ContextMenuDelegates.Add(name, action);
         }
 
         private void OnPopupMenuPressed(int index)
@@ -179,6 +148,45 @@ namespace GodotCSharpToolkit.Editor
             }
 
             // Add local paths
+            AddLocalMods();
+
+            // Ensure all paths end with a slash
+            FixModPathEnding();
+
+            // Create items
+            var modKeys = new List<string>(ModFolders.Keys);
+            modKeys.Sort();
+            foreach (var modName in modKeys)
+            {
+                var delegateItem = CreateModItem(Root, modName, ModFolders[modName]);
+                var modItem = CreateTreeItem(Root, delegateItem);
+
+                foreach (var type in RootItemTypes)
+                {
+                    string rootKey = $"{modName}_{type.Name}";
+                    AbstractEditorRootItem item = null;
+                    if (!RootItems.ContainsKey(rootKey))
+                    {
+                        item = Activator.CreateInstance(type) as AbstractEditorRootItem;
+                        item.Init(modItem, Editor, ModFolders[modName], modName);
+                        item.Reload();
+                        RootItems.Add(rootKey, item);
+                    }
+                    else
+                    {
+                        item = RootItems[rootKey];
+                        item.Init(modItem, Editor, ModFolders[modName], modName);
+                    }
+
+                    item.CreateRootItem();
+                }
+            }
+            InCode = false;
+        }
+
+        private void AddLocalMods()
+        {
+            // Add local paths
             if (Editor.Preferences.ShouldUseLocalPath())
             {
                 foreach (var key in ModFolders.Keys)
@@ -197,7 +205,10 @@ namespace GodotCSharpToolkit.Editor
                     }
                 }
             }
+        }
 
+        private void FixModPathEnding()
+        {
             // Ensure all paths end with a slash
             foreach (var modN in ModFolders.Keys)
             {
@@ -208,34 +219,6 @@ namespace GodotCSharpToolkit.Editor
                     ModFolders[modN][i] = FileUtils.NormalizePath(path);
                 }
             }
-
-            // Create items
-            foreach (var modName in ModFolders.Keys)
-            {
-                var delegateItem = CreateModItem(Root, modName, ModFolders[modName]);
-                var modItem = CreateTreeItem(Root, delegateItem);
-
-                foreach (var type in RootItemTypes)
-                {
-                    string rootKey = $"{modName}_{type.Name}";
-                    AbstractEditorRootItem item = null;
-                    if (!RootItems.ContainsKey(rootKey))
-                    {
-                        item = Activator.CreateInstance(type) as AbstractEditorRootItem;
-                        item.Init(GetParent(item, modItem), Editor, ModFolders[modName], modName);
-                        item.Reload();
-                        RootItems.Add(rootKey, item);
-                    }
-                    else
-                    {
-                        item = RootItems[rootKey];
-                        item.Init(GetParent(item, modItem), Editor, ModFolders[modName], modName);
-                    }
-
-                    item.CreateRootItem();
-                }
-            }
-            InCode = false;
         }
 
         public bool HasUnsavedChanges()

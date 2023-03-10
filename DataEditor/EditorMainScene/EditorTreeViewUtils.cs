@@ -10,25 +10,6 @@ namespace GodotCSharpToolkit.Editor
     public partial class EditorTreeView : Tree
     {
 
-        /// <summary>
-        /// Get the parent for a root item. If the item has a category that will be the parent.
-        /// </summary>
-        private TreeItem GetParent(AbstractEditorRootItem item, TreeItem defaultParent)
-        {
-            if (item.Category.IsNullOrEmpty())
-            {
-                return defaultParent;
-            }
-
-            if (!Categories.ContainsKey(item.Category))
-            {
-                var color = Editor.Preferences.GetTreeItemColor(DataEditorConstants.ROOT_CATEGORIES_COLOR, DataEditorConstants.COLOR_DEFAULT);
-                var colorbg = Editor.Preferences.GetTreeItemColor(DataEditorConstants.ROOT_CATEGORIES_COLOR_BG, DataEditorConstants.COLOR_BG_DEFAULT);
-                Categories.Add(item.Category, CreateTreeItem(Root, item.Category, color, colorbg, true));
-            }
-
-            return Categories[item.Category];
-        }
 
         /// <summary>
         /// Creates a tree item using the stored preferences from storage

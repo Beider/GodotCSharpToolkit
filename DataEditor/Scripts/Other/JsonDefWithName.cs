@@ -62,10 +62,6 @@ public abstract class JsonDefWithName : IJsonDefWithName
         set
         {
             _IsTaggedForDelete = value;
-            if (_IsTaggedForDelete)
-            {
-                _IsModified = true;
-            }
             OnStatusChange(this);
         }
     }

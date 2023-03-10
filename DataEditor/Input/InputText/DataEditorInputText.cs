@@ -20,8 +20,15 @@ namespace GodotCSharpToolkit.Editor
             OnValueChanged(newText);
         }
 
-        public override void SetValue(object value)
+        protected override void Init()
         {
+            TextField.RectMinSize = new Vector2(InputData.EditorWidth, 0f);
+            Refresh();
+        }
+
+        public override void Refresh()
+        {
+            object value = InputData.GetValue(Data);
             if (value == null)
             {
                 TextField.Text = "";
@@ -32,11 +39,6 @@ namespace GodotCSharpToolkit.Editor
             }
 
             OnValueChanged(TextField.Text, false);
-        }
-
-        public void SetInputWidth(float width)
-        {
-            TextField.RectMinSize = new Vector2(width, 0f);
         }
 
 

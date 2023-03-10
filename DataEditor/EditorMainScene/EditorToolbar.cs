@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using GodotCSharpToolkit.Extensions;
+
 namespace GodotCSharpToolkit.Editor
 {
     public class EditorToolbar : Panel
@@ -11,6 +13,7 @@ namespace GodotCSharpToolkit.Editor
         private Button BtnDisplayName;
         private Button BtnLocalOnly;
         private Button BtnRefresh;
+        private Button BtnAddMod;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
@@ -32,6 +35,9 @@ namespace GodotCSharpToolkit.Editor
 
             BtnRefresh = FindNode("BtnRefresh") as Button;
             BtnRefresh.Connect("pressed", this, nameof(OnRefreshPressed));
+
+            BtnAddMod = FindNode("BtnAddMod") as Button;
+            BtnAddMod.Connect("pressed", this, nameof(OnNewModPressed));
         }
 
         public void Init(IDataEditor editor)
@@ -47,25 +53,50 @@ namespace GodotCSharpToolkit.Editor
             BtnDisplayName.Visible = Editor.Tree.DisplayNameDelegates.Count > 1;
         }
 
-        private void OnRefreshPressed()
+        public void OnNewModPressed()
+        {
+            Func<string, bool> nameValidator = (name) =>
+                {
+                    if (name.IsNullOrEmpty()) { return false; }
+                    foreach (var mod in Editor.Tree.ModFolders.Keys)
+                    {
+                        if (mod.ToLower().Equals(name.ToLower()))
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+            Editor.ShowTextEntryDialog("Please enter the mod name", "Name", AddNewModule, nameValidator);
+        }
+
+        private void AddNewModule(string name, string listValue)
+        {
+            System.IO.Directory.CreateDirectory($"{Editor.Preferences.SettingLocalSavePath}{name}");
+            Editor.Tree.RefreshTree(false);
+        }
+
+        public void OnRefreshPressed()
         {
             Editor.Refresh();
         }
 
-        private void OnSortPressed()
+        public void OnSortPressed()
         {
             Editor.Preferences.PrefSortTree = !Editor.Preferences.PrefSortTree;
+            BtnSort.Pressed = Editor.Preferences.PrefSortTree;
         }
 
-        private void OnToggleNamesPressed()
+        public void OnToggleNamesPressed()
         {
             Editor.Tree.NextDisplayName();
             BtnDisplayName.Text = Editor.Preferences.PrefDisplayNameDelegateName;
         }
 
-        private void OnLocalOnlyPressed()
+        public void OnLocalOnlyPressed()
         {
             Editor.Preferences.PrefIsLocalOnly = !Editor.Preferences.PrefIsLocalOnly;
+            BtnLocalOnly.Pressed = Editor.Preferences.PrefIsLocalOnly;
         }
 
         private void OnSavePressed()

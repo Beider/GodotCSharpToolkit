@@ -7,13 +7,6 @@ namespace GodotCSharpToolkit.Editor
 {
     public abstract class AbstractEditorRootItem : AbstractEditorTreeItem
     {
-        /// <summary>
-        /// If this returns anything but an empty string or null
-        /// this node will be put into a parent node with that name.
-        /// Useful for grouping your editors into seperate categories
-        /// </summary>
-        public string Category { get; protected set; } = "";
-
         public AbstractEditorRootItem()
         {
 

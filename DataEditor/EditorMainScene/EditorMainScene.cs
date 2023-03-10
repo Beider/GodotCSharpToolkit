@@ -32,6 +32,42 @@ namespace GodotCSharpToolkit.Editor
             //OS.WindowSize = new Vector2(1440f, 900f);
         }
 
+        public override void _Input(InputEvent @event)
+        {
+            if (@event is InputEventKey keyEvent && keyEvent.Pressed)
+            {
+                if (CtrlOrCmd(keyEvent) && keyEvent.Scancode == (int)KeyList.S)
+                {
+                    Save();
+                }
+                else if (CtrlOrCmd(keyEvent) && keyEvent.Scancode == (int)KeyList.N)
+                {
+                    Toolbar.OnNewModPressed();
+                }
+                else if (CtrlOrCmd(keyEvent) && keyEvent.Scancode == (int)KeyList.R)
+                {
+                    Toolbar.OnRefreshPressed();
+                }
+                else if (keyEvent.Scancode == (int)KeyList.F1)
+                {
+                    Toolbar.OnSortPressed();
+                }
+                else if (keyEvent.Scancode == (int)KeyList.F2)
+                {
+                    Toolbar.OnToggleNamesPressed();
+                }
+                else if (keyEvent.Scancode == (int)KeyList.F3)
+                {
+                    Toolbar.OnLocalOnlyPressed();
+                }
+            }
+        }
+
+        private bool CtrlOrCmd(InputEventKey keyEvent)
+        {
+            return keyEvent.Control || keyEvent.Command;
+        }
+
         public void Refresh()
         {
             if (Tree.HasUnsavedChanges())

@@ -24,20 +24,31 @@ namespace GodotCSharpToolkit.Editor
             OnValueChanged(value);
         }
 
-        public void SetItemList(List<string> itemList, bool sort = true)
+        public void RefreshItemList()
         {
             OptButton.Clear();
             ItemIndexLookup.Clear();
-            if (sort) { itemList.Sort(); }
-            foreach (var item in itemList)
+            if (InputData is JsonGenericEditorInputRowList iData)
             {
-                OptButton.AddItem(item);
-                ItemIndexLookup.Add(item, OptButton.GetItemCount() - 1);
+                if (iData.Sort) { iData.Values.Sort(); }
+                foreach (var item in iData.Values)
+                {
+                    OptButton.AddItem(item);
+                    ItemIndexLookup.Add(item, OptButton.GetItemCount() - 1);
+                }
             }
         }
 
-        public override void SetValue(object value)
+        protected override void Init()
         {
+            OptButton.RectMinSize = new Vector2(InputData.EditorWidth, 0f);
+            RefreshItemList();
+            Refresh();
+        }
+
+        public override void Refresh()
+        {
+            object value = InputData.GetValue(Data);
             string val = "";
             if (value != null)
             {
@@ -49,11 +60,6 @@ namespace GodotCSharpToolkit.Editor
                 OptButton.Select(ItemIndexLookup[val]);
                 OnValueChanged(val, false);
             }
-        }
-
-        public void SetInputWidth(float width)
-        {
-            OptButton.RectMinSize = new Vector2(width, 0f);
         }
     }
 }

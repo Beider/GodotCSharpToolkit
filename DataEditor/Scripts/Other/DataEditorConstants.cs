@@ -31,6 +31,30 @@ namespace GodotCSharpToolkit.Editor
         public const string ROOT_CATEGORIES_COLOR_BG = "Tree_Root_Categories_Color_BG";
 
 
+        //
+        // ICONS
+        //
+
+        public static readonly Texture ICON_DELETE =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Assets/Icons/delete.png") as Texture;
+
+        public static readonly Texture ICON_REVERT =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Assets/Icons/revert.png") as Texture;
+
+        public static readonly Texture ICON_DUPLICATE =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Assets/Icons/duplicate.png") as Texture;
+
+        public static readonly Texture ICON_EDIT =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Assets/Icons/edit.png") as Texture;
+
+        public static readonly Texture ICON_NEW =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Assets/Icons/new.png") as Texture;
+
+        public static readonly Texture ICON_COPY =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Assets/Icons/copy.png") as Texture;
+
+        public static readonly Texture ICON_PASTE =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Assets/Icons/paste.png") as Texture;
 
         //
         // Scene paths

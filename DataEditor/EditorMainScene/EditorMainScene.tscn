@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://HUD/assets/godot_theme/gui.theme" type="Theme" id=1]
 [ext_resource path="res://GodotCSharpToolkit/DataEditor/EditorMainScene/EditorMainScene.cs" type="Script" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://GodotCSharpToolkit/DataEditor/Assets/Icons/local_only.png" type="Texture" id=9]
 [ext_resource path="res://GodotCSharpToolkit/DataEditor/Assets/Icons/refresh.png" type="Texture" id=10]
 [ext_resource path="res://GodotCSharpToolkit/DataEditor/Assets/Icons/module.png" type="Texture" id=11]
+[ext_resource path="res://GodotCSharpToolkit/DataEditor/Assets/Icons/exit.png" type="Texture" id=12]
 
 [node name="EditorMainScene" type="Control"]
 anchor_right = 1.0
@@ -20,6 +21,11 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="BlackBackground" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
 
 [node name="Background" type="Panel" parent="."]
 self_modulate = Color( 0.564706, 0.564706, 0.564706, 0.588235 )
@@ -91,9 +97,9 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -379.0
+margin_left = -451.0
 margin_top = -20.0
-margin_right = -10.0
+margin_right = -6.0
 margin_bottom = 20.0
 columns = 40
 
@@ -135,6 +141,13 @@ margin_bottom = 37.0
 focus_mode = 0
 text = "Settings"
 icon = ExtResource( 4 )
+
+[node name="BtnClose" type="Button" parent="Background/ToolBarSplit/Toolbar/GridRight"]
+margin_left = 373.0
+margin_right = 445.0
+margin_bottom = 37.0
+text = "Close"
+icon = ExtResource( 12 )
 
 [node name="MainArea" type="Control" parent="Background/ToolBarSplit"]
 margin_top = 50.0

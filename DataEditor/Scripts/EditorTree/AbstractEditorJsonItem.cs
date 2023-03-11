@@ -115,9 +115,12 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         private void OnStatusChange(JsonDefWithName def)
         {
-            if ((def.IsModified || def.IsNew || def.IsTaggedForDelete) && !ChangedObjects.Contains(def))
+            if ((def.IsModified || def.IsNew || def.IsTaggedForDelete))
             {
-                ChangedObjects.Add(def);
+                if (!ChangedObjects.Contains(def))
+                {
+                    ChangedObjects.Add(def);
+                }
             }
             else if (ChangedObjects.Contains(def))
             {
@@ -148,7 +151,7 @@ namespace GodotCSharpToolkit.Editor
             path += GetRelativeDataPath();
             path = FileUtils.NormalizePath(path);
 
-            System.IO.Directory.CreateDirectory(path);
+            FileUtils.CreateDirectory(path);
 
             foreach (var cat in FileNames)
             {
@@ -157,9 +160,9 @@ namespace GodotCSharpToolkit.Editor
 
                 if (list.Count == 0)
                 {
-                    if (System.IO.File.Exists(fileName))
+                    if (FileUtils.FileExists(fileName))
                     {
-                        System.IO.File.Delete(fileName);
+                        FileUtils.Delete(fileName);
                     }
                     continue;
                 }
@@ -181,7 +184,6 @@ namespace GodotCSharpToolkit.Editor
             var list = new List<string>();
             foreach (var path in ModPaths)
             {
-
                 list.Add(FileUtils.NormalizePath($"{path}{relativePath}"));
             }
 
@@ -463,6 +465,7 @@ namespace GodotCSharpToolkit.Editor
         {
             item.OnStatusChange += OnStatusChange;
             Values.Add(item);
+            OnStatusChange(item);
             Editor.Tree.RefreshTree(false);
             ShowEditor(item);
         }

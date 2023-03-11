@@ -99,7 +99,7 @@ public abstract class JsonDefWithName : IJsonDefWithName
     /// </summary>
     public bool IsLocal()
     {
-        return !FileUtils.IsGodotPath(SourceFile);
+        return !FileUtils.IsResPath(SourceFile);
     }
 
     public string GetCategory()

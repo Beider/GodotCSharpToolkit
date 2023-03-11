@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using GodotCSharpToolkit.Extensions;
+using GodotCSharpToolkit.Misc;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -14,6 +15,7 @@ namespace GodotCSharpToolkit.Editor
         private Button BtnLocalOnly;
         private Button BtnRefresh;
         private Button BtnAddMod;
+        private Button BtnClose;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
@@ -38,6 +40,9 @@ namespace GodotCSharpToolkit.Editor
 
             BtnAddMod = FindNode("BtnAddMod") as Button;
             BtnAddMod.Connect("pressed", this, nameof(OnNewModPressed));
+
+            BtnClose = FindNode("BtnClose") as Button;
+            BtnClose.Connect("pressed", this, nameof(OnClosePressed));
         }
 
         public void Init(IDataEditor editor)
@@ -51,6 +56,16 @@ namespace GodotCSharpToolkit.Editor
             BtnRefresh.Disabled = !Editor.Preferences.SettingIsLoadLocalData;
 
             BtnDisplayName.Visible = Editor.Tree.DisplayNameDelegates.Count > 1;
+
+            if (!Editor.Preferences.IsPathValid(Editor.Preferences.SettingLocalSavePath))
+            {
+                OnSettingsPressed();
+            }
+        }
+
+        private void OnClosePressed()
+        {
+            Editor.Close();
         }
 
         public void OnNewModPressed()
@@ -72,7 +87,7 @@ namespace GodotCSharpToolkit.Editor
 
         private void AddNewModule(string name, string listValue)
         {
-            System.IO.Directory.CreateDirectory($"{Editor.Preferences.SettingLocalSavePath}{name}");
+            FileUtils.CreateDirectory(Editor.Preferences.SettingLocalSavePath, name);
             Editor.Tree.RefreshTree(false);
         }
 
@@ -104,7 +119,7 @@ namespace GodotCSharpToolkit.Editor
             Editor.Save();
         }
 
-        private void OnSettingsPressed()
+        public void OnSettingsPressed()
         {
             Control settings = DataEditorConstants.SCENE_SETTINGS.Instance() as Control;
             Editor.ShowEditor(settings);

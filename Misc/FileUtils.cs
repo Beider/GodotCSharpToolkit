@@ -21,6 +21,53 @@ namespace GodotCSharpToolkit.Misc
             }
             return path.Replace("/", "\\");
         }
+
+        /// <summary>
+        /// Will normalize the slashes and ensure we have an ending slash
+        /// </summary>
+        public static string NormalizeDirectory(string pathToDir)
+        {
+            if (pathToDir == null) { return null; }
+            if (pathToDir == "") { return pathToDir; }
+            String path = pathToDir;
+            if (!path.EndsWith("/") || path.EndsWith("\\")) { path += "/"; }
+            return FileUtils.NormalizePath(path);
+        }
+
+        /// <summary>
+        /// Get the name of a directory
+        /// </summary>
+        public static string GetDirectoryName(string path)
+        {
+            if (IsGodotPath(path))
+            {
+                var split = path.Split("/");
+                int dist = 1;
+                if (path.EndsWith("/")) { dist++; }
+                return split[split.Length - dist];
+            }
+            else
+            {
+                return (new System.IO.DirectoryInfo(path)).Name;
+            }
+        }
+
+        public static void CreateDirectory(string path)
+        {
+            var dir = new Directory();
+            dir.MakeDirRecursive(path);
+        }
+
+        public static void CreateDirectory(string path, string dirName)
+        {
+            var dir = new Directory();
+            dir.Open(path);
+            if (!dir.DirExists(dirName))
+            {
+                dir.MakeDir(dirName);
+            }
+        }
+
         /// <summary>
         /// Get all subdirectories of the given path.
         /// </summary>
@@ -30,7 +77,7 @@ namespace GodotCSharpToolkit.Misc
             Directory dir = new Directory();
 
             // Release builds do not like backslashes
-            String path = parentPath.Replace("\\", "/");
+            String path = NormalizeDirectory(parentPath);
             dir.Open(path);
             dir.ListDirBegin(true, true);
             while (true)
@@ -49,6 +96,46 @@ namespace GodotCSharpToolkit.Misc
                         subfolder = subfolder.Replace("/", "\\");
                     }
                     retList.Add(subfolder);
+                }
+            }
+            dir.ListDirEnd();
+            return retList;
+        }
+
+        /// <summary>
+        /// Uses the godot file reader and directory browser to read all files of the given type in a folder
+        /// </summary>
+        public static List<string> GetAllFilesInFolder(string pathToFolder, bool includeSubFolders, string extension = "")
+        {
+            List<string> retList = new List<string>();
+            Directory dir = new Directory();
+
+            // Release builds do not like backslashes
+            String path = NormalizeDirectory(pathToFolder);
+
+            if (!dir.DirExists(path))
+            {
+                return retList;
+            }
+            dir.Open(path);
+            dir.ListDirBegin(true, true);
+            while (true)
+            {
+                String filePath = dir.GetNext();
+                if (filePath == "")
+                {
+                    break;
+                }
+                if (includeSubFolders && dir.CurrentIsDir() && !filePath.Equals(".import"))
+                {
+                    // Go into all subfolder
+                    retList.AddRange(GetAllFilesInFolder(path + filePath + "/", includeSubFolders, extension));
+                }
+                else if ((extension == "" && !dir.CurrentIsDir()) ||
+                         (extension != "" && filePath.ToLower().EndsWith(extension)))
+                {
+                    // Grab name of all files found
+                    retList.Add(path + filePath);
                 }
             }
             dir.ListDirEnd();
@@ -79,17 +166,33 @@ namespace GodotCSharpToolkit.Misc
             return System.IO.File.Exists(path);
         }
 
+        public static void Delete(string path, bool recursive = false)
+        {
+            var dir = new Directory();
+            if (recursive && dir.DirExists(path))
+            {
+                // Delete all files
+                foreach (var file in GetAllFilesInFolder(path, false))
+                {
+                    dir.Remove(file);
+                }
+
+                // Deal with subfolders
+                foreach (var folder in GetSubDirectories(path))
+                {
+                    Delete(folder, recursive);
+                }
+            }
+
+            // Remove self
+            dir.Remove(path);
+        }
+
         /// <summary>
         /// Loads the file content into a string. 
         /// Returns an empty string if file is not found.
         /// </summary>
         public static string LoadTextFile(string path)
-        {
-            if (IsGodotPath(path)) { return LoadTextFileGodot(path); }
-            else { return LoadTextFileCSharp(path); }
-        }
-
-        private static string LoadTextFileGodot(string path)
         {
             string text = "";
             var f = new Godot.File();
@@ -102,25 +205,10 @@ namespace GodotCSharpToolkit.Misc
             return text;
         }
 
-        public static string LoadTextFileCSharp(string path)
-        {
-            if (System.IO.File.Exists(path))
-            {
-                return System.IO.File.ReadAllText(path);
-            }
-            return "";
-        }
-
         /// <summary>
         /// Saves the string content to the file.
         /// </summary>
         public static void SaveToFile(string content, string filePath)
-        {
-            if (IsGodotPath(filePath)) { SaveToFileGodot(content, filePath); }
-            else { SaveToFileCSharp(content, filePath); }
-        }
-
-        public static void SaveToFileGodot(string content, string filePath)
         {
             var file = new Godot.File();
             var error = file.Open(filePath, File.ModeFlags.Write);
@@ -135,16 +223,30 @@ namespace GodotCSharpToolkit.Misc
             }
         }
 
-        private static void SaveToFileCSharp(string content, string filePath)
+        /// <summary>
+        /// Uses the godot file reader and directory browser to read all json files of a given type in a folder.
+        /// </summary>
+        public static Dictionary<string, T> LoadAllJsonFilesInFolder<T>(string path, bool includeSubFolders)
         {
-            try
+            Dictionary<string, T> retList = new Dictionary<string, T>();
+            var fileList = FileUtils.GetAllFilesInFolder(path, includeSubFolders, ".json");
+
+            // Load json files
+            foreach (var file in fileList)
             {
-                System.IO.File.WriteAllText(filePath, content);
+                string fileContent = FileUtils.LoadTextFile(file);
+                T jsonObj = (T)Utils.FromJson(fileContent, typeof(T));
+                if (jsonObj == null)
+                {
+                    Logger.Info($"Failed to deserialize json to {typeof(T).Name}");
+                }
+                else
+                {
+                    retList.Add(file, jsonObj);
+                }
             }
-            catch (Exception ex)
-            {
-                Logger.Error($"Failed to write to file", ex);
-            }
+
+            return retList;
         }
 
         /// <summary>
@@ -153,7 +255,15 @@ namespace GodotCSharpToolkit.Misc
         /// <returns>True if it is a godot path</returns>
         public static bool IsGodotPath(string path)
         {
-            return path.ToLower().StartsWith("res://") || path.ToLower().StartsWith("user://");
+            return IsResPath(path) || path.ToLower().StartsWith("user:");
+        }
+
+        /// <summary>
+        /// Check if this is from res://
+        /// </summary>
+        public static bool IsResPath(string path)
+        {
+            return path.ToLower().StartsWith("res:");
         }
     }
 }

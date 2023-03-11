@@ -22,12 +22,17 @@ namespace GodotCSharpToolkit.Editor
         /// <summary>
         /// Can be called to refresh all data, will ask to confirm if you want to save first if you got unsaved changes
         /// </summary>
-        void Refresh();
+        void Refresh(bool askForSave = true);
 
         /// <summary>
         /// Will save the editor content
         /// </summary>
         void Save();
+
+        /// <summary>
+        /// Close the editor, ask to save if there are changes
+        /// </summary>
+        void Close();
 
         /// <summary>
         /// Shows a confirm dialog where the user can press confirm or cancel.

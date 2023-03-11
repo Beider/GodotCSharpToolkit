@@ -27,6 +27,7 @@ namespace GodotCSharpToolkit.Editor
         private const string PREFIX_TREE_COLOR_PREF = "tree_color_";
         private const string SETTING_AUTOLOAD = "editor_pref_autoload";
         private const string SETTING_SAVE_PATH = "editor_pref_save_path";
+        private const string SETTING_WEB_MODE = "editor_web_mode";
         public EditorPrefsExtended(string path = null, bool autoSave = true) : base(path, autoSave)
         {
 
@@ -67,9 +68,10 @@ namespace GodotCSharpToolkit.Editor
         public bool IsPathValid(string path)
         {
             if (path.IsNullOrEmpty()) { return false; }
-            if (!System.IO.Directory.Exists(path)) { return false; }
-
-            return true;
+            if (path.StartsWith("user:")) { return true; }
+            if (path.Equals("/") || path.Equals("\\")) { return false; }
+            Directory dir = new Directory();
+            return dir.DirExists(path);
         }
 
         #region Settings
@@ -84,6 +86,12 @@ namespace GodotCSharpToolkit.Editor
         {
             get { return GetValue(SETTING_SAVE_PATH, ""); }
             set { SetValue(SETTING_SAVE_PATH, value); }
+        }
+
+        public bool SettingWebMode
+        {
+            get { return GetValue(SETTING_WEB_MODE, false); }
+            set { SetValue(SETTING_WEB_MODE, value); }
         }
 
         public bool PrefSortTree

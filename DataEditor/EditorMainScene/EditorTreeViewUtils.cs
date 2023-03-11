@@ -9,8 +9,6 @@ namespace GodotCSharpToolkit.Editor
 {
     public partial class EditorTreeView : Tree
     {
-
-
         /// <summary>
         /// Creates a tree item using the stored preferences from storage
         /// </summary>
@@ -43,8 +41,11 @@ namespace GodotCSharpToolkit.Editor
         protected DelegateEditorTreeItem CreateModItem(TreeItem parent, string name, List<string> modPaths)
         {
             var key = GetUniqueKey(parent, name);
-            return CreateDelegateTreeItem(parent, name, key, true,
-                    Editor.Preferences.GetModColor(), DataEditorConstants.COLOR_BG_DEFAULT, null, modPaths, name);
+            var item = CreateDelegateTreeItem(parent, name, key, true,
+                    Editor.Preferences.GetModColor(), DataEditorConstants.COLOR_BG_DEFAULT,
+                    null, modPaths, name);
+            item.OnContextMenuFill = (a) => { return FillModContextMenu(name); };
+            return item;
         }
 
         public DelegateEditorTreeItem CreateDelegateTreeItem(TreeItem parent, string name, string key, bool collapsed,

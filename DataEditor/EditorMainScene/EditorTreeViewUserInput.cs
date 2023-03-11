@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using GodotCSharpToolkit.Extensions;
+using GodotCSharpToolkit.Misc;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -42,6 +43,43 @@ namespace GodotCSharpToolkit.Editor
                 menu.RectPosition = GetViewport().GetMousePosition();
                 menu.Popup_();
             }
+        }
+
+        private bool FillModContextMenu(string name)
+        {
+            Editor.AddPopupMenuSeparator(name);
+            Editor.AddPopupMenuEntry($"Delete {name}", () => { DeleteMod(name); }, DataEditorConstants.ICON_DELETE);
+            return true;
+        }
+
+        private void DeleteMod(string name)
+        {
+            if (Editor.Tree.HasUnsavedChanges())
+            {
+                Editor.ShowConfirmDialog($"Deleting a mod will cause you to lose any unsaved changes. Do you wish to save first?",
+                                        shouldSave => { _DeleteMod(name, shouldSave); });
+            }
+            else
+            {
+                _DeleteMod(name, false);
+            }
+
+        }
+
+        private void _DeleteMod(string name, bool save)
+        {
+            if (save)
+            {
+                Editor.Save();
+            }
+            Editor.ShowConfirmDialog($"Are you sure you wish to delte all local changes to '{name}'? This can not be undone.",
+             shouldDelete => { if (shouldDelete) { __DeleteMod(name); } });
+        }
+
+        private void __DeleteMod(string name)
+        {
+            FileUtils.Delete($"{Editor.Preferences.SettingLocalSavePath}{name}", true);
+            Editor.Refresh(false);
         }
     }
 }

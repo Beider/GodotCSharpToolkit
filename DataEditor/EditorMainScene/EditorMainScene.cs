@@ -71,9 +71,9 @@ namespace GodotCSharpToolkit.Editor
             return keyEvent.Control || keyEvent.Command;
         }
 
-        public void Refresh()
+        public void Refresh(bool askForSave = true)
         {
-            if (Tree.HasUnsavedChanges())
+            if (askForSave && Tree.HasUnsavedChanges())
             {
                 ShowConfirmDialog("You have unsaved changes, would you like to save before you refresh?", shouldSave => { if (shouldSave) { Save(); } else { _Refresh(); } });
             }
@@ -81,6 +81,24 @@ namespace GodotCSharpToolkit.Editor
             {
                 _Refresh();
             }
+        }
+
+        public void Close()
+        {
+            if (Tree.HasUnsavedChanges())
+            {
+                ShowConfirmDialog("You have unsaved changes, would you like to save before you exit?", shouldSave => { Close(shouldSave); });
+            }
+            else
+            {
+                Close(false);
+            }
+        }
+
+        public void Close(bool save)
+        {
+            if (save) { Tree.Save(); }
+            GetParent().RemoveChild(this);
         }
 
         public void Save()

@@ -143,9 +143,10 @@ namespace GodotCSharpToolkit.Editor
                 }
 
                 // Add local only mods
-                foreach (var path in System.IO.Directory.GetDirectories(Editor.Preferences.SettingLocalSavePath))
+                foreach (var path in FileUtils.GetSubDirectories(Editor.Preferences.SettingLocalSavePath))
                 {
-                    var folder = (new System.IO.DirectoryInfo(path)).Name;
+
+                    var folder = FileUtils.GetDirectoryName(path);
                     if (!ModFolders.ContainsKey(folder))
                     {
                         ModFolders.Add(folder, new List<string>());
@@ -162,9 +163,7 @@ namespace GodotCSharpToolkit.Editor
             {
                 for (int i = 0; i < ModFolders[modN].Count; i++)
                 {
-                    var path = ModFolders[modN][i];
-                    if (!path.EndsWith("/") || !path.EndsWith("\\")) { path += "/"; }
-                    ModFolders[modN][i] = FileUtils.NormalizePath(path);
+                    ModFolders[modN][i] = FileUtils.NormalizeDirectory(ModFolders[modN][i]);
                 }
             }
         }

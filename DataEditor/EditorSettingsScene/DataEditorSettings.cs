@@ -9,6 +9,7 @@ namespace GodotCSharpToolkit.Editor
     public class DataEditorSettings : Control, IDataEditorContent
     {
         private CheckBox LoadLocalData;
+        private CheckBox WebMode;
         private LineEdit SavePath;
         private Label SaveLabel;
 
@@ -23,6 +24,8 @@ namespace GodotCSharpToolkit.Editor
             btn.Connect("pressed", this, nameof(SavePressed));
 
             LoadLocalData = FindNode("AutoLoad") as CheckBox;
+            WebMode = FindNode("WebMode") as CheckBox;
+            WebMode.Connect("pressed", this, nameof(WebModePressed));
             SavePath = FindNode("SavePath") as LineEdit;
             SaveLabel = FindNode("SaveLabel") as Label;
             Refresh();
@@ -33,10 +36,28 @@ namespace GodotCSharpToolkit.Editor
             Editor = editor;
         }
 
+        private void WebModePressed()
+        {
+            SavePath.Editable = !WebMode.Pressed;
+        }
+
         public void Refresh()
         {
             LoadLocalData.Pressed = Editor.Preferences.SettingIsLoadLocalData;
             SavePath.Text = Editor.Preferences.SettingLocalSavePath;
+            if (OS.HasFeature("web"))
+            {
+                Editor.Preferences.SettingWebMode = true;
+                WebMode.Pressed = true;
+                WebMode.Disabled = true;
+                WebModePressed();
+                Save();
+            }
+            else
+            {
+                WebMode.Pressed = Editor.Preferences.SettingWebMode;
+                WebModePressed();
+            }
 
             if (!Editor.Preferences.IsPathValid(SavePath.Text))
             {
@@ -57,13 +78,18 @@ namespace GodotCSharpToolkit.Editor
         public void Save()
         {
             Editor.Preferences.SettingIsLoadLocalData = LoadLocalData.Pressed;
-            var path = SavePath.Text.Replace("/", "\\");
-            if (!path.EndsWith("\\"))
-            {
-                path += "\\";
-            }
+            Editor.Preferences.SettingWebMode = WebMode.Pressed;
+            SetupWebMode();
+            var path = FileUtils.NormalizeDirectory(SavePath.Text);
             Editor.Preferences.SettingLocalSavePath = path;
             SavePath.Text = path;
+        }
+
+        private void SetupWebMode()
+        {
+            if (!WebMode.Pressed) { return; };
+            FileUtils.CreateDirectory("user://", "mods");
+            SavePath.Text = "user://mods/";
         }
 
         public void SetData(object data, object provider)

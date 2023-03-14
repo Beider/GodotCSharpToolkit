@@ -11,15 +11,16 @@ namespace GodotCSharpToolkit.Editor
     {
         public const string DEFAULT_PATH = "user://gd_toolkit_editor_prefs.json";
 
-        public bool AutoSave { get; set; } = true;
+        public bool HasChanges { get; set; } = false;
 
         private string Path = DEFAULT_PATH;
 
+        private System.Timers.Timer Timer = null;
+
         private Dictionary<string, EditorPrefEntry> Entries = new Dictionary<string, EditorPrefEntry>();
 
-        public EditorPrefsStorage(string path = null, bool autoSave = true)
+        public EditorPrefsStorage(string path = null)
         {
-            AutoSave = autoSave;
             if (!path.IsNullOrEmpty())
             {
                 this.Path = path;
@@ -65,7 +66,7 @@ namespace GodotCSharpToolkit.Editor
                 pref.Value = value;
                 Entries.Add(name, pref);
             }
-            if (AutoSave) { Save(); }
+            HasChanges = true;
         }
 
         private void Load()
@@ -86,8 +87,10 @@ namespace GodotCSharpToolkit.Editor
             }
         }
 
-        private void Save()
+        public void Save()
         {
+            if (!HasChanges) { return; }
+            HasChanges = false;
             try
             {
                 EditorPrefsJson file = new EditorPrefsJson();

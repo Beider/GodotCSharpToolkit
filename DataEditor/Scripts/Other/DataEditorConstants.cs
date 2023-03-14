@@ -5,6 +5,7 @@ namespace GodotCSharpToolkit.Editor
 {
     public static class DataEditorConstants
     {
+
         //
         // Default colors, can be overriden in prefs see EditorPrefsExtended.cs
         //
@@ -74,15 +75,24 @@ namespace GodotCSharpToolkit.Editor
                 ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputText/DataEditorInputText.tscn") as PackedScene;
         private static readonly PackedScene SCENE_INPUT_COMBO =
                 ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputCombo/DataEditorInputCombo.tscn") as PackedScene;
-
         private static readonly PackedScene SCENE_INPUT_LIST =
                 ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputList/DataEditorInputList.tscn") as PackedScene;
+        private static readonly PackedScene SCENE_INPUT_CHECKBOX =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputCheckbox/DataEditorInputCheckbox.tscn") as PackedScene;
+
+        private static readonly PackedScene SCENE_EDITOR_CONTAINER =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/JsonEditor/EditorContainer/EditorContainer.tscn") as PackedScene;
+
 
         private static readonly PackedScene SCENE_GENERIC_EDITOR =
                         ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/JsonEditor/JsonGenericEditor.tscn") as PackedScene;
 
 
 
+        public static EditorContainer CreateEditorContainer()
+        {
+            return DataEditorConstants.SCENE_EDITOR_CONTAINER.Instance() as EditorContainer;
+        }
 
         public static DataEditorInputText CreateInputText()
         {
@@ -97,6 +107,11 @@ namespace GodotCSharpToolkit.Editor
         public static DataEditorInputList CreateInputList()
         {
             return DataEditorConstants.SCENE_INPUT_LIST.Instance() as DataEditorInputList;
+        }
+
+        public static DataEditorInputCheckbox CreateInputCheckbox()
+        {
+            return DataEditorConstants.SCENE_INPUT_CHECKBOX.Instance() as DataEditorInputCheckbox;
         }
 
         public static JsonGenericEditor CreateJsonGenericEditor()

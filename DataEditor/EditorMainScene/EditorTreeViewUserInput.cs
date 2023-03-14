@@ -30,9 +30,7 @@ namespace GodotCSharpToolkit.Editor
         {
             if (!Editor.Preferences.ShouldUseLocalPath()) { return; }
             if (GetSelected() == null) { return; }
-            var data = GetSelected().GetMetadata(0);
-            if (data == null) { return; }
-            var item = TreeItemLookup.ContainsKey(data.ToString()) ? TreeItemLookup[data.ToString()] : null;
+            var item = GetAbstractTreeItem(GetSelected());
             if (item == null) { return; }
 
             var menu = Editor.PopupMenu;

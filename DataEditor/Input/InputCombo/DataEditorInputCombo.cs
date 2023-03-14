@@ -54,6 +54,8 @@ namespace GodotCSharpToolkit.Editor
         protected override void Init()
         {
             OptButton.RectMinSize = new Vector2(InputData.EditorWidth, 0f);
+            OptButton.HintTooltip = InputData.ToolTip;
+            TextLabel.HintTooltip = InputData.ToolTip;
             RefreshItemList();
             Refresh();
         }

@@ -81,6 +81,7 @@ namespace GodotCSharpToolkit.Editor
 
         private bool NameValidation(string name, object data, object value)
         {
+            if (TextValidator == null) { return true; }
             if (value == null || !TextValidator.Invoke(value.ToString()))
             {
                 BtnConfirm.Disabled = true;

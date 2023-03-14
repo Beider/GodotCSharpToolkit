@@ -58,9 +58,12 @@ namespace GodotCSharpToolkit.Editor
                         InputData.OnSave(InputData.Name, Data, newValue);
                         if (Data != null && markModified) { Data.IsModified = true; }
                     }
-                    TextLabel.AddColorOverride("font_color", GetColor("font_color", "Label"));
+                    if (TextLabel != null)
+                    {
+                        TextLabel.AddColorOverride("font_color", GetColor("font_color", "Label"));
+                    }
                 }
-                else
+                else if (TextLabel != null)
                 {
                     TextLabel.AddColorOverride("font_color", Colors.Red);
                 }

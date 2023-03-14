@@ -15,6 +15,7 @@ namespace GodotCSharpToolkit.Editor
         protected GridContainer CreateRow(Control parent, int columns)
         {
             var container = new GridContainer();
+            container.SizeFlagsHorizontal = (int)SizeFlags.ExpandFill;
             parent.AddChild(container);
             container.Columns = columns;
             container.AddConstantOverride("hseparation", 20);

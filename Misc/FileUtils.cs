@@ -30,7 +30,7 @@ namespace GodotCSharpToolkit.Misc
             if (pathToDir == null) { return null; }
             if (pathToDir == "") { return pathToDir; }
             String path = pathToDir;
-            if (!path.EndsWith("/") || path.EndsWith("\\")) { path += "/"; }
+            if (!path.EndsWith("/") && !path.EndsWith("\\")) { path += "/"; }
             return FileUtils.NormalizePath(path);
         }
 

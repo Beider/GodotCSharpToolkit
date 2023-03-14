@@ -5,6 +5,7 @@
 [node name="DataEditorInputList" type="GridContainer"]
 margin_right = 235.0
 margin_bottom = 24.0
+size_flags_horizontal = 3
 columns = 2
 script = ExtResource( 1 )
 
@@ -20,3 +21,4 @@ margin_right = 235.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 200, 0 )
 focus_mode = 0
+size_flags_horizontal = 3

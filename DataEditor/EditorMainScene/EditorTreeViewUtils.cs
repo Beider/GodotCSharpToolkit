@@ -86,7 +86,7 @@ namespace GodotCSharpToolkit.Editor
         {
             object obj = item.GetMetadata(0);
             string key = obj == null ? "" : obj.ToString();
-            if (key != "")
+            if (key != "" && TreeItemLookup.ContainsKey(key))
             {
                 return TreeItemLookup[key];
             }

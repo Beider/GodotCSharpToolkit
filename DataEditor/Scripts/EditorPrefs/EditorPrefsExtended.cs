@@ -28,7 +28,7 @@ namespace GodotCSharpToolkit.Editor
         private const string SETTING_AUTOLOAD = "editor_pref_autoload";
         private const string SETTING_SAVE_PATH = "editor_pref_save_path";
         private const string SETTING_WEB_MODE = "editor_web_mode";
-        public EditorPrefsExtended(string path = null, bool autoSave = true) : base(path, autoSave)
+        public EditorPrefsExtended(string path = null) : base(path)
         {
 
         }

@@ -71,6 +71,8 @@ namespace GodotCSharpToolkit.Editor
         {
             var input = (JsonGenericEditorInputRowList)InputData;
             ListField.RectMinSize = new Vector2(input.EditorWidth, input.EditorHeight);
+            TextLabel.HintTooltip = InputData.ToolTip;
+            ListField.HintTooltip = InputData.ToolTip;
             Refresh();
         }
 

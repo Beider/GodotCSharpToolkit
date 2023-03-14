@@ -293,6 +293,10 @@ namespace GodotCSharpToolkit.Editor
         public void ShowEditor(JsonDefWithName jsonDef)
         {
             var editor = GetEditor((U)jsonDef);
+            if (editor == null)
+            {
+                return;
+            }
             editor.SetData(jsonDef, this);
             var item = Editor.Tree.GetTreeItemById(jsonDef.GetUniqueId());
             if (item != null)

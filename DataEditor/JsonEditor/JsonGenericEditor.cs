@@ -58,6 +58,7 @@ namespace GodotCSharpToolkit.Editor
         private void CreateControl(JsonGenericEditorInputRow data)
         {
             var parent = Rows[data.RowNumber];
+            parent.Columns = parent.GetChildCount() + 1;
             IDataEditorInput input = null;
             if (data.EditorType == JsonGenericEditorInputRow.EditorTypes.Text)
             {
@@ -70,6 +71,10 @@ namespace GodotCSharpToolkit.Editor
             else if (data.EditorType == JsonGenericEditorInputRow.EditorTypes.List)
             {
                 input = DataEditorConstants.CreateInputList();
+            }
+            else if (data.EditorType == JsonGenericEditorInputRow.EditorTypes.CheckBox)
+            {
+                input = DataEditorConstants.CreateInputCheckbox();
             }
             else if (data.EditorType == JsonGenericEditorInputRow.EditorTypes.Custom &&
                     data.GetCustomEditor != null)
@@ -95,7 +100,7 @@ namespace GodotCSharpToolkit.Editor
             while (CurrentRow < data.RowNumber)
             {
                 CurrentRow++;
-                var row = CreateRow(ControlContainer, 100);
+                var row = CreateRow(ControlContainer, 1);
                 Rows.Add(CurrentRow, row);
             }
         }

@@ -9,8 +9,16 @@ namespace GodotCSharpToolkit.Editor
     /// </summary>
     public partial class EditorMainScene : Control, IDataEditor
     {
+        private const int PREF_SAVE_INTERVAL = 5;
+
+        /// <summary>
+        /// Called when data is saved
+        /// </summary>
+        public event Action OnDataSaved = delegate { };
+
         private Control EditorArea;
         public EditorPrefsExtended Preferences { get; private set; } = new EditorPrefsExtended();
+        private Timer SaveTimer;
         public EditorTreeView Tree { get; private set; }
         public EditorToolbar Toolbar { get; private set; }
         public PopupMenu PopupMenu { get; private set; }
@@ -30,9 +38,18 @@ namespace GodotCSharpToolkit.Editor
             Tree.Init(this);
             Toolbar.Init(this);
 
-            // TODO: Remove this
-            //GetTree().SetScreenStretch(SceneTree.StretchMode.Mode2d, SceneTree.StretchAspect.Expand, new Vector2(1440f, 900f));
-            //OS.WindowSize = new Vector2(1440f, 900f);
+            // Start preferences save timer
+            SaveTimer = new Timer();
+            SaveTimer.OneShot = false;
+            SaveTimer.WaitTime = PREF_SAVE_INTERVAL;
+            SaveTimer.Connect("timeout", this, nameof(SavePreferences));
+            AddChild(SaveTimer);
+            SaveTimer.Start();
+        }
+
+        private void SavePreferences()
+        {
+            Preferences.Save();
         }
 
         public override void _Input(InputEvent @event)
@@ -97,7 +114,7 @@ namespace GodotCSharpToolkit.Editor
 
         public void Close(bool save)
         {
-            if (save) { Tree.Save(); }
+            if (save) { Save(); }
             GetParent().RemoveChild(this);
         }
 
@@ -105,6 +122,7 @@ namespace GodotCSharpToolkit.Editor
         {
             Tree.Save();
             _Refresh();
+            OnDataSaved();
         }
 
         private void _Refresh()

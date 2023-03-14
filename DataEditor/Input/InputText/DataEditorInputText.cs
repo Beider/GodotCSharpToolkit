@@ -23,6 +23,8 @@ namespace GodotCSharpToolkit.Editor
         protected override void Init()
         {
             TextField.RectMinSize = new Vector2(InputData.EditorWidth, 0f);
+            TextField.HintTooltip = InputData.ToolTip;
+            TextLabel.HintTooltip = InputData.ToolTip;
             Refresh();
         }
 
@@ -38,7 +40,7 @@ namespace GodotCSharpToolkit.Editor
                 TextField.Text = value.ToString();
             }
 
-            OnValueChanged(TextField.Text, false);
+            OnValueChanged(TextField.Text, false, false);
         }
 
 

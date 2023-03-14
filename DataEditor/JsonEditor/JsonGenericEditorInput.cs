@@ -69,6 +69,25 @@ namespace GodotCSharpToolkit.Editor
             return row;
         }
 
+        public JsonGenericEditorInputRow AddCheckboxField(string name, int rowNum,
+                        string toolTip,
+                        Func<JsonDefWithName, object> getValue,
+                        Action<string, object, object> onSave,
+                        Func<string, object, object, bool> onValidate = null)
+        {
+            var row = new JsonGenericEditorInputRow();
+            row.Name = name;
+            row.ToolTip = toolTip;
+            row.EditorType = JsonGenericEditorInputRow.EditorTypes.CheckBox;
+            row.RowNumber = rowNum;
+            row.GetValue = getValue;
+            row.OnSave = onSave;
+            row.OnValidate = onValidate;
+            Rows.Add(row);
+            return row;
+        }
+
+
         public static bool ValidateTextNotNullOrEmpty(string name, object data, object value)
         {
             if (value == null) { return false; }
@@ -89,13 +108,18 @@ namespace GodotCSharpToolkit.Editor
     {
         public enum EditorTypes
         {
-            Text, Combo, List, Custom
+            Text, Combo, List, CheckBox, Custom
         }
 
         /// <summary>
         /// The name of this field, used to show to the user and as a key for some of the callbacks.
         /// </summary>
         public string Name { get; set; } = "";
+
+        /// <summary>
+        /// For controls that support it you can fill tooltip text here to get a tooltip
+        /// </summary>
+        public string ToolTip { get; set; } = "";
 
         /// <summary>
         /// If custom this will be instanced, must implement IDataEditorInput

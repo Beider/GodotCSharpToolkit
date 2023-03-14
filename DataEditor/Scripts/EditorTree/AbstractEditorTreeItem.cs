@@ -37,7 +37,7 @@ namespace GodotCSharpToolkit.Editor
         /// <summary>
         /// Setup things we need at startup
         /// </summary>
-        public void Init(TreeItem parent, IDataEditor editor, List<string> modPaths, string modName)
+        public void Init(TreeItem parent, IDataEditor editor, List<string> modPaths = null, string modName = "")
         {
             this.Parent = parent;
             this.Editor = editor;

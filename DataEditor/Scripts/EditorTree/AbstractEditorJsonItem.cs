@@ -518,7 +518,7 @@ namespace GodotCSharpToolkit.Editor
         /// Validates that the name of the JsonDefWithName is unique.
         /// Can be used with the JsonGenericEditor
         /// </summary>
-        protected bool ValidateNameUnique<X>(string name, object data, object value) where X : IAbstractJsonEditor
+        public bool ValidateNameUnique<X>(string name, object data, object value) where X : IAbstractJsonEditor
         {
             if (!JsonGenericEditorInput.ValidateTextNotNullOrEmpty(name, data, value))
             {

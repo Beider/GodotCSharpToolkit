@@ -171,7 +171,7 @@ namespace GodotCSharpToolkit.Editor
         /// <summary>
         /// Get all the root items of the given type
         /// </summary>
-        public List<T> GetRootAllItemsByType<T>()
+        public List<T> GetAllItemsByRootItemType<T>()
         {
             var returnList = new List<T>();
             foreach (var item in RootItems.Values)

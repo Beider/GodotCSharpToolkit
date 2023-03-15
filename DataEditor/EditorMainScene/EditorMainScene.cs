@@ -16,6 +16,11 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         public event Action OnDataSaved = delegate { };
 
+        /// <summary>
+        /// Called to open search dialog
+        /// </summary>
+        public event Action<IDataEditor> OnOpenSearchDialog = delegate { };
+
         private Control EditorArea;
         public EditorPrefsExtended Preferences { get; private set; } = new EditorPrefsExtended();
         private Timer SaveTimer;
@@ -135,7 +140,11 @@ namespace GodotCSharpToolkit.Editor
             }
             Tree.RefreshTree(true, uniqueId);
             Toolbar.Init(this);
+        }
 
+        public void NotifyOpenSearchDialog()
+        {
+            OnOpenSearchDialog(this);
         }
     }
 }

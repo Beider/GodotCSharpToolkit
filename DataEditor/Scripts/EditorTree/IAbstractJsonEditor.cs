@@ -11,5 +11,16 @@ namespace GodotCSharpToolkit.Editor
         /// Check if the given name is unique
         /// </summary>
         bool IsNameUnique(string name, JsonDefWithName original);
+
+        /// <summary>
+        /// Shows the editor for the item
+        /// </summary>
+        void ShowEditor(JsonDefWithName jsonDef);
+
+        /// <summary>
+        /// List of values
+        /// </summary>
+        List<JsonDefWithName> Values { get; }
+        string ModName { get; }
     }
 }

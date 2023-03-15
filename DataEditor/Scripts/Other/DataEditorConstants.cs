@@ -34,6 +34,22 @@ namespace GodotCSharpToolkit.Editor
 
 
         //
+        // JsonDefWithName metadata
+        //
+
+        /// <summary>
+        /// All JsonItemWithName will get this metadata added on load.
+        /// Contains the name of the mod this came from
+        /// </summary>
+        public const string METADATA_KEY_MOD = "key_mod_name";
+
+        /// <summary>
+        /// Added on load. Contains this editor
+        /// </summary>
+        public const string METADATA_KEY_EDITOR = "key_editor";
+
+
+        //
         // ICONS
         //
 
@@ -70,6 +86,10 @@ namespace GodotCSharpToolkit.Editor
 
         public static readonly PackedScene SCENE_DIALOG_TEXT_ENTRY =
                 ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Dialogs/TextEntryDialog/TextEntryDialog.tscn") as PackedScene;
+
+        public static readonly PackedScene SCENE_DIALOG_ADVANCED_LIST =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Dialogs/AdvancedListDialog/DataEditorAdvancedListDialog.tscn") as PackedScene;
+
 
         private static readonly PackedScene SCENE_INPUT_TEXT =
                 ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputText/DataEditorInputText.tscn") as PackedScene;

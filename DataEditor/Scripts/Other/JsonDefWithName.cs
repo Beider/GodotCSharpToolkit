@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using GodotCSharpToolkit.Misc;
 using GodotCSharpToolkit.Extensions;
 using Newtonsoft.Json;
@@ -7,6 +8,11 @@ using Newtonsoft.Json;
 public abstract class JsonDefWithName : IJsonDefWithName
 {
     public event Action<JsonDefWithName> OnStatusChange = delegate { };
+
+    /// <summary>
+    /// Useful to drop your own values that you need for your editor or such
+    /// </summary>
+    public Dictionary<string, object> Metadata = null;
 
     [JsonIgnore]
     public JsonDefWithName Original;
@@ -107,4 +113,38 @@ public abstract class JsonDefWithName : IJsonDefWithName
         var filename = SourceFile.GetFile();
         return filename.Replace($".{SourceFile.Extension()}", "");
     }
+
+    #region Metadata
+    public void AddMetadata(string key, object value)
+    {
+        if (Metadata == null)
+        {
+            Metadata = new Dictionary<string, object>();
+        }
+        if (Metadata.ContainsKey(key))
+        {
+            Metadata[key] = value;
+        }
+        else
+        {
+            Metadata.Add(key, value);
+        }
+    }
+
+    public bool HasMetadata(string key)
+    {
+        if (Metadata == null) { return false; }
+        return Metadata.ContainsKey(key);
+    }
+
+    public object GetMetadata(string key)
+    {
+        if (Metadata == null) { return null; }
+        if (Metadata.ContainsKey(key))
+        {
+            return Metadata[key];
+        }
+        return null;
+    }
+    #endregion
 }

@@ -46,6 +46,13 @@ namespace GodotCSharpToolkit.Editor
             AddChild(dialog);
         }
 
+        public void ShowAdvancedListDialog(DataEditorAdvancedListDialogInput input)
+        {
+            var dialog = DataEditorConstants.SCENE_DIALOG_ADVANCED_LIST.Instance() as DataEditorAdvancedListDialog;
+            dialog.Init(input, this);
+            AddChild(dialog);
+        }
+
         public void ClearPopupMenu()
         {
             PopupMenu.Clear();

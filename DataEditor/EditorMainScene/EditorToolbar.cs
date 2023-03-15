@@ -7,7 +7,7 @@ namespace GodotCSharpToolkit.Editor
 {
     public class EditorToolbar : Panel
     {
-        private IDataEditor Editor;
+        private EditorMainScene Editor;
         private Button BtnSettings;
         private Button BtnSave;
         private Button BtnSort;
@@ -16,6 +16,7 @@ namespace GodotCSharpToolkit.Editor
         private Button BtnRefresh;
         private Button BtnAddMod;
         private Button BtnClose;
+        private Button BtnSearch;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
@@ -43,9 +44,12 @@ namespace GodotCSharpToolkit.Editor
 
             BtnClose = FindNode("BtnClose") as Button;
             BtnClose.Connect("pressed", this, nameof(OnClosePressed));
+
+            BtnSearch = FindNode("BtnSearch") as Button;
+            BtnSearch.Connect("pressed", this, nameof(OnSearchPressed));
         }
 
-        public void Init(IDataEditor editor)
+        public void Init(EditorMainScene editor)
         {
             this.Editor = editor;
             BtnSort.Pressed = Editor.Preferences.PrefSortTree;
@@ -66,6 +70,11 @@ namespace GodotCSharpToolkit.Editor
         private void OnClosePressed()
         {
             Editor.Close();
+        }
+
+        private void OnSearchPressed()
+        {
+            Editor.NotifyOpenSearchDialog();
         }
 
         public void OnNewModPressed()

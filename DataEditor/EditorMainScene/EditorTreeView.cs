@@ -18,7 +18,8 @@ namespace GodotCSharpToolkit.Editor
         private Dictionary<string, AbstractEditorTreeItem> TreeItemLookup = new Dictionary<string, AbstractEditorTreeItem>();
         public Dictionary<string, List<string>> ModFolders = new Dictionary<string, List<string>>();
         private List<Type> RootItemTypes = new List<Type>();
-        private Dictionary<string, AbstractEditorRootItem> RootItems = new Dictionary<string, AbstractEditorRootItem>();
+        public Dictionary<string, AbstractEditorRootItem> RootItems = new Dictionary<string, AbstractEditorRootItem>();
+
         private AbstractEditorTreeModFolderProvider Provider = null;
         public Dictionary<string, Func<AbstractEditorTreeItem, string>> DisplayNameDelegates = new Dictionary<string, Func<AbstractEditorTreeItem, string>>();
 
@@ -107,7 +108,7 @@ namespace GodotCSharpToolkit.Editor
 
                 foreach (var type in RootItemTypes)
                 {
-                    string rootKey = $"{modName}_{type.Name}";
+                    string rootKey = $"{modName}?{type.Name}";
                     AbstractEditorRootItem item = null;
                     if (!RootItems.ContainsKey(rootKey))
                     {

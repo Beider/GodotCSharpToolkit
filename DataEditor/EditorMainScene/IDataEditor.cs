@@ -47,6 +47,11 @@ namespace GodotCSharpToolkit.Editor
                     Action<string, string> callback, Func<string, bool> nameValidator,
                     string listName = "", Func<Dictionary<object, string>> getItemList = null);
 
+        /// <summary>
+        /// Shows the advanced list dialog
+        /// </summary>
+        void ShowAdvancedListDialog(DataEditorAdvancedListDialogInput input);
+
 
         /// <summary>
         /// Clear the popup menu

@@ -13,7 +13,7 @@ namespace GodotCSharpToolkit.Editor
     /// </summary>
     public abstract class AbstractEditorJsonItem<T, U> : AbstractEditorRootItem, IAbstractJsonEditor where T : IJsonFile<U> where U : JsonDefWithName
     {
-        public List<JsonDefWithName> Values = new List<JsonDefWithName>();
+        public List<JsonDefWithName> Values { get; protected set; } = new List<JsonDefWithName>();
         public List<JsonDefWithName> ChangedObjects = new List<JsonDefWithName>();
         public List<String> FileNames = new List<string>();
         public TreeItem RootItem = null;
@@ -87,6 +87,7 @@ namespace GodotCSharpToolkit.Editor
 
         public override void Reload()
         {
+            AboutToReload();
             ChangedObjects.Clear();
             Values.Clear();
             FileNames.Clear();
@@ -101,9 +102,22 @@ namespace GodotCSharpToolkit.Editor
                 {
                     FileNames.Add(jDef.GetCategory());
                 }
+                jDef.AddMetadata(DataEditorConstants.METADATA_KEY_MOD, ModName);
+                jDef.AddMetadata(DataEditorConstants.METADATA_KEY_EDITOR, this);
                 Values.Add(jDef);
             }
+            FinishedReload();
         }
+
+        /// <summary>
+        /// Can be used to do stuff before reload
+        /// </summary>
+        protected virtual void AboutToReload() { }
+
+        /// <summary>
+        /// Can be used to do stuff after reload
+        /// </summary>
+        protected virtual void FinishedReload() { }
 
         public override bool HasUnsavedChanges()
         {
@@ -525,7 +539,7 @@ namespace GodotCSharpToolkit.Editor
                 return false;
             }
 
-            var rootItems = Editor.Tree.GetRootAllItemsByType<X>();
+            var rootItems = Editor.Tree.GetAllItemsByRootItemType<X>();
             var strName = value.ToString();
             var jDef = (JsonDefWithName)data;
 

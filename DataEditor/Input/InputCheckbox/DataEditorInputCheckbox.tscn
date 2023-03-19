@@ -11,4 +11,5 @@ script = ExtResource( 1 )
 [node name="CheckBox" type="CheckBox" parent="."]
 margin_right = 88.0
 margin_bottom = 24.0
+focus_mode = 0
 text = "Text here"

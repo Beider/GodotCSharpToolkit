@@ -60,6 +60,12 @@ namespace GodotCSharpToolkit.Editor
             Refresh();
         }
 
+        public override void Disable(bool disabled)
+        {
+            base.Disable(disabled);
+            OptButton.Disabled = disabled;
+        }
+
         public override void Refresh()
         {
             object value = InputData.GetValue(Data);

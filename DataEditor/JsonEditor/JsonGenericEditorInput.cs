@@ -32,6 +32,20 @@ namespace GodotCSharpToolkit.Editor
             return row;
         }
 
+        public JsonGenericEditorInputRow AddButton(string name, int rowNum,
+                        Func<JsonDefWithName, object> getValue,
+                        Action<string, object, object> onSave)
+        {
+            var row = new JsonGenericEditorInputRow();
+            row.Name = name;
+            row.EditorType = JsonGenericEditorInputRow.EditorTypes.Button;
+            row.RowNumber = rowNum;
+            row.GetValue = getValue;
+            row.OnSave = onSave;
+            Rows.Add(row);
+            return row;
+        }
+
         public JsonGenericEditorInputRowList AddListField(string name, int rowNum,
                         bool sort, Func<Dictionary<object, string>> getListValues,
                         Action<IDataEditorInput> onAdd, Action<object, IDataEditorInput> onRemove,
@@ -108,7 +122,7 @@ namespace GodotCSharpToolkit.Editor
     {
         public enum EditorTypes
         {
-            Text, Combo, List, CheckBox, Custom
+            Text, Combo, List, CheckBox, Button, Custom
         }
 
         /// <summary>
@@ -150,6 +164,11 @@ namespace GodotCSharpToolkit.Editor
         /// You get the data object and are expected to return the value (usually a string)
         /// </summary>
         public Func<JsonDefWithName, object> GetValue { get; set; } = null;
+
+        /// <summary>
+        /// Called whenever data has been updated, can do refresh etc...
+        /// </summary>
+        public Action<DataEditorInput> OnDataUpdated { get; set; } = null;
 
         /// <summary>
         /// You get the name, data object and current value of the control as input

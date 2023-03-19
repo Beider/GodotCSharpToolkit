@@ -27,6 +27,27 @@ namespace GodotCSharpToolkit.Editor
                 TextLabel.RectMinSize = new Vector2(InputData.LabelWidth, 0f);
             }
             Init();
+            DataUpdated();
+        }
+
+        public virtual void Disable(bool disabled)
+        {
+            if (TextLabel != null)
+            {
+                SetTextLabelDisabled(disabled);
+            }
+        }
+
+        protected void SetTextLabelDisabled(bool disabled)
+        {
+            if (disabled)
+            {
+                TextLabel.AddColorOverride("font_color", DataEditorConstants.COLOR_DISABLED);
+            }
+            else
+            {
+                TextLabel.AddColorOverride("font_color", DataEditorConstants.COLOR_DEFAULT);
+            }
         }
 
         protected virtual void Init()
@@ -37,6 +58,14 @@ namespace GodotCSharpToolkit.Editor
         public virtual void Refresh()
         {
 
+        }
+
+        public virtual void DataUpdated()
+        {
+            if (InputData.OnDataUpdated != null)
+            {
+                InputData.OnDataUpdated(this);
+            }
         }
 
         protected virtual void OnValueChanged(object newValue, bool notifyAndSave = true, bool markModified = true)

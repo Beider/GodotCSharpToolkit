@@ -43,10 +43,24 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         public const string METADATA_KEY_MOD = "key_mod_name";
 
+        public static string GetModName(this JsonDefWithName jDef)
+        {
+            var val = jDef.GetMetadata(METADATA_KEY_MOD);
+            if (val == null) { return ""; }
+            return val.ToString();
+        }
+
         /// <summary>
         /// Added on load. Contains this editor
         /// </summary>
         public const string METADATA_KEY_EDITOR = "key_editor";
+
+        public static IAbstractJsonEditor GetEditor(this JsonDefWithName jDef)
+        {
+            var val = jDef.GetMetadata(METADATA_KEY_EDITOR);
+            if (val == null) { return null; }
+            return (IAbstractJsonEditor)val;
+        }
 
 
         //
@@ -99,7 +113,8 @@ namespace GodotCSharpToolkit.Editor
                 ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputList/DataEditorInputList.tscn") as PackedScene;
         private static readonly PackedScene SCENE_INPUT_CHECKBOX =
                 ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputCheckbox/DataEditorInputCheckbox.tscn") as PackedScene;
-
+        private static readonly PackedScene SCENE_INPUT_BUTTON =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputButton/DataEditorInputButton.tscn") as PackedScene;
         private static readonly PackedScene SCENE_EDITOR_CONTAINER =
                 ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/JsonEditor/EditorContainer/EditorContainer.tscn") as PackedScene;
 
@@ -132,6 +147,11 @@ namespace GodotCSharpToolkit.Editor
         public static DataEditorInputCheckbox CreateInputCheckbox()
         {
             return DataEditorConstants.SCENE_INPUT_CHECKBOX.Instance() as DataEditorInputCheckbox;
+        }
+
+        public static DataEditorInputButton CreateInputButton()
+        {
+            return DataEditorConstants.SCENE_INPUT_BUTTON.Instance() as DataEditorInputButton;
         }
 
         public static JsonGenericEditor CreateJsonGenericEditor()

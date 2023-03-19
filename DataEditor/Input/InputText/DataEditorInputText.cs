@@ -15,6 +15,12 @@ namespace GodotCSharpToolkit.Editor
             TextField.Connect("text_changed", this, nameof(_OnTextChanged));
         }
 
+        public override void Disable(bool disabled)
+        {
+            base.Disable(disabled);
+            TextField.Editable = !disabled;
+        }
+
         private void _OnTextChanged(string newText)
         {
             OnValueChanged(newText);

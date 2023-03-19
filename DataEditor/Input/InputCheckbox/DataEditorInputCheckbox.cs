@@ -32,6 +32,12 @@ namespace GodotCSharpToolkit.Editor
             InCode = false;
         }
 
+        public override void Disable(bool disabled)
+        {
+            base.Disable(disabled);
+            CheckBox.Disabled = disabled;
+        }
+
         public override void Refresh()
         {
             object value = InputData.GetValue(Data);

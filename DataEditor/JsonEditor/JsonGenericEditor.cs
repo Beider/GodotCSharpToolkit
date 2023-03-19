@@ -11,6 +11,8 @@ namespace GodotCSharpToolkit.Editor
     /// </summary>
     public class JsonGenericEditor : JsonEditorContentBase
     {
+        public event Action OnDataUpdated = delegate { };
+
         private GridContainer ControlContainer;
 
         private JsonGenericEditorInput Input = null;
@@ -24,6 +26,15 @@ namespace GodotCSharpToolkit.Editor
         {
             CreateGridContainer();
             BuildControls();
+        }
+
+        protected override void DataUpdated(JsonDefWithName data)
+        {
+            OnDataUpdated();
+            foreach (var field in InputFields.Values)
+            {
+                field.DataUpdated();
+            }
         }
 
         private void CreateGridContainer()
@@ -75,6 +86,10 @@ namespace GodotCSharpToolkit.Editor
             else if (data.EditorType == JsonGenericEditorInputRow.EditorTypes.CheckBox)
             {
                 input = DataEditorConstants.CreateInputCheckbox();
+            }
+            else if (data.EditorType == JsonGenericEditorInputRow.EditorTypes.Button)
+            {
+                input = DataEditorConstants.CreateInputButton();
             }
             else if (data.EditorType == JsonGenericEditorInputRow.EditorTypes.Custom &&
                     data.GetCustomEditor != null)

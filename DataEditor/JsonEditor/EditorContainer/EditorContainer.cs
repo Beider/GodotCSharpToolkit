@@ -48,6 +48,14 @@ namespace GodotCSharpToolkit.Editor
 
         }
 
+        public void DataUpdated()
+        {
+
+        }
+        public virtual void Disable(bool disabled)
+        {
+        }
+
         public void SetInputData(JsonDefWithName data, JsonGenericEditorInputRow input, IDataEditor editor)
         {
             Data = data;

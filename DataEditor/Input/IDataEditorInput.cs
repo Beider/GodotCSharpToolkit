@@ -8,5 +8,9 @@ namespace GodotCSharpToolkit.Editor
         void SetInputData(JsonDefWithName data, JsonGenericEditorInputRow input, IDataEditor editor);
 
         void Refresh();
+
+        void DataUpdated();
+
+        void Disable(bool disabled);
     }
 }

@@ -22,6 +22,15 @@ namespace GodotCSharpToolkit.Editor
             return container;
         }
 
+        public override void _ExitTree()
+        {
+            base._ExitTree();
+            if (Data != null)
+            {
+                Data.OnStatusChange -= DataUpdated;
+            }
+        }
+
         public virtual void Save()
         {
             // Do nothing
@@ -32,10 +41,19 @@ namespace GodotCSharpToolkit.Editor
             Editor = editor;
         }
 
+        protected virtual void DataUpdated(JsonDefWithName data)
+        {
+            // Do nothing
+        }
+
         public virtual void SetData(object data, object provider)
         {
             Provider = provider;
             Data = (JsonDefWithName)data;
+            if (Data != null)
+            {
+                Data.OnStatusChange += DataUpdated;
+            }
         }
 
         public string GetUniqueId()

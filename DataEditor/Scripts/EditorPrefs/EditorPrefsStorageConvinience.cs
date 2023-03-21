@@ -54,5 +54,41 @@ namespace GodotCSharpToolkit.Editor
             }
             return defaultValue;
         }
+
+        public void SetValue(string name, float value)
+        {
+            SetValue(name, value.ToString());
+        }
+
+        public float GetValue(string name, float defaultValue)
+        {
+            if (SettingExists(name))
+            {
+                float value = defaultValue;
+                if (float.TryParse(GetValue(name), out value))
+                {
+                    return value;
+                }
+            }
+            return defaultValue;
+        }
+
+        public void SetValue(string name, Vector2 value)
+        {
+            SetValue(name, GD.Var2Str(value));
+        }
+
+        public Vector2 GetValue(string name, Vector2 defaultValue)
+        {
+            if (SettingExists(name))
+            {
+                object var = GD.Str2Var(GetValue(name));
+                if (var is Vector2 vec)
+                {
+                    return vec;
+                }
+            }
+            return defaultValue;
+        }
     }
 }

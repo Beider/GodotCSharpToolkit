@@ -12,6 +12,7 @@ public abstract class JsonDefWithName : IJsonDefWithName
     /// <summary>
     /// Useful to drop your own values that you need for your editor or such
     /// </summary>
+    [JsonIgnore]
     public Dictionary<string, object> Metadata = null;
 
     [JsonIgnore]

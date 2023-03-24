@@ -49,6 +49,11 @@ namespace GodotCSharpToolkit.Editor
             return newItem;
         }
 
+        public override void Dispose()
+        {
+            Values.Clear();
+        }
+
         /// <summary>
         /// Duplicates a piece of data and sets the new name
         /// </summary>

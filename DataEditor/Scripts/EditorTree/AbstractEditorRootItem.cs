@@ -29,6 +29,14 @@ namespace GodotCSharpToolkit.Editor
         }
 
         /// <summary>
+        /// Called if we are thrown away
+        /// </summary>
+        public virtual void Dispose()
+        {
+
+        }
+
+        /// <summary>
         /// Called to check if we have unsaved changes
         /// </summary>
         public virtual bool HasUnsavedChanges()

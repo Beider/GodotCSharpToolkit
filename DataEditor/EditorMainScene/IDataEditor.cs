@@ -66,6 +66,11 @@ namespace GodotCSharpToolkit.Editor
         /// <summary>
         /// Add a new entry to the popup menu.
         /// </summary>
-        void AddPopupMenuEntry(string name, Action action, Texture icon = null);
+        void AddPopupMenuEntry(string name, Action action, Texture icon = null, string subMenuName = "");
+
+        /// <summary>
+        /// Create a submenu with the given name
+        /// </summary>
+        void CreatePopupSubMenu(string name);
     }
 }

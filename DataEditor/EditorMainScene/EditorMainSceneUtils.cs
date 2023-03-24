@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using GodotCSharpToolkit.Logging;
+using GodotCSharpToolkit.Extensions;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -56,6 +57,7 @@ namespace GodotCSharpToolkit.Editor
         public void ClearPopupMenu()
         {
             PopupMenu.Clear();
+            PopupMenu.ClearChildren();
             PopupMenuDelegates.Clear();
         }
 
@@ -64,17 +66,37 @@ namespace GodotCSharpToolkit.Editor
             PopupMenu.AddSeparator($" {name} ");
         }
 
-        public void AddPopupMenuEntry(string name, Action action, Texture icon = null)
+        public void AddPopupMenuEntry(string name, Action action, Texture icon = null, string subMenuName = "")
         {
+            var menu = PopupMenu;
+            if (!subMenuName.IsNullOrEmpty())
+            {
+                foreach (Control child in PopupMenu.GetChildren())
+                {
+                    if (child.Name.Equals(subMenuName))
+                    {
+                        menu = (PopupMenu)child;
+                        break;
+                    }
+                }
+            }
             if (icon != null)
             {
-                PopupMenu.AddIconItem(icon, name);
+                menu.AddIconItem(icon, name);
             }
             else
             {
-                PopupMenu.AddItem(name);
+                menu.AddItem(name);
             }
             PopupMenuDelegates.Add(name, action);
+        }
+
+        public void CreatePopupSubMenu(string name)
+        {
+            PopupMenu subMenu = new PopupMenu();
+            subMenu.Name = name;
+            PopupMenu.AddChild(subMenu);
+            PopupMenu.AddSubmenuItem(name, name);
         }
 
         private void OnPopupMenuPressed(int index)

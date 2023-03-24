@@ -89,6 +89,7 @@ namespace GodotCSharpToolkit.Editor
 
             if (reload)
             {
+                foreach (var val in RootItems.Values) { val.Dispose(); }
                 RootItems.Clear();
             }
 

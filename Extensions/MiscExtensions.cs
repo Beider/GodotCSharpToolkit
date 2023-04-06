@@ -68,7 +68,12 @@ namespace GodotCSharpToolkit.Extensions
         /// <param name="name">Name of the watch</param>
         public static void PrintStopwatch(this System.Diagnostics.Stopwatch watch, string name)
         {
-            Logger.Info($"{name} took {watch.ElapsedMilliseconds} milliseconds ({watch.ElapsedTicks} ticks)");
+            Logger.Info(watch.PrintToString(name));
+        }
+
+        public static string PrintToString(this System.Diagnostics.Stopwatch watch, string name)
+        {
+            return $"{name} took {watch.ElapsedMilliseconds} milliseconds ({watch.ElapsedTicks} ticks)";
         }
 
         /// <summary>

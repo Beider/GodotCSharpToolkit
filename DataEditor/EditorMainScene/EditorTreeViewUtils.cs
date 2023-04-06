@@ -43,8 +43,9 @@ namespace GodotCSharpToolkit.Editor
             var key = GetUniqueKey(parent, name);
             var item = CreateDelegateTreeItem(parent, name, key, true,
                     Editor.Preferences.GetModColor(), DataEditorConstants.COLOR_BG_DEFAULT,
-                    null, modPaths, name);
+                    (dte) => Editor.NotifyOnModuleTreeItemPressed(name), modPaths, name);
             item.OnContextMenuFill = (a) => { return FillModContextMenu(name); };
+
             return item;
         }
 

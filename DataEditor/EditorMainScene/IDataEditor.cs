@@ -72,5 +72,10 @@ namespace GodotCSharpToolkit.Editor
         /// Create a submenu with the given name
         /// </summary>
         void CreatePopupSubMenu(string name);
+
+        /// <summary>
+        /// Sent when a module tree item is pressed
+        /// </summary>
+        void NotifyOnModuleTreeItemPressed(string name);
     }
 }

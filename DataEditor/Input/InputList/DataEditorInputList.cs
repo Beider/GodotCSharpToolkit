@@ -42,6 +42,13 @@ namespace GodotCSharpToolkit.Editor
 
         private void ShowPopupMenu(int index, Vector2 pos)
         {
+            if (InputData is JsonGenericEditorInputRowList iData)
+            {
+                if (iData.OnAdd == null && iData.OnRemove == null)
+                {
+                    return;
+                }
+            }
             var menu = Editor.PopupMenu;
             Editor.ClearPopupMenu();
             menu.RectSize = menu.RectMinSize;

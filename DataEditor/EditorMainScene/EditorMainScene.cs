@@ -21,6 +21,11 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         public event Action<IDataEditor> OnOpenSearchDialog = delegate { };
 
+        /// <summary>
+        /// Called when a module is pressed
+        /// </summary>
+        public event Action<string, IDataEditor> OnModuleTreeItemPressed = delegate { };
+
         private Control EditorArea;
         public EditorPrefsExtended Preferences { get; private set; } = new EditorPrefsExtended();
         private Timer SaveTimer;
@@ -145,6 +150,11 @@ namespace GodotCSharpToolkit.Editor
         public void NotifyOpenSearchDialog()
         {
             OnOpenSearchDialog(this);
+        }
+
+        public void NotifyOnModuleTreeItemPressed(string name)
+        {
+            OnModuleTreeItemPressed(name, this);
         }
     }
 }

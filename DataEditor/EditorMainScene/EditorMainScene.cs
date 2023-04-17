@@ -22,9 +22,15 @@ namespace GodotCSharpToolkit.Editor
         public event Action<IDataEditor> OnOpenSearchDialog = delegate { };
 
         /// <summary>
+        /// Sent when editor is about to be closed
+        /// Return true to free editor, false if you dont want editor to be free
+        /// </summary>
+        public Func<IDataEditor, bool> OnEditorCloseRequest;
+
+        /// <summary>
         /// Called when a module is pressed
         /// </summary>
-        public event Action<string, IDataEditor> OnModuleTreeItemPressed = delegate { };
+        public event Action<string, DelegateEditorTreeItem, IDataEditor> OnModuleTreeItemPressed = delegate { };
 
         private Control EditorArea;
         public EditorPrefsExtended Preferences { get; private set; } = new EditorPrefsExtended();
@@ -125,14 +131,17 @@ namespace GodotCSharpToolkit.Editor
         public void Close(bool save)
         {
             if (save) { Save(); }
-            GetParent().RemoveChild(this);
+            if (OnEditorCloseRequest == null || OnEditorCloseRequest(this))
+            {
+                GetParent().RemoveChild(this);
+            }
         }
 
         public void Save()
         {
             Tree.Save();
-            _Refresh();
             OnDataSaved();
+            _Refresh();
         }
 
         private void _Refresh()
@@ -152,9 +161,9 @@ namespace GodotCSharpToolkit.Editor
             OnOpenSearchDialog(this);
         }
 
-        public void NotifyOnModuleTreeItemPressed(string name)
+        public void NotifyOnModuleTreeItemPressed(string name, DelegateEditorTreeItem item)
         {
-            OnModuleTreeItemPressed(name, this);
+            OnModuleTreeItemPressed(name, item, this);
         }
     }
 }

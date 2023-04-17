@@ -19,8 +19,9 @@ namespace GodotCSharpToolkit.Editor
         public Dictionary<string, List<string>> ModFolders = new Dictionary<string, List<string>>();
         private List<Type> RootItemTypes = new List<Type>();
         public Dictionary<string, AbstractEditorRootItem> RootItems = new Dictionary<string, AbstractEditorRootItem>();
+        public Dictionary<string, DelegateEditorTreeItem> ModItems = new Dictionary<string, DelegateEditorTreeItem>();
 
-        private AbstractEditorTreeModFolderProvider Provider = null;
+        private AbstractEditorTreeModFolderProvider ModProvider = null;
         public Dictionary<string, Func<AbstractEditorTreeItem, string>> DisplayNameDelegates = new Dictionary<string, Func<AbstractEditorTreeItem, string>>();
 
         public JsonDefWithName CopiedObject { get; set; } = null;
@@ -67,7 +68,7 @@ namespace GodotCSharpToolkit.Editor
 
         public void RefreshTree(bool reload = true, string reloadEditor = "")
         {
-            if (Provider == null)
+            if (ModProvider == null)
             {
                 Logger.Error($"Please provide a AbstractEditorTreeModFolderProvider provider for the editor.");
                 return;
@@ -85,12 +86,14 @@ namespace GodotCSharpToolkit.Editor
 
             // Get mod folders
             ModFolders.Clear();
-            ModFolders = Provider.GetModFolders();
+            ModFolders = ModProvider.GetModFolders();
 
             if (reload)
             {
                 foreach (var val in RootItems.Values) { val.Dispose(); }
                 RootItems.Clear();
+                foreach (var val in ModItems.Values) { val.Dispose(); }
+                ModItems.Clear();
             }
 
             // Add local paths
@@ -104,9 +107,21 @@ namespace GodotCSharpToolkit.Editor
             modKeys.Sort();
             foreach (var modName in modKeys)
             {
-                var delegateItem = CreateModItem(Root, modName, ModFolders[modName]);
-                var modItem = CreateTreeItem(Root, delegateItem);
+                // Resolve the mod item
+                TreeItem modItem = null;
+                if (!ModItems.ContainsKey(modName))
+                {
+                    var delegateItem = CreateModItem(Root, modName, ModFolders[modName]);
+                    modItem = CreateTreeItem(Root, delegateItem);
+                    ModItems[modName] = delegateItem;
+                }
+                else
+                {
+                    // Recreate the tree item
+                    modItem = CreateTreeItem(Root, ModItems[modName]);
+                }
 
+                // Fill the tree
                 foreach (var type in RootItemTypes)
                 {
                     string rootKey = $"{modName}?{type.Name}";
@@ -116,6 +131,7 @@ namespace GodotCSharpToolkit.Editor
                         item = Activator.CreateInstance(type) as AbstractEditorRootItem;
                         item.Init(modItem, Editor, ModFolders[modName], modName);
                         item.Reload();
+                        item.Key = rootKey;
                         RootItems.Add(rootKey, item);
                     }
                     else
@@ -179,12 +195,23 @@ namespace GodotCSharpToolkit.Editor
                     return true;
                 }
             }
+            foreach (var item in ModItems.Values)
+            {
+                if (item.HasUnsavedChanges())
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
         public void Save()
         {
             foreach (var item in RootItems.Values)
+            {
+                item.Save();
+            }
+            foreach (var item in ModItems.Values)
             {
                 item.Save();
             }

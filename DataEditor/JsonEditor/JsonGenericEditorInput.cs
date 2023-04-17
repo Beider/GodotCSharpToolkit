@@ -64,6 +64,24 @@ namespace GodotCSharpToolkit.Editor
             return row;
         }
 
+        public JsonGenericEditorInputRowTree AddTreeField(string name, int rowNum,
+                        List<DEA_TreeColumn> columns, Func<List<object>> getObjectList,
+                        Action<IDataEditorInput> onAdd, Action<object, IDataEditorInput> onRemove,
+                        Action<object> onDoubleClick = null)
+        {
+            var row = new JsonGenericEditorInputRowTree();
+            row.Name = name;
+            row.EditorType = JsonGenericEditorInputRow.EditorTypes.Tree;
+            row.RowNumber = rowNum;
+            row.OnAdd = onAdd;
+            row.OnRemove = onRemove;
+            row.OnDoubleClick = onDoubleClick;
+            row.Columns = columns;
+            row.GetObjectList = getObjectList;
+            Rows.Add(row);
+            return row;
+        }
+
         public JsonGenericEditorInputRowCombo AddComboField(string name, int rowNum,
                         bool sort, Func<Dictionary<object, string>> getListValues,
                         Func<JsonDefWithName, object> getValue,
@@ -122,7 +140,7 @@ namespace GodotCSharpToolkit.Editor
     {
         public enum EditorTypes
         {
-            Text, Combo, List, CheckBox, Button, Custom
+            Text, Combo, List, CheckBox, Button, Tree, Custom
         }
 
         /// <summary>
@@ -212,5 +230,36 @@ namespace GodotCSharpToolkit.Editor
         /// Triggered when this item is double clicked
         /// </summary>
         public Action<object> OnDoubleClick { get; set; } = null;
+    }
+
+    public class JsonGenericEditorInputRowTree : JsonGenericEditorInputRow
+    {
+        public float EditorHeight { get; set; } = 100f;
+
+        /// <summary>
+        /// List of objects for the dialog
+        /// </summary>
+        public Func<List<object>> GetObjectList { get; set; }
+
+        /// <summary>
+        /// Triggered when this item is double clicked
+        /// </summary>
+        public Action<object> OnDoubleClick { get; set; } = null;
+
+        /// <summary>
+        /// The object is the key value of the item.
+        /// You need to manually call refresh on the IDataEditorInput
+        /// </summary>
+        public Action<object, IDataEditorInput> OnRemove { get; set; } = null;
+
+        /// <summary>
+        /// After adding you need to manually call refresh on the IDataEditorInput
+        /// </summary>
+        public Action<IDataEditorInput> OnAdd { get; set; } = null;
+
+        /// <summary>
+        /// Columns for the tree
+        /// </summary>
+        public List<DEA_TreeColumn> Columns { get; set; } = new List<DEA_TreeColumn>();
     }
 }

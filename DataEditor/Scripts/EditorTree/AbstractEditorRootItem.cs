@@ -5,7 +5,10 @@ using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public abstract class AbstractEditorRootItem : AbstractEditorTreeItem
+    /// <summary>
+    /// Root item for a subsection under a mod. These are created for each module
+    /// </summary>
+    public abstract class AbstractEditorRootItem : AbstractEditorSavableItem
     {
         public AbstractEditorRootItem()
         {
@@ -19,39 +22,5 @@ namespace GodotCSharpToolkit.Editor
         {
             return Editor.Tree.CreateTreeItem(Parent, this);
         }
-
-        /// <summary>
-        /// Caled when we should reload
-        /// </summary>
-        public virtual void Reload()
-        {
-
-        }
-
-        /// <summary>
-        /// Called if we are thrown away
-        /// </summary>
-        public virtual void Dispose()
-        {
-
-        }
-
-        /// <summary>
-        /// Called to check if we have unsaved changes
-        /// </summary>
-        public virtual bool HasUnsavedChanges()
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// Called when we should save our data
-        /// A reload will always be done after save so no need to refresh yourself
-        /// </summary>
-        public virtual void Save()
-        {
-
-        }
-
     }
 }

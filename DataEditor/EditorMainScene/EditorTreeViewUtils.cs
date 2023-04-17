@@ -43,7 +43,7 @@ namespace GodotCSharpToolkit.Editor
             var key = GetUniqueKey(parent, name);
             var item = CreateDelegateTreeItem(parent, name, key, true,
                     Editor.Preferences.GetModColor(), DataEditorConstants.COLOR_BG_DEFAULT,
-                    (dte) => Editor.NotifyOnModuleTreeItemPressed(name), modPaths, name);
+                    (dte) => Editor.NotifyOnModuleTreeItemPressed(name, dte), modPaths, name);
             item.OnContextMenuFill = (a) => { return FillModContextMenu(name); };
 
             return item;
@@ -69,13 +69,14 @@ namespace GodotCSharpToolkit.Editor
         {
             foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
+                // Find abstract tree items, but skip the delegate item
                 if (typeof(AbstractEditorRootItem).IsAssignableFrom(type) && !type.IsAbstract)
                 {
                     RootItemTypes.Add(type);
                 }
                 else if (typeof(AbstractEditorTreeModFolderProvider).IsAssignableFrom(type) && !type.IsAbstract)
                 {
-                    Provider = Activator.CreateInstance(type) as AbstractEditorTreeModFolderProvider;
+                    ModProvider = Activator.CreateInstance(type) as AbstractEditorTreeModFolderProvider;
                 }
             }
         }

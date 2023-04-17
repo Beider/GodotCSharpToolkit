@@ -91,6 +91,10 @@ namespace GodotCSharpToolkit.Editor
             {
                 input = DataEditorConstants.CreateInputButton();
             }
+            else if (data.EditorType == JsonGenericEditorInputRow.EditorTypes.Tree)
+            {
+                input = DataEditorConstants.CreateInputTree();
+            }
             else if (data.EditorType == JsonGenericEditorInputRow.EditorTypes.Custom &&
                     data.GetCustomEditor != null)
             {

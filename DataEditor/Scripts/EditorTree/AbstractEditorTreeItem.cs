@@ -5,7 +5,10 @@ using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class AbstractEditorTreeItem
+    /// <summary>
+    /// Basic tree item to be inherited from
+    /// </summary>
+    public abstract class AbstractEditorTreeItem
     {
         /// <summary>
         /// The editor we belong to

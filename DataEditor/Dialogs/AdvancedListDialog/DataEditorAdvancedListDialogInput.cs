@@ -108,6 +108,19 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         public Func<object, Color> GetBackgroundColor { get; set; } = null;
 
+        public static DEA_TreeColumn CreateColumn(string name,
+                                     Func<object, string> getValue, Func<object, Color> getColor,
+                                     int minWidth, bool expand = false)
+        {
+            DEA_TreeColumn colData = new DEA_TreeColumn();
+            colData.Name = name;
+            colData.GetValue = getValue;
+            colData.GetForegroundColor = getColor;
+            colData.MinWidth = minWidth;
+            colData.Expand = expand;
+            return colData;
+        }
+
 
     }
 }

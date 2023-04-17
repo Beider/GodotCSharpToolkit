@@ -76,6 +76,6 @@ namespace GodotCSharpToolkit.Editor
         /// <summary>
         /// Sent when a module tree item is pressed
         /// </summary>
-        void NotifyOnModuleTreeItemPressed(string name);
+        void NotifyOnModuleTreeItemPressed(string name, DelegateEditorTreeItem item);
     }
 }

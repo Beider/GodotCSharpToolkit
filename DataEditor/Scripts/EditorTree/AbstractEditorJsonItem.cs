@@ -367,19 +367,7 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         protected virtual Color GetItemColor(JsonDefWithName item, bool isForeground)
         {
-            if (!isForeground)
-            {
-                if (item.IsTaggedForDelete) { return Editor.Preferences.GetDeleteColor(); }
-                else if (item.IsInvalid) { return Editor.Preferences.GetErrorColor(); }
-                else if (item.IsNew) { return Editor.Preferences.GetNewColor(); }
-                else if (item.IsModified) { return Editor.Preferences.GetModifiedColor(); }
-                return Editor.Preferences.GetDefaultBgColor();
-            }
-            if (item.IsLocal())
-            {
-                return Editor.Preferences.GetIsLocalColor();
-            }
-            return Editor.Preferences.GetDefaultColor();
+            return DataEditorConstants.GetItemColor(item, Editor, isForeground);
         }
 
         /// <summary>

@@ -111,6 +111,8 @@ namespace GodotCSharpToolkit.Editor
                 ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputCombo/DataEditorInputCombo.tscn") as PackedScene;
         private static readonly PackedScene SCENE_INPUT_LIST =
                 ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputList/DataEditorInputList.tscn") as PackedScene;
+        private static readonly PackedScene SCENE_INPUT_TREE =
+                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputTree/DataEditorInputTree.tscn") as PackedScene;
         private static readonly PackedScene SCENE_INPUT_CHECKBOX =
                 ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputCheckbox/DataEditorInputCheckbox.tscn") as PackedScene;
         private static readonly PackedScene SCENE_INPUT_BUTTON =
@@ -154,9 +156,34 @@ namespace GodotCSharpToolkit.Editor
             return DataEditorConstants.SCENE_INPUT_BUTTON.Instance() as DataEditorInputButton;
         }
 
+        public static DataEditorInputTree CreateInputTree()
+        {
+            return DataEditorConstants.SCENE_INPUT_TREE.Instance() as DataEditorInputTree;
+        }
+
         public static JsonGenericEditor CreateJsonGenericEditor()
         {
             return DataEditorConstants.SCENE_GENERIC_EDITOR.Instance() as JsonGenericEditor;
+        }
+
+        /// <summary>
+        /// Can override to provide item colors if you want
+        /// </summary>
+        public static Color GetItemColor(JsonDefWithName item, IDataEditor editor, bool isForeground)
+        {
+            if (!isForeground)
+            {
+                if (item.IsTaggedForDelete) { return editor.Preferences.GetDeleteColor(); }
+                else if (item.IsInvalid) { return editor.Preferences.GetErrorColor(); }
+                else if (item.IsNew) { return editor.Preferences.GetNewColor(); }
+                else if (item.IsModified) { return editor.Preferences.GetModifiedColor(); }
+                return editor.Preferences.GetDefaultBgColor();
+            }
+            if (item.IsLocal())
+            {
+                return editor.Preferences.GetIsLocalColor();
+            }
+            return editor.Preferences.GetDefaultColor();
         }
     }
 }

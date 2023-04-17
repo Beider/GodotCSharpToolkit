@@ -4,13 +4,29 @@ using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class DelegateEditorTreeItem : AbstractEditorTreeItem
+    /// <summary>
+    /// Delegate item can be used to implement simple tree items without creating a new class
+    /// </summary>
+    public class DelegateEditorTreeItem : AbstractEditorSavableItem
     {
         public Action<DelegateEditorTreeItem> OnSelection { get; set; } = null;
+        public Action<DelegateEditorTreeItem> OnSave { get; set; } = null;
+        public Action<DelegateEditorTreeItem> OnDispose { get; set; } = null;
+        public Action<DelegateEditorTreeItem> OnReload { get; set; } = null;
 
         public Func<DelegateEditorTreeItem, bool> OnContextMenuFill { get; set; } = null;
 
+        public Func<DelegateEditorTreeItem, bool> OnHasUnsavedChangedCheck { get; set; } = null;
+
         public object RelatedData;
+
+        protected override void OnSelectItemRequest(string uniqueId)
+        {
+            if (uniqueId.Equals(Key))
+            {
+                OnItemSelected();
+            }
+        }
 
         public override void OnItemSelected()
         {
@@ -31,6 +47,39 @@ namespace GodotCSharpToolkit.Editor
                 return OnContextMenuFill(this);
             }
             return false;
+        }
+
+        public override void Reload()
+        {
+            if (OnReload != null)
+            {
+                OnReload(this);
+            }
+        }
+
+        public override void Dispose()
+        {
+            if (OnDispose != null)
+            {
+                OnDispose(this);
+            }
+        }
+
+        public override bool HasUnsavedChanges()
+        {
+            if (OnHasUnsavedChangedCheck != null)
+            {
+                return OnHasUnsavedChangedCheck(this);
+            }
+            return false;
+        }
+
+        public override void Save()
+        {
+            if (OnSave != null)
+            {
+                OnSave(this);
+            }
         }
     }
 }

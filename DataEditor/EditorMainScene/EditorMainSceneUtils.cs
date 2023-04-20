@@ -54,6 +54,13 @@ namespace GodotCSharpToolkit.Editor
             AddChild(dialog);
         }
 
+        public void ShowGenericEditorDialog(GenericEditorDialogInput input)
+        {
+            var dialog = DataEditorConstants.SCENE_DIALOG_GENERIC_EDITOR.Instance() as GenericEditorDialog;
+            dialog.Init(input, this);
+            AddChild(dialog);
+        }
+
         public void ClearPopupMenu()
         {
             PopupMenu.Clear();

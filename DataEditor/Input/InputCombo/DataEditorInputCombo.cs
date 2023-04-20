@@ -69,21 +69,19 @@ namespace GodotCSharpToolkit.Editor
         public override void Refresh()
         {
             object value = InputData.GetValue(Data);
-            string val = "";
-            if (value != null)
+
+            foreach (var key in ReturnValueLookup.Keys)
             {
-                val = value.ToString();
+                if (ReturnValueLookup[key].Equals(value))
+                {
+                    OptButton.Select(key);
+                    OnValueChanged(ReturnValueLookup[key], true, false);
+                    return;
+                }
             }
 
-            if (ItemIndexLookup.ContainsKey(val))
-            {
-                OptButton.Select(ItemIndexLookup[val]);
-                OnValueChanged(ReturnValueLookup[ItemIndexLookup[val]], true, false);
-            }
-            else if (ReturnValueLookup.Count > 0)
-            {
-                OnValueChanged(ReturnValueLookup[0], true, false);
-            }
+
+            OnValueChanged(ReturnValueLookup[0], true, false);
         }
     }
 }

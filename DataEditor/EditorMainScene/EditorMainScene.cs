@@ -15,6 +15,8 @@ namespace GodotCSharpToolkit.Editor
         /// Called when data is saved
         /// </summary>
         public event Action OnDataSaved = delegate { };
+        public event Action OnDataRefreshed = delegate { };
+        public event Func<bool> HasUnsavedChanges = null;
 
         /// <summary>
         /// Called to open search dialog
@@ -106,7 +108,7 @@ namespace GodotCSharpToolkit.Editor
 
         public void Refresh(bool askForSave = true)
         {
-            if (askForSave && Tree.HasUnsavedChanges())
+            if (askForSave && _HasUnsavedChanges())
             {
                 ShowConfirmDialog("You have unsaved changes, would you like to save before you refresh?", shouldSave => { if (shouldSave) { Save(); } else { _Refresh(); } });
             }
@@ -118,7 +120,7 @@ namespace GodotCSharpToolkit.Editor
 
         public void Close()
         {
-            if (Tree.HasUnsavedChanges())
+            if (_HasUnsavedChanges())
             {
                 ShowConfirmDialog("You have unsaved changes, would you like to save before you exit?", shouldSave => { Close(shouldSave); });
             }
@@ -126,6 +128,11 @@ namespace GodotCSharpToolkit.Editor
             {
                 Close(false);
             }
+        }
+
+        private bool _HasUnsavedChanges()
+        {
+            return Tree.HasUnsavedChanges() || (HasUnsavedChanges != null && HasUnsavedChanges());
         }
 
         public void Close(bool save)
@@ -152,6 +159,7 @@ namespace GodotCSharpToolkit.Editor
                 uniqueId = ActiveEditor.GetUniqueId();
                 ActiveEditor.QueueFree();
             }
+            OnDataRefreshed();
             Tree.RefreshTree(true, uniqueId);
             Toolbar.Init(this);
         }

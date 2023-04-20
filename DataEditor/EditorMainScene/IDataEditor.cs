@@ -52,6 +52,11 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         void ShowAdvancedListDialog(DataEditorAdvancedListDialogInput input);
 
+        /// <summary>
+        /// Shows the generic editor dialog
+        /// </summary>
+        void ShowGenericEditorDialog(GenericEditorDialogInput input);
+
 
         /// <summary>
         /// Clear the popup menu

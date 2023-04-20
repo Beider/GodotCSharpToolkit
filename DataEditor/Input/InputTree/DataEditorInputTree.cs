@@ -33,7 +33,7 @@ namespace GodotCSharpToolkit.Editor
             }
             Tree.HintTooltip = InputData.ToolTip;
             BuildTreeColumns();
-            RefreshTree();
+            Refresh();
         }
 
         private void OnRmbClicked(Vector2 pos)
@@ -67,7 +67,9 @@ namespace GodotCSharpToolkit.Editor
 
         private void ShowPopupMenu(TreeItem item, Vector2 pos)
         {
-            if (Input.OnAdd == null && Input.OnRemove == null)
+            if (Input.OnAdd == null &&
+                Input.OnRemove == null &&
+                Input.OnEdit == null)
             {
                 return;
             }
@@ -84,17 +86,28 @@ namespace GodotCSharpToolkit.Editor
             var item = Tree.GetSelected();
             var selectedItem = GetSelectedObject();
             Editor.AddPopupMenuSeparator(InputData.Name);
-            Editor.AddPopupMenuEntry($"Add new ", () =>
+            if (Input.OnAdd != null)
             {
-                Input.OnAdd(this);
-                RefreshTree();
-            }, DataEditorConstants.ICON_NEW);
+                Editor.AddPopupMenuEntry($"Add new ", () =>
+                {
+                    Input.OnAdd(this);
+                }, DataEditorConstants.ICON_NEW);
+            }
             if (selectedItem == null) { return; }
-            Editor.AddPopupMenuEntry($"Remove {item.GetText(0)} ", () =>
+            if (Input.OnEdit != null)
             {
-                Input.OnRemove(selectedItem, this);
-                RefreshTree();
-            }, DataEditorConstants.ICON_DELETE);
+                Editor.AddPopupMenuEntry($"Edit {item.GetText(0)} ", () =>
+                {
+                    Input.OnEdit(selectedItem, this);
+                }, DataEditorConstants.ICON_EDIT);
+            }
+            if (Input.OnRemove != null)
+            {
+                Editor.AddPopupMenuEntry($"Remove {item.GetText(0)} ", () =>
+                {
+                    Input.OnRemove(selectedItem, this);
+                }, DataEditorConstants.ICON_DELETE);
+            }
         }
 
         private void BuildTreeColumns()
@@ -110,7 +123,7 @@ namespace GodotCSharpToolkit.Editor
 
         }
 
-        private void RefreshTree()
+        public override void Refresh()
         {
             Tree.Clear();
             Root = Tree.CreateItem(null);

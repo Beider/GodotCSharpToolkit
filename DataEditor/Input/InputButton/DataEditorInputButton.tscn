@@ -6,11 +6,11 @@
 margin_right = 235.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
-columns = 2
 script = ExtResource( 1 )
 
 [node name="Button" type="Button" parent="."]
-margin_right = 151.0
+margin_right = 235.0
 margin_bottom = 20.0
 focus_mode = 0
+size_flags_horizontal = 3
 text = "Button text goes here"

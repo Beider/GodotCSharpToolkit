@@ -67,62 +67,68 @@ namespace GodotCSharpToolkit.Editor
         // ICONS
         //
 
+        private static readonly String EDITOR_ROOT = "res://GodotCSharpToolkit/DataEditor/";
+
         public static readonly Texture ICON_DELETE =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Assets/Icons/delete.png") as Texture;
+                ResourceLoader.Load($"{EDITOR_ROOT}Assets/Icons/delete.png") as Texture;
 
         public static readonly Texture ICON_REVERT =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Assets/Icons/revert.png") as Texture;
+                ResourceLoader.Load($"{EDITOR_ROOT}Assets/Icons/revert.png") as Texture;
 
         public static readonly Texture ICON_DUPLICATE =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Assets/Icons/duplicate.png") as Texture;
+                ResourceLoader.Load($"{EDITOR_ROOT}Assets/Icons/duplicate.png") as Texture;
 
         public static readonly Texture ICON_EDIT =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Assets/Icons/edit.png") as Texture;
+                ResourceLoader.Load($"{EDITOR_ROOT}Assets/Icons/edit.png") as Texture;
 
         public static readonly Texture ICON_NEW =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Assets/Icons/new.png") as Texture;
+                ResourceLoader.Load($"{EDITOR_ROOT}Assets/Icons/new.png") as Texture;
 
         public static readonly Texture ICON_COPY =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Assets/Icons/copy.png") as Texture;
+                ResourceLoader.Load($"{EDITOR_ROOT}Assets/Icons/copy.png") as Texture;
 
         public static readonly Texture ICON_PASTE =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Assets/Icons/paste.png") as Texture;
+                ResourceLoader.Load($"{EDITOR_ROOT}Assets/Icons/paste.png") as Texture;
 
         //
         // Scene paths
         //
 
         public static readonly PackedScene SCENE_SETTINGS =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/EditorSettingsScene/DataEditorSettings.tscn") as PackedScene;
+                ResourceLoader.Load($"{EDITOR_ROOT}EditorSettingsScene/DataEditorSettings.tscn") as PackedScene;
 
         public static readonly PackedScene SCENE_DIALOG_CONFIRM =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Dialogs/ConfirmDialog/DataEditorConfirmDialog.tscn") as PackedScene;
+                ResourceLoader.Load($"{EDITOR_ROOT}Dialogs/ConfirmDialog/DataEditorConfirmDialog.tscn") as PackedScene;
 
         public static readonly PackedScene SCENE_DIALOG_TEXT_ENTRY =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Dialogs/TextEntryDialog/TextEntryDialog.tscn") as PackedScene;
+                ResourceLoader.Load($"{EDITOR_ROOT}Dialogs/TextEntryDialog/TextEntryDialog.tscn") as PackedScene;
 
         public static readonly PackedScene SCENE_DIALOG_ADVANCED_LIST =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Dialogs/AdvancedListDialog/DataEditorAdvancedListDialog.tscn") as PackedScene;
+                ResourceLoader.Load($"{EDITOR_ROOT}Dialogs/AdvancedListDialog/DataEditorAdvancedListDialog.tscn") as PackedScene;
+
+        public static readonly PackedScene SCENE_DIALOG_GENERIC_EDITOR =
+                ResourceLoader.Load($"{EDITOR_ROOT}Dialogs/GenericEditorDialog/GenericEditorDialog.tscn") as PackedScene;
+
 
 
         private static readonly PackedScene SCENE_INPUT_TEXT =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputText/DataEditorInputText.tscn") as PackedScene;
+                ResourceLoader.Load($"{EDITOR_ROOT}Input/InputText/DataEditorInputText.tscn") as PackedScene;
         private static readonly PackedScene SCENE_INPUT_COMBO =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputCombo/DataEditorInputCombo.tscn") as PackedScene;
+                ResourceLoader.Load($"{EDITOR_ROOT}Input/InputCombo/DataEditorInputCombo.tscn") as PackedScene;
         private static readonly PackedScene SCENE_INPUT_LIST =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputList/DataEditorInputList.tscn") as PackedScene;
+                ResourceLoader.Load($"{EDITOR_ROOT}Input/InputList/DataEditorInputList.tscn") as PackedScene;
         private static readonly PackedScene SCENE_INPUT_TREE =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputTree/DataEditorInputTree.tscn") as PackedScene;
+                ResourceLoader.Load($"{EDITOR_ROOT}Input/InputTree/DataEditorInputTree.tscn") as PackedScene;
         private static readonly PackedScene SCENE_INPUT_CHECKBOX =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputCheckbox/DataEditorInputCheckbox.tscn") as PackedScene;
+                ResourceLoader.Load($"{EDITOR_ROOT}Input/InputCheckbox/DataEditorInputCheckbox.tscn") as PackedScene;
         private static readonly PackedScene SCENE_INPUT_BUTTON =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/Input/InputButton/DataEditorInputButton.tscn") as PackedScene;
+                ResourceLoader.Load($"{EDITOR_ROOT}Input/InputButton/DataEditorInputButton.tscn") as PackedScene;
         private static readonly PackedScene SCENE_EDITOR_CONTAINER =
-                ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/JsonEditor/EditorContainer/EditorContainer.tscn") as PackedScene;
+                ResourceLoader.Load($"{EDITOR_ROOT}JsonEditor/EditorContainer/EditorContainer.tscn") as PackedScene;
 
 
         private static readonly PackedScene SCENE_GENERIC_EDITOR =
-                        ResourceLoader.Load("res://GodotCSharpToolkit/DataEditor/JsonEditor/JsonGenericEditor.tscn") as PackedScene;
+                        ResourceLoader.Load($"{EDITOR_ROOT}JsonEditor/JsonGenericEditor.tscn") as PackedScene;
 
 
 

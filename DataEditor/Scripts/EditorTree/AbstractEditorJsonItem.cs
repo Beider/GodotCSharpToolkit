@@ -46,6 +46,7 @@ namespace GodotCSharpToolkit.Editor
         {
             if (item.Original == null) { return item; }
             var newItem = (U)item.Original.Clone(typeof(U));
+            newItem.Metadata = item.Metadata;
             return newItem;
         }
 
@@ -71,6 +72,8 @@ namespace GodotCSharpToolkit.Editor
             originalCopy.SourceFile = newItem.SourceFile;
 
             newItem.Original = originalCopy;
+            newItem.AddMetadata(DataEditorConstants.METADATA_KEY_MOD, ModName);
+            newItem.AddMetadata(DataEditorConstants.METADATA_KEY_EDITOR, this);
             newItem.IsModified = true;
             newItem.IsNew = true;
             return newItem;
@@ -85,6 +88,8 @@ namespace GodotCSharpToolkit.Editor
             newItem.SetName($"New {ContextMenuAddNewItemName}");
             newItem.SetUniqueId(System.Guid.NewGuid().ToString());
             newItem.SourceFile = GetSourceFile(currentCategory);
+            newItem.AddMetadata(DataEditorConstants.METADATA_KEY_MOD, ModName);
+            newItem.AddMetadata(DataEditorConstants.METADATA_KEY_EDITOR, this);
             newItem.IsModified = true;
             newItem.IsNew = true;
             return newItem;

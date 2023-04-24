@@ -63,7 +63,6 @@ namespace GodotCSharpToolkit.Editor
             var newItem = (U)item.Clone(typeof(U));
             var originalCopy = (U)item.Clone(typeof(U));
 
-            newItem.SetUniqueId(System.Guid.NewGuid().ToString());
             newItem.SetName($"{item.GetName()}_dup");
             newItem.SourceFile = GetSourceFile(category != null ? category : item.GetCategory());
 
@@ -86,7 +85,10 @@ namespace GodotCSharpToolkit.Editor
         {
             JsonDefWithName newItem = Activator.CreateInstance(typeof(U)) as JsonDefWithName;
             newItem.SetName($"New {ContextMenuAddNewItemName}");
-            newItem.SetUniqueId(System.Guid.NewGuid().ToString());
+            if (newItem.GetUniqueId().IsNullOrEmpty())
+            {
+                newItem.SetUniqueId(System.Guid.NewGuid().ToString());
+            }
             newItem.SourceFile = GetSourceFile(currentCategory);
             newItem.AddMetadata(DataEditorConstants.METADATA_KEY_MOD, ModName);
             newItem.AddMetadata(DataEditorConstants.METADATA_KEY_EDITOR, this);

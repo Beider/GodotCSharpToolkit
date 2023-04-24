@@ -27,9 +27,10 @@ namespace GodotCSharpToolkit.Editor
 
         private void _OnButtonPressed()
         {
-            if (InputData.OnSave != null)
+            if (InputData is JsonGenericEditorInputRowButton btnInput &&
+                btnInput.OnPressed != null)
             {
-                InputData.OnSave("", Data, true);
+                btnInput.OnPressed(Data, this);
             }
         }
 

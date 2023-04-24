@@ -8,13 +8,25 @@ namespace GodotCSharpToolkit.Editor
 {
     public class GenericEditorDialogInput
     {
+        public event Action RebuildDialog = delegate { };
+        public event Action CheckOk = delegate { };
         public string Name { get; set; } = "List dialog";
-        public JsonGenericEditorInput EditorInput { get; set; } = null;
+        public Func<JsonGenericEditorInput> GetEditorInput { get; set; } = null;
         public JsonDefWithName Data { get; set; } = null;
         public Action<JsonDefWithName> OnDialogOk { get; set; } = null;
         public Func<JsonDefWithName, bool> IsOkEnabled { get; set; } = null;
         public Action OnClose { get; set; } = null;
         public Vector2 DialogSize = new Vector2(500f, 300f);
+
+        public void NotifyRebuildDialog()
+        {
+            RebuildDialog();
+        }
+
+        public void NotifyCheckOk()
+        {
+            CheckOk();
+        }
     }
     /// <summary>
     /// Dialog that displays a generic editor
@@ -51,16 +63,31 @@ namespace GodotCSharpToolkit.Editor
             Input.Data.OnStatusChange += OnDataChanged;
 
             // Create generic editor
-            GenericEditor = DataEditorConstants.CreateJsonGenericEditor();
-            GenericEditor.SetInput(Input.EditorInput);
-            GenericEditor.SetData(Input.Data, this);
-            GenericEditor.Init(Editor);
-            ContentParent.AddChild(GenericEditor);
+            Input.RebuildDialog += ReBuildGenericEditor;
+            Input.CheckOk += CheckOkEnabled;
+            ReBuildGenericEditor();
 
             Dialog.RectMinSize = Input.DialogSize;
             Dialog.RectSize = Input.DialogSize;
 
             Dialog.Popup_();
+        }
+
+        public override void _ExitTree()
+        {
+            Input.RebuildDialog -= ReBuildGenericEditor;
+            Input.CheckOk -= CheckOkEnabled;
+        }
+
+        private void ReBuildGenericEditor()
+        {
+            GenericEditor?.QueueFree();
+            GenericEditor = DataEditorConstants.CreateJsonGenericEditor();
+            GenericEditor.SetInput(Input.GetEditorInput());
+            GenericEditor.SetData(Input.Data, this);
+            GenericEditor.Init(Editor);
+            ContentParent.AddChild(GenericEditor);
+            CheckOkEnabled();
         }
 
         private void OnDataChanged(JsonDefWithName data)
@@ -81,10 +108,12 @@ namespace GodotCSharpToolkit.Editor
                 if (key.Scancode == (int)KeyList.Escape)
                 {
                     OnCancelPressed();
+                    GetTree().SetInputAsHandled();
                 }
-                else if (key.Scancode == (int)KeyList.Enter && !BtnOk.Disabled)
+                else if ((key.Scancode == (int)KeyList.Enter || key.Scancode == (int)KeyList.KpEnter) && !BtnOk.Disabled)
                 {
                     OnOkPressed();
+                    GetTree().SetInputAsHandled();
                 }
             }
         }

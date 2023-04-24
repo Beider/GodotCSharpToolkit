@@ -24,6 +24,13 @@ namespace GodotCSharpToolkit.Editor
         /// <value>true if valid, false if not</value>
         public delegate bool OnValidateCallback(string name, JsonDefWithName dataObject, object currentValue);
 
+        /// <summary>
+        /// Called when a button is pressed
+        /// </summary>
+        /// <param name="dataObject">The data object related to this field</param>
+        /// <param name="dataEditor">The data editor so you can refresh if needed</param>
+        public delegate void OnPressedCallback(JsonDefWithName dataObject, IDataEditorInput dataEditor);
+
         public List<JsonGenericEditorInputRow> Rows { get; } = new List<JsonGenericEditorInputRow>();
 
         /// <summary>
@@ -51,14 +58,14 @@ namespace GodotCSharpToolkit.Editor
 
         public JsonGenericEditorInputRow AddButton(string name, int rowNum,
                         Func<JsonDefWithName, object> getValue,
-                        OnSaveCallback onPressed)
+                        OnPressedCallback onPressed)
         {
-            var row = new JsonGenericEditorInputRow();
+            var row = new JsonGenericEditorInputRowButton();
             row.Name = name;
             row.EditorType = JsonGenericEditorInputRow.EditorTypes.Button;
             row.RowNumber = rowNum;
             row.GetValue = getValue;
-            row.OnSave = onPressed;
+            row.OnPressed = onPressed;
             Rows.Add(row);
             return row;
         }
@@ -231,6 +238,11 @@ namespace GodotCSharpToolkit.Editor
         /// If null we do no validation
         /// </summary>
         public JsonGenericEditorInput.OnValidateCallback OnValidate { get; set; } = null;
+    }
+
+    public class JsonGenericEditorInputRowButton : JsonGenericEditorInputRow
+    {
+        public JsonGenericEditorInput.OnPressedCallback OnPressed { get; set; } = null;
     }
 
     public class JsonGenericEditorInputRowCombo : JsonGenericEditorInputRow

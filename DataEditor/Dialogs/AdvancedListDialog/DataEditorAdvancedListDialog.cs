@@ -75,10 +75,12 @@ namespace GodotCSharpToolkit.Editor
                 if (key.Scancode == (int)KeyList.Escape)
                 {
                     OnCancelPressed();
+                    GetTree().SetInputAsHandled();
                 }
-                else if (key.Scancode == (int)KeyList.Enter && !BtnOk.Disabled)
+                else if ((key.Scancode == (int)KeyList.Enter || key.Scancode == (int)KeyList.KpEnter) && !BtnOk.Disabled)
                 {
                     OnOkPressed();
+                    GetTree().SetInputAsHandled();
                 }
             }
         }

@@ -122,10 +122,12 @@ namespace GodotCSharpToolkit.Editor
                 if (key.Scancode == (int)KeyList.Escape)
                 {
                     OnCancelPressed();
+                    GetTree().SetInputAsHandled();
                 }
-                else if (key.Scancode == (int)KeyList.Enter && !BtnConfirm.Disabled)
+                else if ((key.Scancode == (int)KeyList.Enter || key.Scancode == (int)KeyList.KpEnter) && !BtnConfirm.Disabled)
                 {
                     OnConfirmPressed();
+                    GetTree().SetInputAsHandled();
                 }
             }
         }

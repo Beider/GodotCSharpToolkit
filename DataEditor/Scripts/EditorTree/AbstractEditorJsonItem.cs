@@ -65,6 +65,7 @@ namespace GodotCSharpToolkit.Editor
 
             newItem.SetName($"{item.GetName()}_dup");
             newItem.SourceFile = GetSourceFile(category != null ? category : item.GetCategory());
+            newItem.SetUniqueId(newItem.CreateNewUniqueID());
 
             originalCopy.SetUniqueId(newItem.GetUniqueId());
             originalCopy.SetName(newItem.GetName());

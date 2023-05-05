@@ -29,6 +29,7 @@ public abstract class JsonDefWithName : IJsonDefWithName
     public abstract void SetUniqueId(string uniqueId);
     public abstract string GetName();
     public abstract void SetName(string newName);
+    public abstract string CreateNewUniqueID();
 
     [JsonIgnore]
     public bool IsNew { get; set; } = false;

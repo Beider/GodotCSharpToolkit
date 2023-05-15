@@ -96,12 +96,6 @@ namespace GodotCSharpToolkit.Editor
                 ModItems.Clear();
             }
 
-            // Add local paths
-            AddLocalMods();
-
-            // Ensure all paths end with a slash
-            FixModPathEnding();
-
             // Create items
             var modKeys = new List<string>(ModFolders.Keys);
             modKeys.Sort();
@@ -147,42 +141,6 @@ namespace GodotCSharpToolkit.Editor
             if (reloadEditor != "")
             {
                 OnSelectItemRequest(reloadEditor);
-            }
-        }
-
-        private void AddLocalMods()
-        {
-            // Add local paths
-            if (Editor.Preferences.ShouldUseLocalPath())
-            {
-                foreach (var key in ModFolders.Keys)
-                {
-                    ModFolders[key].Add($"{Editor.Preferences.SettingLocalSavePath}{key}");
-                }
-
-                // Add local only mods
-                foreach (var path in FileUtils.GetSubDirectories(Editor.Preferences.SettingLocalSavePath))
-                {
-
-                    var folder = FileUtils.GetDirectoryName(path);
-                    if (!ModFolders.ContainsKey(folder))
-                    {
-                        ModFolders.Add(folder, new List<string>());
-                        ModFolders[folder].Add(path);
-                    }
-                }
-            }
-        }
-
-        private void FixModPathEnding()
-        {
-            // Ensure all paths end with a slash
-            foreach (var modN in ModFolders.Keys)
-            {
-                for (int i = 0; i < ModFolders[modN].Count; i++)
-                {
-                    ModFolders[modN][i] = FileUtils.NormalizeDirectory(ModFolders[modN][i]);
-                }
             }
         }
 

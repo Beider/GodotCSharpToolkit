@@ -25,6 +25,7 @@ namespace GodotCSharpToolkit.Editor
         public Dictionary<string, Func<AbstractEditorTreeItem, string>> DisplayNameDelegates = new Dictionary<string, Func<AbstractEditorTreeItem, string>>();
 
         public JsonDefWithName CopiedObject { get; set; } = null;
+        private bool RefreshInProgress = false;
 
         /// <summary>
         /// Workaround for some godot bugs with signals triggering from code on trees
@@ -68,11 +69,15 @@ namespace GodotCSharpToolkit.Editor
 
         public void RefreshTree(bool reload = true, string reloadEditor = "")
         {
+            if (RefreshInProgress) { return; }
             if (ModProvider == null)
             {
                 Logger.Error($"Please provide a AbstractEditorTreeModFolderProvider provider for the editor.");
                 return;
             }
+
+            // Mark as refresh starting
+            RefreshInProgress = true;
 
             // Current selection if any
             OnSelectItemRequest = delegate { };
@@ -148,6 +153,8 @@ namespace GodotCSharpToolkit.Editor
             {
                 OnSelectItemRequest(reloadEditor);
             }
+
+            RefreshInProgress = false;
         }
 
         private void AddLocalMods()

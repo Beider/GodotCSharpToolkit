@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using GodotCSharpToolkit.Extensions;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -15,6 +16,10 @@ namespace GodotCSharpToolkit.Editor
         public TreeItem CreateTreeItem(TreeItem parent, AbstractEditorTreeItem item)
         {
             // Add so we can find it again
+            if (TreeItemLookup.ContainsKey(item.Key))
+            {
+                Logger.Error($"Duplicate key added {item.Key}");
+            }
             TreeItemLookup.Add(item.Key, item);
             var nameDelegate = Editor.Tree.GetDisplayNameDelegate();
             var treeItem = CreateTreeItem(parent, nameDelegate(item), item.Color, item.ColorBg, item.Collapsed, item.Key);

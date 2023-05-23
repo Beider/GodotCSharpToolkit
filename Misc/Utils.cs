@@ -116,6 +116,18 @@ namespace GodotCSharpToolkit.Misc
             return returnList;
         }
 
-
+        /// <summary>
+        /// Convert a list of items into an array using a conversion function.
+        /// You could also use list.Select(x=>convert(x)).ToArray() in Linq
+        /// </summary>
+        public static T[] ConvertListToArray<T, U>(List<U> list, Func<U, T> convert)
+        {
+            var array = new T[list.Count];
+            for (int i = 0; i < list.Count; i++)
+            {
+                array[i] = convert(list[i]);
+            }
+            return array;
+        }
     }
 }

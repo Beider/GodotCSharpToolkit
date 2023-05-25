@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 using GodotCSharpToolkit.Misc;
 using GodotCSharpToolkit.Logging;
@@ -86,6 +87,17 @@ namespace GodotCSharpToolkit.Extensions
         public static bool CompareFloats(this float value1, float value2, float epsilon = 0.0001f)
         {
             return Mathf.Abs(value1 - value2) <= epsilon;
+        }
+
+        /// <summary>
+        /// Easy for each on enumerables
+        /// </summary>
+        public static void ForEach<T>(this IEnumerable<T> value, Action<T> action)
+        {
+            foreach (T item in value)
+            {
+                action(item);
+            }
         }
     }
 }

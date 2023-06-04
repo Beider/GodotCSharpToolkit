@@ -28,6 +28,7 @@ namespace GodotCSharpToolkit.Editor
             CheckBox.RectMinSize = new Vector2(InputData.EditorWidth, 0f);
             CheckBox.HintTooltip = InputData.ToolTip;
             InCode = true;
+            Disable(InputData.Disabled);
             Refresh();
             InCode = false;
         }

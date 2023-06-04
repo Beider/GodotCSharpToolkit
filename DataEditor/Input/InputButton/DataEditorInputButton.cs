@@ -39,6 +39,7 @@ namespace GodotCSharpToolkit.Editor
             BtnInput.RectMinSize = new Vector2(InputData.EditorWidth, 0f);
             BtnInput.HintTooltip = InputData.ToolTip;
             BtnInput.Text = (string)InputData.GetValue(Data);
+            Disable(InputData.Disabled);
             Refresh();
         }
 

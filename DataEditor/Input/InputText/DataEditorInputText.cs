@@ -31,6 +31,7 @@ namespace GodotCSharpToolkit.Editor
             TextField.RectMinSize = new Vector2(InputData.EditorWidth, 0f);
             TextField.HintTooltip = InputData.ToolTip;
             TextLabel.HintTooltip = InputData.ToolTip;
+            Disable(InputData.Disabled);
             Refresh();
         }
 

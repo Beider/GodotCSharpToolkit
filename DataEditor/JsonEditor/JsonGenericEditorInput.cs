@@ -238,6 +238,11 @@ namespace GodotCSharpToolkit.Editor
         /// If null we do no validation
         /// </summary>
         public JsonGenericEditorInput.OnValidateCallback OnValidate { get; set; } = null;
+
+        /// <summary>
+        /// For controls that respect this will set the control as read only
+        /// </summary>
+        public bool Disabled { get; set; } = false;
     }
 
     public class JsonGenericEditorInputRowButton : JsonGenericEditorInputRow

@@ -17,6 +17,7 @@ namespace GodotCSharpToolkit.Editor
         {
             base._Ready();
             Tree = FindNode("Tree") as Tree;
+            Tree.Connect("item_double_clicked", this, nameof(OnItemActivated));
             Tree.Connect("item_activated", this, nameof(OnItemActivated));
             Tree.Connect("item_rmb_selected", this, nameof(OnRmbClicked));
             Tree.Connect("empty_rmb", this, nameof(OnRmbClicked));
@@ -49,9 +50,13 @@ namespace GodotCSharpToolkit.Editor
             }
         }
 
-        private void OnItemActivated(int index)
+        private void OnItemActivated()
         {
-            Input.OnDoubleClick(GetSelectedObject());
+            var selection = GetSelectedObject();
+            if (selection != null)
+            {
+                Input.OnDoubleClick(selection, this);
+            }
         }
 
         private object GetSelectedObject()

@@ -92,7 +92,7 @@ namespace GodotCSharpToolkit.Editor
                         List<DEA_TreeColumn> columns, Func<List<object>> getObjectList,
                         Action<IDataEditorInput> onAdd, Action<object, IDataEditorInput> onEdit,
                         Action<object, IDataEditorInput> onRemove,
-                        Action<object> onDoubleClick = null)
+                        Action<object, IDataEditorInput> onDoubleClick = null)
         {
             var row = new JsonGenericEditorInputRowTree();
             row.Name = name;
@@ -293,7 +293,7 @@ namespace GodotCSharpToolkit.Editor
         /// <summary>
         /// Triggered when this item is double clicked
         /// </summary>
-        public Action<object> OnDoubleClick { get; set; } = null;
+        public Action<object, IDataEditorInput> OnDoubleClick { get; set; } = null;
 
         /// <summary>
         /// The object is the key value of the item.

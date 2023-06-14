@@ -42,6 +42,8 @@ namespace GodotCSharpToolkit.Editor
         public PopupMenu PopupMenu { get; private set; }
         public Dictionary<string, Action> PopupMenuDelegates = new Dictionary<string, Action>();
 
+        private Control CurrentDialog = null;
+
         private IDataEditorContent ActiveEditor = null;
 
         // Called when the node enters the scene tree for the first time.
@@ -146,6 +148,10 @@ namespace GodotCSharpToolkit.Editor
 
         public void Save()
         {
+            if (CurrentDialog != null && IsInstanceValid(CurrentDialog) && CurrentDialog.Visible)
+            {
+                return;
+            }
             Tree.Save();
             OnDataSaved();
             _Refresh();
@@ -153,6 +159,10 @@ namespace GodotCSharpToolkit.Editor
 
         private void _Refresh()
         {
+            if (CurrentDialog != null && IsInstanceValid(CurrentDialog) && CurrentDialog.Visible)
+            {
+                return;
+            }
             string uniqueId = "";
             if (ActiveEditor != null && IsInstanceValid(((Control)ActiveEditor)))
             {

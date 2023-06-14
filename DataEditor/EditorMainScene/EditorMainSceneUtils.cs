@@ -35,6 +35,7 @@ namespace GodotCSharpToolkit.Editor
         {
             var dialog = DataEditorConstants.SCENE_DIALOG_CONFIRM.Instance() as DataEditorConfirmDialog;
             dialog.SetupBeforeAddChild(message, callback);
+            CurrentDialog = dialog;
             AddChild(dialog);
         }
 
@@ -44,6 +45,7 @@ namespace GodotCSharpToolkit.Editor
         {
             var dialog = DataEditorConstants.SCENE_DIALOG_TEXT_ENTRY.Instance() as DataEditorTextEntryDialog;
             dialog.SetupBeforeAddChild(title, textName, callback, nameValidator, listName, getItemList);
+            CurrentDialog = dialog;
             AddChild(dialog);
         }
 
@@ -51,6 +53,7 @@ namespace GodotCSharpToolkit.Editor
         {
             var dialog = DataEditorConstants.SCENE_DIALOG_ADVANCED_LIST.Instance() as DataEditorAdvancedListDialog;
             dialog.Init(input, this);
+            CurrentDialog = dialog;
             AddChild(dialog);
         }
 
@@ -58,6 +61,7 @@ namespace GodotCSharpToolkit.Editor
         {
             var dialog = DataEditorConstants.SCENE_DIALOG_GENERIC_EDITOR.Instance() as GenericEditorDialog;
             dialog.Init(input, this);
+            CurrentDialog = dialog;
             AddChild(dialog);
         }
 

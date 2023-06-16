@@ -53,7 +53,7 @@ namespace GodotCSharpToolkit.Editor
         private void OnItemActivated()
         {
             var selection = GetSelectedObject();
-            if (selection != null)
+            if (selection != null && Input.OnDoubleClick != null)
             {
                 Input.OnDoubleClick(selection, this);
             }

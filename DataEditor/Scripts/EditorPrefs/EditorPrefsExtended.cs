@@ -76,6 +76,12 @@ namespace GodotCSharpToolkit.Editor
 
         #region Settings
 
+        public int SettingEditorSplitOffset
+        {
+            get { return GetValue(SETTING_AUTOLOAD, 0); }
+            set { SetValue(SETTING_AUTOLOAD, value); }
+        }
+
         public bool SettingIsLoadLocalData
         {
             get { return GetValue(SETTING_AUTOLOAD, true); }

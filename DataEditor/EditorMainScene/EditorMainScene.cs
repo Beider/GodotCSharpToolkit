@@ -35,6 +35,7 @@ namespace GodotCSharpToolkit.Editor
         public event Action<string, DelegateEditorTreeItem, IDataEditor> OnModuleTreeItemPressed = delegate { };
 
         private Control EditorArea;
+        private HSplitContainer EditorTreeSplit;
         public EditorPrefsExtended Preferences { get; private set; } = new EditorPrefsExtended();
         private Timer SaveTimer;
         public EditorTreeView Tree { get; private set; }
@@ -53,10 +54,14 @@ namespace GodotCSharpToolkit.Editor
             EditorArea = FindNode("EditorArea") as Control;
             Toolbar = FindNode("Toolbar") as EditorToolbar;
             PopupMenu = FindNode("PopupMenu") as PopupMenu;
+            EditorTreeSplit = FindNode("EditorTreeSplit") as HSplitContainer;
             PopupMenu.Connect("id_pressed", this, nameof(OnPopupMenuPressed));
 
             Tree.Init(this);
             Toolbar.Init(this);
+
+            EditorTreeSplit.SplitOffset = Preferences.SettingEditorSplitOffset;
+            EditorTreeSplit.Connect("dragged", this, nameof(SplitDragged));
 
             // Start preferences save timer
             SaveTimer = new Timer();
@@ -65,6 +70,11 @@ namespace GodotCSharpToolkit.Editor
             SaveTimer.Connect("timeout", this, nameof(SavePreferences));
             AddChild(SaveTimer);
             SaveTimer.Start();
+        }
+
+        private void SplitDragged(int offset)
+        {
+            Preferences.SettingEditorSplitOffset = offset;
         }
 
         private void SavePreferences()

@@ -66,6 +66,7 @@ namespace GodotCSharpToolkit.Editor
             LoadPrefs();
             RefreshDialog();
             Dialog.Popup_();
+            TxtSearchField.GrabFocus();
         }
 
         public override void _Input(InputEvent @event)

@@ -60,6 +60,11 @@ namespace GodotCSharpToolkit.Editor
 
         }
 
+        public virtual void TakeFocus()
+        {
+
+        }
+
         public virtual void DataUpdated()
         {
             if (InputData.OnDataUpdated != null)

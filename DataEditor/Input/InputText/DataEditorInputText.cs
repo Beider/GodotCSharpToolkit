@@ -35,6 +35,18 @@ namespace GodotCSharpToolkit.Editor
             Refresh();
         }
 
+        public override void TakeFocus()
+        {
+            CallDeferred(nameof(_TakeFocus));
+        }
+
+        private void _TakeFocus()
+        {
+            if (TextField == null) { return; }
+            TextField.GrabFocus();
+            TextField.CaretPosition = TextField.Text.Length;
+        }
+
         public override void Refresh()
         {
             object value = InputData.GetValue(Data);

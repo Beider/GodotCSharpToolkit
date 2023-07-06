@@ -12,5 +12,7 @@ namespace GodotCSharpToolkit.Editor
         void DataUpdated();
 
         void Disable(bool disabled);
+
+        void TakeFocus();
     }
 }

@@ -59,14 +59,17 @@ namespace GodotCSharpToolkit.Editor
         {
             if (Input == null) { return; }
 
+            Boolean isFirst = true;
+
             foreach (var row in Input.Rows)
             {
                 EnsureRowExists(row);
-                CreateControl(row);
+                CreateControl(row, isFirst);
+                isFirst = false;
             }
         }
 
-        private void CreateControl(JsonGenericEditorInputRow data)
+        private void CreateControl(JsonGenericEditorInputRow data, bool setFocus)
         {
             var parent = Rows[data.RowNumber];
             parent.Columns = parent.GetChildCount() + 1;
@@ -109,6 +112,10 @@ namespace GodotCSharpToolkit.Editor
 
             if (data.LabelWidth == 0) { data.LabelWidth = Input.LabelWidth; }
             parent.AddChild((Control)input);
+            if (setFocus)
+            {
+                input.TakeFocus();
+            }
             input.SetInputData(Data, data, Editor);
 
             InputFields.Add(data.Name, input);

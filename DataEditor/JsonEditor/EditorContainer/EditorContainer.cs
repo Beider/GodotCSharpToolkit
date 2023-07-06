@@ -92,5 +92,10 @@ namespace GodotCSharpToolkit.Editor
             parent.Rows.Add(row);
             return row;
         }
+
+        public void TakeFocus()
+        {
+
+        }
     }
 }

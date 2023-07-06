@@ -40,6 +40,16 @@ namespace GodotCSharpToolkit.Editor
             }
         }
 
+        public override void TakeFocus()
+        {
+            CallDeferred(nameof(_TakeFocus));
+        }
+
+        private void _TakeFocus()
+        {
+            ListField?.GrabFocus();
+        }
+
         private void ShowPopupMenu(int index, Vector2 pos)
         {
             if (InputData is JsonGenericEditorInputRowList iData)

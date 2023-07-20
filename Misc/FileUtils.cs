@@ -10,6 +10,8 @@ namespace GodotCSharpToolkit.Misc
 {
     public static class FileUtils
     {
+        public const string IMPORT_EXTENSION = ".import";
+
         /// <summary>
         /// Will fix the slashes in the path name
         /// </summary>
@@ -126,16 +128,29 @@ namespace GodotCSharpToolkit.Misc
                 {
                     break;
                 }
-                if (includeSubFolders && dir.CurrentIsDir() && !filePath.Equals(".import"))
+                if (includeSubFolders && dir.CurrentIsDir() && !filePath.Equals(IMPORT_EXTENSION))
                 {
                     // Go into all subfolder
                     retList.AddRange(GetAllFilesInFolder(path + filePath + "/", includeSubFolders, extension));
                 }
                 else if ((extension == "" && !dir.CurrentIsDir()) ||
-                         (extension != "" && filePath.ToLower().EndsWith(extension)))
+                         (extension != "" && (filePath.ToLower().EndsWith(extension))))
                 {
                     // Grab name of all files found
-                    retList.Add(path + filePath);
+                    if (!Engine.EditorHint && filePath.EndsWith(IMPORT_EXTENSION))
+                    {
+                        // In export builds get rid of the .import at the end
+                        retList.Add(path + filePath.Replace(IMPORT_EXTENSION, ""));
+                    }
+                    else
+                    {
+                        retList.Add(path + filePath);
+                    }
+                }
+                else if (!Engine.EditorHint && extension != "" && filePath.ToLower().EndsWith($"{extension}{IMPORT_EXTENSION}"))
+                {
+                    // This is an export build so we need to look for .Import files
+                    retList.Add(path + filePath.Replace(IMPORT_EXTENSION, ""));
                 }
             }
             dir.ListDirEnd();
@@ -161,7 +176,12 @@ namespace GodotCSharpToolkit.Misc
         {
             if (IsGodotPath(path))
             {
-                return (new Godot.File()).FileExists(path);
+                var exists = (new Godot.File()).FileExists(path);
+                if (!exists && !Engine.EditorHint)
+                {
+                    exists = (new Godot.File()).FileExists($"{path}{IMPORT_EXTENSION}");
+                }
+                return exists;
             }
             return System.IO.File.Exists(path);
         }

@@ -47,6 +47,7 @@ namespace GodotCSharpToolkit.Editor
                 TextInput = DataEditorConstants.CreateInputText();
                 ControlGrid.AddChild(TextInput);
                 TextInput.SetInputData(null, GetTextRowData(), null);
+                TextInput.TakeFocus();
             }
 
             if (GetItemList != null && GetItemList != null)
@@ -54,6 +55,7 @@ namespace GodotCSharpToolkit.Editor
                 ComboInput = DataEditorConstants.CreateInputCombo();
                 ControlGrid.AddChild(ComboInput);
                 ComboInput.SetInputData(null, GetListRowData(), null);
+                ComboInput.TakeFocus();
             }
 
         }

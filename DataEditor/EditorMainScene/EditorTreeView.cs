@@ -126,27 +126,38 @@ namespace GodotCSharpToolkit.Editor
                     modItem = CreateTreeItem(Root, ModItems[modName]);
                 }
 
-                // Fill the tree
-                foreach (var type in RootItemTypes)
-                {
-                    string rootKey = $"{modName}?{type.Name}";
-                    AbstractEditorRootItem item = null;
-                    if (!RootItems.ContainsKey(rootKey))
-                    {
-                        item = Activator.CreateInstance(type) as AbstractEditorRootItem;
-                        item.Init(modItem, Editor, ModFolders[modName], modName);
-                        item.Reload();
-                        item.Key = rootKey;
-                        RootItems.Add(rootKey, item);
-                    }
-                    else
-                    {
-                        item = RootItems[rootKey];
-                        item.Init(modItem, Editor, ModFolders[modName], modName);
-                    }
+                // Add features
+                var features = GetFeatures(modName);
 
-                    item.CreateRootItem();
+                foreach (var feature in features.Keys)
+                {
+                    var delegateItem = CreateModFeatureItem(modItem, feature, modName, features[feature]);
+                    var delTree = CreateTreeItem(modItem, delegateItem);
+
+                    // Fill the tree
+                    foreach (var type in RootItemTypes)
+                    {
+                        string rootKey = $"{modName}?{feature}?{type.Name}";
+                        AbstractEditorRootItem item = null;
+                        if (!RootItems.ContainsKey(rootKey))
+                        {
+                            item = Activator.CreateInstance(type) as AbstractEditorRootItem;
+                            item.Init(delTree, Editor, features[feature], modName);
+                            item.Reload();
+                            item.Key = rootKey;
+                            RootItems.Add(rootKey, item);
+                        }
+                        else
+                        {
+                            item = RootItems[rootKey];
+                            item.Init(delTree, Editor, features[feature], modName);
+                        }
+
+                        item.CreateRootItem();
+                    }
                 }
+
+
             }
             InCode = false;
             if (reloadEditor != "")
@@ -155,6 +166,45 @@ namespace GodotCSharpToolkit.Editor
             }
 
             RefreshInProgress = false;
+        }
+
+        private Dictionary<string, List<string>> GetFeatures(string modName)
+        {
+            var returnDict = new Dictionary<string, List<string>>();
+            var subfolderList = new List<string>();
+            var lowerCaseList = new List<string>();
+            foreach (var folder in ModFolders[modName])
+            {
+                var subs = FileUtils.GetSubDirectories(folder);
+                foreach (var subFolder in subs)
+                {
+                    var subName = System.IO.Path.GetFileName(RemoveLastSlash(subFolder));
+                    if (!lowerCaseList.Contains(subName.ToLower()))
+                    {
+                        subfolderList.Add(subName);
+                        lowerCaseList.Add(subName.ToLower());
+                    }
+                }
+            }
+            foreach (var sub in subfolderList)
+            {
+                returnDict.Add(sub, new List<string>());
+                foreach (var folder in ModFolders[modName])
+                {
+                    returnDict[sub].Add(FileUtils.NormalizeDirectory($"{FileUtils.NormalizeDirectory(folder)}{sub}"));
+                }
+            }
+            return returnDict;
+        }
+
+        private string RemoveLastSlash(string path)
+        {
+            if (path == null) { return ""; }
+            if (path.EndsWith("/") || path.EndsWith("\\"))
+            {
+                return path.Substr(0, path.Length - 1);
+            }
+            return path;
         }
 
         private void AddLocalMods()

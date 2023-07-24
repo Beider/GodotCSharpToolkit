@@ -86,6 +86,11 @@ namespace GodotCSharpToolkit.Editor
         {
             if (@event is InputEventKey keyEvent && keyEvent.Pressed)
             {
+                // Do not allow shortcuts during dialogs
+                if (CurrentDialog != null && IsInstanceValid(CurrentDialog) && CurrentDialog.Visible)
+                {
+                    return;
+                }
                 if (CtrlOrCmd(keyEvent) && keyEvent.Scancode == (int)KeyList.S)
                 {
                     Save();
@@ -158,10 +163,6 @@ namespace GodotCSharpToolkit.Editor
 
         public void Save()
         {
-            if (CurrentDialog != null && IsInstanceValid(CurrentDialog) && CurrentDialog.Visible)
-            {
-                return;
-            }
             Tree.Save();
             OnDataSaved();
             _Refresh();
@@ -169,10 +170,6 @@ namespace GodotCSharpToolkit.Editor
 
         private void _Refresh()
         {
-            if (CurrentDialog != null && IsInstanceValid(CurrentDialog) && CurrentDialog.Visible)
-            {
-                return;
-            }
             string uniqueId = "";
             if (ActiveEditor != null && IsInstanceValid(((Control)ActiveEditor)))
             {

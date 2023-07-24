@@ -47,7 +47,26 @@ namespace GodotCSharpToolkit.Editor
         {
             Editor.AddPopupMenuSeparator(name);
             Editor.AddPopupMenuEntry($"Delete {name}", () => { DeleteMod(name); }, DataEditorConstants.ICON_DELETE);
+            Editor.AddPopupMenuEntry($"Add Feature", () => { AddModFeature(name); }, DataEditorConstants.ICON_NEW);
             return true;
+        }
+
+        private void AddModFeature(string modName)
+        {
+            Func<string, bool> nameValidator = (name) =>
+                {
+                    if (name.IsNullOrEmpty()) { return false; }
+                    var normPath = FileUtils.NormalizePath($"{Editor.Preferences.SettingLocalSavePath}{modName}/{name}");
+                    return !FileUtils.DirectoryExists(normPath);
+                };
+            Editor.ShowTextEntryDialog("Please enter the feature name", "Name", (s1, s2) => AddNewModuleFeature(s1, modName), nameValidator);
+        }
+
+        private void AddNewModuleFeature(string name, string module)
+        {
+            var path = FileUtils.NormalizePath($"{Editor.Preferences.SettingLocalSavePath}{module}/");
+            FileUtils.CreateDirectory(path, name);
+            Editor.Tree.RefreshTree(false);
         }
 
         private void DeleteMod(string name)
@@ -61,7 +80,6 @@ namespace GodotCSharpToolkit.Editor
             {
                 _DeleteMod(name, false);
             }
-
         }
 
         private void _DeleteMod(string name, bool save)
@@ -71,12 +89,48 @@ namespace GodotCSharpToolkit.Editor
                 Editor.Save();
             }
             Editor.ShowConfirmDialog($"Are you sure you wish to delte all local changes to '{name}'? This can not be undone.",
-             shouldDelete => { if (shouldDelete) { __DeleteMod(name); } });
+             shouldDelete => { if (shouldDelete) { _DeleteMod(name); } else if (save) { Editor.Refresh(false); } });
         }
 
-        private void __DeleteMod(string name)
+        private void _DeleteMod(string name)
         {
             FileUtils.Delete($"{Editor.Preferences.SettingLocalSavePath}{name}", true);
+            Editor.Refresh(false);
+        }
+
+        private bool FillModFeatureContextMenu(string modname, string featureName)
+        {
+            Editor.AddPopupMenuSeparator(featureName);
+            Editor.AddPopupMenuEntry($"Delete {featureName}", () => { DeleteModFeature(modname, featureName); }, DataEditorConstants.ICON_DELETE);
+            return true;
+        }
+
+        private void DeleteModFeature(string modName, string featureName)
+        {
+            if (Editor.Tree.HasUnsavedChanges())
+            {
+                Editor.ShowConfirmDialog($"Deleting a mod feature will cause you to lose any unsaved changes. Do you wish to save first?",
+                                        shouldSave => { _DeleteModFeature(modName, featureName, shouldSave); });
+            }
+            else
+            {
+                _DeleteModFeature(modName, featureName, false);
+            }
+        }
+
+        private void _DeleteModFeature(string modName, string featureName, bool save)
+        {
+            if (save)
+            {
+                Editor.Save();
+            }
+            Editor.ShowConfirmDialog($"Are you sure you wish to delte all local changes to '{modName}/{featureName}'? This can not be undone.",
+             shouldDelete => { if (shouldDelete) { _DeleteModFeature(modName, featureName); } else if (save) { Editor.Refresh(false); } });
+        }
+
+        private void _DeleteModFeature(string modName, string featureName)
+        {
+            FileUtils.Delete(FileUtils.NormalizeDirectory($"{Editor.Preferences.SettingLocalSavePath}{modName}/{featureName}"), true);
             Editor.Refresh(false);
         }
     }

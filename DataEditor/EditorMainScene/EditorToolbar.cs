@@ -102,7 +102,7 @@ namespace GodotCSharpToolkit.Editor
 
         public void OnRefreshPressed()
         {
-            Editor.Refresh();
+            Editor.Refresh(true);
         }
 
         public void OnSortPressed()

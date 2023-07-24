@@ -54,6 +54,17 @@ namespace GodotCSharpToolkit.Editor
             return item;
         }
 
+        protected DelegateEditorTreeItem CreateModFeatureItem(TreeItem parent, string name, string modName, List<string> modPaths)
+        {
+            var key = GetUniqueKey(parent, name);
+            var item = CreateDelegateTreeItem(parent, name, key, true,
+                    Colors.White, DataEditorConstants.COLOR_BG_DEFAULT,
+                    null, modPaths, modName);
+            item.OnContextMenuFill = (a) => { return FillModFeatureContextMenu(modName, name); };
+
+            return item;
+        }
+
         public DelegateEditorTreeItem CreateDelegateTreeItem(TreeItem parent, string name, string key, bool collapsed,
                     Color defaultColor, Color defaultBgColor, Action<DelegateEditorTreeItem> onSelection, List<string> modPaths,
                     string modName, object relatedData = null)

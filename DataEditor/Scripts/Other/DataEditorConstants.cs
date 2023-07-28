@@ -42,10 +42,18 @@ namespace GodotCSharpToolkit.Editor
         /// Contains the name of the mod this came from
         /// </summary>
         public const string METADATA_KEY_MOD = "key_mod_name";
+        public const string METADATA_KEY_FEATURE = "key_feature_name";
 
         public static string GetModName(this JsonDefWithName jDef)
         {
             var val = jDef.GetMetadata(METADATA_KEY_MOD);
+            if (val == null) { return ""; }
+            return val.ToString();
+        }
+
+        public static string GetFeatureName(this JsonDefWithName jDef)
+        {
+            var val = jDef.GetMetadata(METADATA_KEY_FEATURE);
             if (val == null) { return ""; }
             return val.ToString();
         }

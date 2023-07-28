@@ -131,7 +131,7 @@ namespace GodotCSharpToolkit.Editor
 
                 foreach (var feature in features.Keys)
                 {
-                    var delegateItem = CreateModFeatureItem(modItem, feature, modName, features[feature]);
+                    var delegateItem = CreateModFeatureItem(modItem, feature, modName, feature, features[feature]);
                     var delTree = CreateTreeItem(modItem, delegateItem);
 
                     // Fill the tree
@@ -142,7 +142,7 @@ namespace GodotCSharpToolkit.Editor
                         if (!RootItems.ContainsKey(rootKey))
                         {
                             item = Activator.CreateInstance(type) as AbstractEditorRootItem;
-                            item.Init(delTree, Editor, features[feature], modName);
+                            item.Init(delTree, Editor, features[feature], modName, feature);
                             item.Reload();
                             item.Key = rootKey;
                             RootItems.Add(rootKey, item);
@@ -150,7 +150,7 @@ namespace GodotCSharpToolkit.Editor
                         else
                         {
                             item = RootItems[rootKey];
-                            item.Init(delTree, Editor, features[feature], modName);
+                            item.Init(delTree, Editor, features[feature], modName, feature);
                         }
 
                         item.CreateRootItem();

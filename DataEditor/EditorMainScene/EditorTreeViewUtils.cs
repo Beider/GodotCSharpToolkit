@@ -48,18 +48,18 @@ namespace GodotCSharpToolkit.Editor
             var key = GetUniqueKey(parent, name);
             var item = CreateDelegateTreeItem(parent, name, key, true,
                     Editor.Preferences.GetModColor(), DataEditorConstants.COLOR_BG_DEFAULT,
-                    (dte) => Editor.NotifyOnModuleTreeItemPressed(name, dte), modPaths, name);
+                    (dte) => Editor.NotifyOnModuleTreeItemPressed(name, dte), modPaths, name, "");
             item.OnContextMenuFill = (a) => { return FillModContextMenu(name); };
 
             return item;
         }
 
-        protected DelegateEditorTreeItem CreateModFeatureItem(TreeItem parent, string name, string modName, List<string> modPaths)
+        protected DelegateEditorTreeItem CreateModFeatureItem(TreeItem parent, string name, string modName, string featureName, List<string> modPaths)
         {
             var key = GetUniqueKey(parent, name);
             var item = CreateDelegateTreeItem(parent, name, key, true,
                     Colors.White, DataEditorConstants.COLOR_BG_DEFAULT,
-                    null, modPaths, modName);
+                    null, modPaths, modName, featureName);
             item.OnContextMenuFill = (a) => { return FillModFeatureContextMenu(modName, name); };
 
             return item;
@@ -67,10 +67,10 @@ namespace GodotCSharpToolkit.Editor
 
         public DelegateEditorTreeItem CreateDelegateTreeItem(TreeItem parent, string name, string key, bool collapsed,
                     Color defaultColor, Color defaultBgColor, Action<DelegateEditorTreeItem> onSelection, List<string> modPaths,
-                    string modName, object relatedData = null)
+                    string modName, string feature, object relatedData = null)
         {
             var newItem = new DelegateEditorTreeItem();
-            newItem.Init(parent, Editor, modPaths, modName);
+            newItem.Init(parent, Editor, modPaths, modName, feature);
             newItem.Name = name;
             newItem.Key = key;
             newItem.Collapsed = collapsed;

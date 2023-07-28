@@ -109,6 +109,7 @@ namespace GodotCSharpToolkit.Editor
 
             newItem.Original = originalCopy;
             newItem.AddMetadata(DataEditorConstants.METADATA_KEY_MOD, ModName);
+            newItem.AddMetadata(DataEditorConstants.METADATA_KEY_FEATURE, FeatureName);
             newItem.AddMetadata(DataEditorConstants.METADATA_KEY_EDITOR, this);
             newItem.IsModified = true;
             newItem.IsNew = true;
@@ -128,6 +129,7 @@ namespace GodotCSharpToolkit.Editor
             }
             newItem.SourceFile = GetSourceFile(currentCategory);
             newItem.AddMetadata(DataEditorConstants.METADATA_KEY_MOD, ModName);
+            newItem.AddMetadata(DataEditorConstants.METADATA_KEY_FEATURE, FeatureName);
             newItem.AddMetadata(DataEditorConstants.METADATA_KEY_EDITOR, this);
             newItem.IsModified = true;
             newItem.IsNew = true;
@@ -152,6 +154,7 @@ namespace GodotCSharpToolkit.Editor
                     FileNames.Add(jDef.GetCategory());
                 }
                 jDef.AddMetadata(DataEditorConstants.METADATA_KEY_MOD, ModName);
+                jDef.AddMetadata(DataEditorConstants.METADATA_KEY_FEATURE, FeatureName);
                 jDef.AddMetadata(DataEditorConstants.METADATA_KEY_EDITOR, this);
                 Values.Add(jDef);
             }
@@ -314,7 +317,7 @@ namespace GodotCSharpToolkit.Editor
                 foreach (var jDef in list)
                 {
                     var aTreeItem = Editor.Tree.CreateDelegateTreeItem(fileItem, jDef.GetName(), jDef.GetUniqueId(), true, GetItemColor(jDef, true),
-                                    GetItemColor(jDef, false), OnJsonItemSelected, ModPaths, ModName, jDef);
+                                    GetItemColor(jDef, false), OnJsonItemSelected, ModPaths, ModName, FeatureName, jDef);
                     aTreeItem.OnContextMenuFill = FillContextMenuForItem;
                     itemList.Add(aTreeItem);
                 }
@@ -441,7 +444,7 @@ namespace GodotCSharpToolkit.Editor
         {
             var key = Editor.Tree.GetUniqueKey(parent, name);
             var item = Editor.Tree.CreateDelegateTreeItem(parent, name, key, true,
-                    GetCategoryColor(name, true), GetCategoryColor(name, false), OnFileItemSelected, ModPaths, ModName);
+                    GetCategoryColor(name, true), GetCategoryColor(name, false), OnFileItemSelected, ModPaths, FeatureName, ModName);
             item.OnContextMenuFill = contextMenu;
             item.Color = Color;
             return Editor.Tree.CreateTreeItem(parent, item); ;
@@ -565,7 +568,7 @@ namespace GodotCSharpToolkit.Editor
 
         protected string GetSourceFile(string category)
         {
-            return FileUtils.NormalizePath(Editor.Preferences.SettingLocalSavePath + $"{ModName}\\" + GetRelativeDataPath() + GetFileName(category));
+            return FileUtils.NormalizePath(Editor.Preferences.SettingLocalSavePath + $"{ModName}\\{FeatureName}\\" + GetRelativeDataPath() + GetFileName(category));
         }
 
         #region Validators

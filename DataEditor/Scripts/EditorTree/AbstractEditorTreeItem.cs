@@ -28,6 +28,7 @@ namespace GodotCSharpToolkit.Editor
         public string Key { get; set; } = "Tree Item";
         public string Name { get; set; } = "Name";
         public string ModName { get; set; } = "ModName";
+        public string FeatureName { get; set; } = "FeatureName";
         public Color Color { get; set; } = DataEditorConstants.COLOR_DEFAULT;
         public Color ColorBg { get; set; } = DataEditorConstants.COLOR_BG_DEFAULT;
         public bool Collapsed { get; set; } = false;
@@ -40,12 +41,13 @@ namespace GodotCSharpToolkit.Editor
         /// <summary>
         /// Setup things we need at startup
         /// </summary>
-        public void Init(TreeItem parent, IDataEditor editor, List<string> modPaths = null, string modName = "")
+        public void Init(TreeItem parent, IDataEditor editor, List<string> modPaths = null, string modName = "", string featureName = "")
         {
             this.Parent = parent;
             this.Editor = editor;
             this.ModPaths = modPaths;
             this.ModName = modName;
+            this.FeatureName = featureName;
             Editor.Tree.OnSelectItemRequest += OnSelectItemRequest;
         }
 

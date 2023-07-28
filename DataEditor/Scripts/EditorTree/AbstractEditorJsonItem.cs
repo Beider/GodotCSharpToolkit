@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using GodotCSharpToolkit.Misc;
 using GodotCSharpToolkit.Logging;
@@ -54,6 +55,41 @@ namespace GodotCSharpToolkit.Editor
         {
             Values.Clear();
         }
+
+        public override FolderManagerTreeItem GetFolderManagerRootItem(string moduleName, string featurePath)
+        {
+            var childrenType = typeof(U).Name;
+            var fileType = $"File{childrenType}";
+            var assetTypePath = FileUtils.NormalizePath(featurePath + GetRelativeDataPath());
+            var root = FolderManagerTreeItem.CreateTypeItem(Name, assetTypePath, GetType().Name, this, fileType, Color);
+            root.SubPath = GetRelativeDataPath();
+            root.Collapsed = true;
+            var fileNames = new Dictionary<string, FolderManagerTreeItem>();
+
+            // We only want what is in this feature
+            if (featurePath == null) { return root; }
+
+            foreach (var val in Values)
+            {
+                if (!val.GetModName().Equals(moduleName)) { continue; }
+                if (!val.SourceFile.StartsWith(featurePath)) { continue; }
+
+                if (!fileNames.ContainsKey(val.GetCategory()))
+                {
+                    var fileItem = FolderManagerTreeItem.CreateTypeItem(val.GetCategory(), val.SourceFile, fileType, this, childrenType, Color);
+                    fileItem.Collapsed = true;
+                    fileItem.AllowMove = true;
+                    fileItem.SaveAction = (name, list) => SaveFileContent<T, U>(list.Cast<U>().ToList(), name);
+                    root.AddChild(fileItem);
+                    fileNames.Add(val.GetCategory(), fileItem);
+                }
+                // Insert file names
+                var listItem = FolderManagerTreeItem.CreateJsonItem(val.GetName(), val.SourceFile, childrenType, val, GetItemColor(val, true));
+                fileNames[val.GetCategory()].AddChild(listItem);
+            }
+            return root;
+        }
+
 
         /// <summary>
         /// Duplicates a piece of data and sets the new name
@@ -194,12 +230,17 @@ namespace GodotCSharpToolkit.Editor
                     continue;
                 }
 
-                var jsonFileContent = Activator.CreateInstance<X>();
-                jsonFileContent.SetValues(list.ToArray());
-                var jsonContent = Utils.ToJson(jsonFileContent);
-                FileUtils.SaveToFile(jsonContent, fileName);
+                SaveFileContent<X, R>(list, fileName);
             }
             return true;
+        }
+
+        private void SaveFileContent<X, R>(List<R> list, string fileName) where X : IJsonFile<R> where R : JsonDefWithName
+        {
+            var jsonFileContent = Activator.CreateInstance<X>();
+            jsonFileContent.SetValues(list.ToArray());
+            var jsonContent = Utils.ToJson(jsonFileContent);
+            FileUtils.SaveToFile(jsonContent, fileName);
         }
 
         /// <summary>

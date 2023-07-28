@@ -13,6 +13,7 @@ namespace GodotCSharpToolkit.Editor
         private Button BtnSort;
         private Button BtnDisplayName;
         private Button BtnLocalOnly;
+        private Button BtnFolderManager;
         private Button BtnRefresh;
         private Button BtnAddMod;
         private Button BtnClose;
@@ -47,6 +48,9 @@ namespace GodotCSharpToolkit.Editor
 
             BtnSearch = FindNode("BtnSearch") as Button;
             BtnSearch.Connect("pressed", this, nameof(OnSearchPressed));
+
+            BtnFolderManager = FindNode("BtnFolderManager") as Button;
+            BtnFolderManager.Connect("pressed", this, nameof(OnBtnFolderManagerPressed));
         }
 
         public void Init(EditorMainScene editor)
@@ -75,6 +79,11 @@ namespace GodotCSharpToolkit.Editor
         private void OnSearchPressed()
         {
             Editor.NotifyOpenSearchDialog();
+        }
+
+        private void OnBtnFolderManagerPressed()
+        {
+            Editor.OpenFolderManager();
         }
 
         public void OnNewModPressed()

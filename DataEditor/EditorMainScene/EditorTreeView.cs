@@ -168,7 +168,7 @@ namespace GodotCSharpToolkit.Editor
             RefreshInProgress = false;
         }
 
-        private Dictionary<string, List<string>> GetFeatures(string modName)
+        public Dictionary<string, List<string>> GetFeatures(string modName)
         {
             var returnDict = new Dictionary<string, List<string>>();
             var subfolderList = new List<string>();
@@ -178,7 +178,7 @@ namespace GodotCSharpToolkit.Editor
                 var subs = FileUtils.GetSubDirectories(folder);
                 foreach (var subFolder in subs)
                 {
-                    var subName = System.IO.Path.GetFileName(RemoveLastSlash(subFolder));
+                    var subName = System.IO.Path.GetFileName(FileUtils.RemoveLastSlash(subFolder));
                     if (!lowerCaseList.Contains(subName.ToLower()))
                     {
                         subfolderList.Add(subName);
@@ -195,16 +195,6 @@ namespace GodotCSharpToolkit.Editor
                 }
             }
             return returnDict;
-        }
-
-        private string RemoveLastSlash(string path)
-        {
-            if (path == null) { return ""; }
-            if (path.EndsWith("/") || path.EndsWith("\\"))
-            {
-                return path.Substr(0, path.Length - 1);
-            }
-            return path;
         }
 
         private void AddLocalMods()

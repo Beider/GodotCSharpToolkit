@@ -20,7 +20,7 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         protected TreeItem Parent;
 
-        protected List<string> ModPaths;
+        public List<string> ModPaths;
 
         public TreeItem TreeItemSelf { get; set; } = null;
 

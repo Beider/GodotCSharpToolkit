@@ -11,6 +11,7 @@ namespace GodotCSharpToolkit.Misc
     public static class FileUtils
     {
         public const string IMPORT_EXTENSION = ".import";
+        public const string JSON_EXTENSION = ".json";
 
         /// <summary>
         /// Will fix the slashes in the path name
@@ -22,6 +23,19 @@ namespace GodotCSharpToolkit.Misc
                 return path.Replace("\\", "/");
             }
             return path.Replace("/", "\\");
+        }
+
+        /// <summary>
+        /// Removes the last slash from a path if it has one
+        /// </summary>
+        public static string RemoveLastSlash(string path)
+        {
+            if (path == null) { return ""; }
+            if (path.EndsWith("/") || path.EndsWith("\\"))
+            {
+                return path.Substr(0, path.Length - 1);
+            }
+            return path;
         }
 
         /// <summary>

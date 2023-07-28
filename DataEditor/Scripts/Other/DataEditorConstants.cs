@@ -106,6 +106,9 @@ namespace GodotCSharpToolkit.Editor
         public static readonly PackedScene SCENE_DIALOG_ADVANCED_LIST =
                 ResourceLoader.Load($"{EDITOR_ROOT}Dialogs/AdvancedListDialog/DataEditorAdvancedListDialog.tscn") as PackedScene;
 
+        public static readonly PackedScene SCENE_DIALOG_FOLDER_MANAGER =
+                ResourceLoader.Load($"{EDITOR_ROOT}Dialogs/FolderManager/FolderManager.tscn") as PackedScene;
+
         public static readonly PackedScene SCENE_DIALOG_GENERIC_EDITOR =
                 ResourceLoader.Load($"{EDITOR_ROOT}Dialogs/GenericEditorDialog/GenericEditorDialog.tscn") as PackedScene;
 

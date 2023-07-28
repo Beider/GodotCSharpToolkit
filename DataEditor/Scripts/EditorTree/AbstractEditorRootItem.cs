@@ -15,6 +15,11 @@ namespace GodotCSharpToolkit.Editor
 
         }
 
+        public virtual FolderManagerTreeItem GetFolderManagerRootItem(string moduleName, string featurePath)
+        {
+            return null;
+        }
+
         /// <summary>
         /// Should return the root item
         /// </summary>

@@ -186,6 +186,35 @@ namespace GodotCSharpToolkit.Editor
             OnOpenSearchDialog(this);
         }
 
+        public void OpenFolderManager()
+        {
+            if (_HasUnsavedChanges())
+            {
+                ShowConfirmDialog("You have unsaved changes, would you like to save first?", shouldSave =>
+                {
+                    if (shouldSave)
+                    {
+                        Save();
+                        _OpenFolderManager();
+                    }
+                    else
+                    {
+                        _Refresh();
+                        _OpenFolderManager();
+                    }
+                });
+            }
+            else
+            {
+                _OpenFolderManager();
+            }
+        }
+
+        private void _OpenFolderManager()
+        {
+            ShowFolderManagerDialog();
+        }
+
         public void NotifyOnModuleTreeItemPressed(string name, DelegateEditorTreeItem item)
         {
             OnModuleTreeItemPressed(name, item, this);

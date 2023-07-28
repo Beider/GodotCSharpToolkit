@@ -57,6 +57,11 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         void ShowGenericEditorDialog(GenericEditorDialogInput input);
 
+        /// <summary>
+        /// Editor that lets you organize your mods
+        /// </summary>
+        void ShowFolderManagerDialog();
+
 
         /// <summary>
         /// Clear the popup menu

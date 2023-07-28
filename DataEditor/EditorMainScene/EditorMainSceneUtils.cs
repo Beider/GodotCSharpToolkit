@@ -57,6 +57,14 @@ namespace GodotCSharpToolkit.Editor
             AddChild(dialog);
         }
 
+        public void ShowFolderManagerDialog()
+        {
+            var dialog = DataEditorConstants.SCENE_DIALOG_FOLDER_MANAGER.Instance() as FolderManager;
+            dialog.Init(this);
+            CurrentDialog = dialog;
+            AddChild(dialog);
+        }
+
         public void ShowGenericEditorDialog(GenericEditorDialogInput input)
         {
             var dialog = DataEditorConstants.SCENE_DIALOG_GENERIC_EDITOR.Instance() as GenericEditorDialog;

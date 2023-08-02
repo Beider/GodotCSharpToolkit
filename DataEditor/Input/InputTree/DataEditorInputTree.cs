@@ -132,6 +132,7 @@ namespace GodotCSharpToolkit.Editor
         {
             Tree.Clear();
             Root = Tree.CreateItem(null);
+            if (Root == null) { return; }
             var list = Input.GetObjectList();
             for (int i = 0; i < list.Count; i++)
             {

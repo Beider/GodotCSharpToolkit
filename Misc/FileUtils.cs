@@ -242,7 +242,7 @@ namespace GodotCSharpToolkit.Misc
         /// <summary>
         /// Saves the string content to the file.
         /// </summary>
-        public static void SaveToFile(string content, string filePath)
+        public static string SaveToFile(string content, string filePath)
         {
             var file = new Godot.File();
             var error = file.Open(filePath, File.ModeFlags.Write);
@@ -250,10 +250,12 @@ namespace GodotCSharpToolkit.Misc
             {
                 file.StoreString(content);
                 file.Close();
+                return null;
             }
             else
             {
                 Logger.Error($"Failed to write to file, error code: {error.ToString()}");
+                return error.ToString();
             }
         }
 

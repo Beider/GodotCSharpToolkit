@@ -169,8 +169,13 @@ namespace GodotCSharpToolkit.Editor
 
         public static bool ValidateNumberValue(string name, object data, object value)
         {
-            int outValue = 0;
-            return int.TryParse(value.ToString(), out outValue);
+            return int.TryParse(value.ToString(), out var outValue);
+        }
+
+        public static bool ValidateDecimalValue(string name, object data, object value)
+        {
+            if (value == null || value.ToString().Contains(",")) { return false; }
+            return float.TryParse(value.ToString(), out var outValue);
         }
     }
 

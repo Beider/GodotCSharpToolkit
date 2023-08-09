@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using GodotCSharpToolkit.Logging;
+using System.Linq;
 
 namespace GodotCSharpToolkit.Misc
 {
@@ -106,14 +107,14 @@ namespace GodotCSharpToolkit.Misc
         /// <summary>
         /// Used primarily for the editor
         /// </summary>
-        public static Dictionary<object, string> EnumToDictionary(Type enumType)
+        public static Dictionary<object, string> EnumToDictionary(Type enumType, bool sorted = true)
         {
             var returnList = new Dictionary<object, string>();
             foreach (var val in Enum.GetValues(enumType))
             {
                 returnList.Add(val, val.ToString());
             }
-            return returnList;
+            return returnList.OrderBy(pair => pair.Key.ToString()).ToDictionary(obj => obj.Key, obj => obj.Value); ;
         }
 
         /// <summary>

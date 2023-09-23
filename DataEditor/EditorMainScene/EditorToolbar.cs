@@ -17,6 +17,7 @@ namespace GodotCSharpToolkit.Editor
         private Button BtnRefresh;
         private Button BtnAddMod;
         private Button BtnClose;
+        private Button BtnBrowse;
         private Button BtnSearch;
 
         // Called when the node enters the scene tree for the first time.
@@ -45,6 +46,9 @@ namespace GodotCSharpToolkit.Editor
 
             BtnClose = FindNode("BtnClose") as Button;
             BtnClose.Connect("pressed", this, nameof(OnClosePressed));
+
+            BtnBrowse = FindNode("BtnBrowse") as Button;
+            BtnBrowse.Connect("pressed", this, nameof(OnBrowsePressed));
 
             BtnSearch = FindNode("BtnSearch") as Button;
             BtnSearch.Connect("pressed", this, nameof(OnSearchPressed));
@@ -76,9 +80,14 @@ namespace GodotCSharpToolkit.Editor
             Editor.Close();
         }
 
-        private void OnSearchPressed()
+        public void OnSearchPressed()
         {
-            Editor.NotifyOpenSearchDialog();
+            Editor.NotifyOpenSearch();
+        }
+
+        private void OnBrowsePressed()
+        {
+            Editor.NotifyOpenBrowseDialog();
         }
 
         private void OnBtnFolderManagerPressed()

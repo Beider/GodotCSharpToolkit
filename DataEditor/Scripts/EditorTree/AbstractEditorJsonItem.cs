@@ -288,6 +288,10 @@ namespace GodotCSharpToolkit.Editor
                 {
                     continue;
                 }
+                if (Editor.Tree.IsFiltered(def.GetUniqueId()))
+                {
+                    continue;
+                }
                 if (includeDelete || !def.IsTaggedForDelete)
                 {
                     returnList.Add((R)def);
@@ -319,6 +323,7 @@ namespace GodotCSharpToolkit.Editor
                     var aTreeItem = Editor.Tree.CreateDelegateTreeItem(fileItem, jDef.GetName(), jDef.GetUniqueId(), true, GetItemColor(jDef, true),
                                     GetItemColor(jDef, false), OnJsonItemSelected, ModPaths, ModName, FeatureName, jDef);
                     aTreeItem.OnContextMenuFill = FillContextMenuForItem;
+                    aTreeItem.IsLeaf = true;
                     itemList.Add(aTreeItem);
                 }
                 if (Editor.Preferences.PrefSortTree) { SortTreeItemList(itemList); }

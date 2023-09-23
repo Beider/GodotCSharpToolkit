@@ -27,6 +27,9 @@ namespace GodotCSharpToolkit.Editor
         public JsonDefWithName CopiedObject { get; set; } = null;
         private bool RefreshInProgress = false;
 
+        private List<string> Filter = new List<string>();
+        public bool FilterActive { private set; get; } = false;
+
         /// <summary>
         /// Workaround for some godot bugs with signals triggering from code on trees
         /// </summary>
@@ -159,6 +162,12 @@ namespace GodotCSharpToolkit.Editor
 
 
             }
+            if (FilterActive)
+            {
+                // Prune empty items
+                PruneEmptyTreeItems(Root);
+            }
+
             InCode = false;
             if (reloadEditor != "")
             {
@@ -194,7 +203,44 @@ namespace GodotCSharpToolkit.Editor
                     returnDict[sub].Add(FileUtils.NormalizeDirectory($"{FileUtils.NormalizeDirectory(folder)}{sub}"));
                 }
             }
+
             return returnDict;
+        }
+
+        /// <summary>
+        /// Return true if it should be pruned
+        /// </summary>
+        private bool PruneEmptyTreeItems(TreeItem item)
+        {
+            var removeList = new List<TreeItem>();
+            bool hasLeafs = false;
+            // Return false if this is a leaf
+            var abs = GetAbstractTreeItem(item);
+            if (abs != null && abs.IsLeaf)
+            {
+                return false;
+            }
+
+            var child = item.GetChildren();
+            while (child != null)
+            {
+                if (PruneEmptyTreeItems(child))
+                {
+                    removeList.Add(child);
+                }
+                else
+                {
+                    hasLeafs = true;
+                }
+                child = child.GetNext();
+            }
+
+            foreach (var c in removeList)
+            {
+                item.RemoveChild(c);
+            }
+
+            return !hasLeafs;
         }
 
         private void AddLocalMods()

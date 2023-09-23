@@ -202,5 +202,26 @@ namespace GodotCSharpToolkit.Editor
 
             return returnList;
         }
+
+        public void SetFilter(List<string> filter)
+        {
+            Filter = filter;
+            FilterActive = true;
+        }
+
+        public void ClearFilter()
+        {
+            Filter.Clear();
+            FilterActive = false;
+        }
+
+        /// <summary>
+        /// Returns if this item is filtered or not
+        /// </summary>
+        public bool IsFiltered(string identifier)
+        {
+            if (!FilterActive) { return false; }
+            return !Filter.Contains(identifier);
+        }
     }
 }

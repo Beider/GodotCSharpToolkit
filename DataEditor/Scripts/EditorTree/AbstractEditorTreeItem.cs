@@ -32,6 +32,7 @@ namespace GodotCSharpToolkit.Editor
         public Color Color { get; set; } = DataEditorConstants.COLOR_DEFAULT;
         public Color ColorBg { get; set; } = DataEditorConstants.COLOR_BG_DEFAULT;
         public bool Collapsed { get; set; } = false;
+        public bool IsLeaf { get; set; } = false;
 
         public AbstractEditorTreeItem()
         {

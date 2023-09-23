@@ -19,9 +19,10 @@ namespace GodotCSharpToolkit.Editor
         public event Func<bool> HasUnsavedChanges = null;
 
         /// <summary>
-        /// Called to open search dialog
+        /// Called to open dialogs
         /// </summary>
-        public event Action<IDataEditor> OnOpenSearchDialog = delegate { };
+        public event Action<IDataEditor> OnOpenBrowseDialog = delegate { };
+        public Func<string, bool, List<JsonDefWithName>> OnSearch = null;
 
         /// <summary>
         /// Sent when editor is about to be closed
@@ -43,6 +44,8 @@ namespace GodotCSharpToolkit.Editor
         public PopupMenu PopupMenu { get; private set; }
         public Dictionary<string, Action> PopupMenuDelegates = new Dictionary<string, Action>();
 
+        private SearchWindow SearchWindow;
+
         private Control CurrentDialog = null;
 
         private IDataEditorContent ActiveEditor = null;
@@ -54,8 +57,13 @@ namespace GodotCSharpToolkit.Editor
             EditorArea = FindNode("EditorArea") as Control;
             Toolbar = FindNode("Toolbar") as EditorToolbar;
             PopupMenu = FindNode("PopupMenu") as PopupMenu;
+            SearchWindow = FindNode("SearchWindow") as SearchWindow;
             EditorTreeSplit = FindNode("EditorTreeSplit") as HSplitContainer;
             PopupMenu.Connect("id_pressed", this, nameof(OnPopupMenuPressed));
+
+            Tree.Visible = true;
+            SearchWindow.Visible = false;
+            SearchWindow.MainScene = this;
 
             Tree.Init(this);
             Toolbar.Init(this);
@@ -103,15 +111,15 @@ namespace GodotCSharpToolkit.Editor
                 {
                     Toolbar.OnRefreshPressed();
                 }
-                else if (keyEvent.Scancode == (int)KeyList.F1)
+                else if (keyEvent.Scancode == (int)KeyList.F2)
+                {
+                    Toolbar.OnSearchPressed();
+                }
+                else if (keyEvent.Scancode == (int)KeyList.F4)
                 {
                     Toolbar.OnSortPressed();
                 }
-                else if (keyEvent.Scancode == (int)KeyList.F2)
-                {
-                    Toolbar.OnToggleNamesPressed();
-                }
-                else if (keyEvent.Scancode == (int)KeyList.F3)
+                else if (keyEvent.Scancode == (int)KeyList.F5)
                 {
                     Toolbar.OnLocalOnlyPressed();
                 }
@@ -181,9 +189,20 @@ namespace GodotCSharpToolkit.Editor
             Toolbar.Init(this);
         }
 
-        public void NotifyOpenSearchDialog()
+        public void NotifyOpenSearch()
         {
-            OnOpenSearchDialog(this);
+            SearchWindow.Visible = !SearchWindow.Visible;
+        }
+
+        public List<JsonDefWithName> Search(string query, bool exactMatch)
+        {
+            if (OnSearch == null) { return new List<JsonDefWithName>(); }
+            return OnSearch(query, exactMatch);
+        }
+
+        public void NotifyOpenBrowseDialog()
+        {
+            OnOpenBrowseDialog(this);
         }
 
         public void OpenFolderManager()

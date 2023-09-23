@@ -203,10 +203,20 @@ namespace GodotCSharpToolkit.Editor
             return returnList;
         }
 
-        public void SetFilter(List<string> filter)
+        public void SetFilter(string query, bool exactMatch = false)
         {
-            Filter = filter;
+            Filter.Clear();
             FilterActive = true;
+
+            var results = Editor.Search(query, exactMatch);
+
+            foreach (var jDef in results)
+            {
+                Filter.Add(jDef.GetUniqueId());
+            }
+
+            RefreshTree(false);
+            Editor.SearchWindow.Visible = true;
         }
 
         public void ClearFilter()

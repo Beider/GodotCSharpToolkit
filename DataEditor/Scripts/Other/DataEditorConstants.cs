@@ -98,6 +98,9 @@ namespace GodotCSharpToolkit.Editor
         public static readonly Texture ICON_PASTE =
                 ResourceLoader.Load($"{EDITOR_ROOT}Assets/Icons/paste.png") as Texture;
 
+        public static readonly Texture ICON_SEARCH =
+                ResourceLoader.Load($"{EDITOR_ROOT}Assets/Icons/search.png") as Texture;
+
         //
         // Scene paths
         //

@@ -113,6 +113,13 @@ namespace GodotCSharpToolkit.Editor
                     Input.OnRemove(selectedItem, this);
                 }, DataEditorConstants.ICON_DELETE);
             }
+            foreach (var mItem in Input.MenuItems)
+            {
+                Editor.AddPopupMenuEntry(mItem.Name, () =>
+                {
+                    mItem.Action(selectedItem, this);
+                }, mItem.Icon);
+            }
         }
 
         private void BuildTreeColumns()

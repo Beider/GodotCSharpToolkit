@@ -54,19 +54,11 @@ namespace GodotCSharpToolkit.Editor
 
         public void Search(string query, bool exactMatch = false)
         {
-            var result = new List<string>();
+            SearchInput.Text = query;
+            ChkExact.Pressed = exactMatch;
             ClearButton.Visible = true;
             GridButtons.Columns = 3;
-
-            var results = MainScene.Search(query, exactMatch);
-
-            foreach (var jDef in results)
-            {
-                result.Add(jDef.GetUniqueId());
-            }
-
-            MainScene.Tree.SetFilter(result);
-            MainScene.Tree.RefreshTree(false);
+            MainScene.Tree.SetFilter(query, exactMatch);
         }
     }
 }

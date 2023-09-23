@@ -92,7 +92,8 @@ namespace GodotCSharpToolkit.Editor
                         List<DEA_TreeColumn> columns, Func<List<object>> getObjectList,
                         Action<IDataEditorInput> onAdd, Action<object, IDataEditorInput> onEdit,
                         Action<object, IDataEditorInput> onRemove,
-                        Action<object, IDataEditorInput> onDoubleClick = null)
+                        Action<object, IDataEditorInput> onDoubleClick = null,
+                        List<JsonTreeMenuItem> menuItems = null)
         {
             var row = new JsonGenericEditorInputRowTree();
             row.Name = name;
@@ -102,6 +103,7 @@ namespace GodotCSharpToolkit.Editor
             row.OnEdit = onEdit;
             row.OnRemove = onRemove;
             row.OnDoubleClick = onDoubleClick;
+            row.MenuItems = menuItems;
             row.Columns = columns;
             row.GetObjectList = getObjectList;
             Rows.Add(row);
@@ -286,6 +288,20 @@ namespace GodotCSharpToolkit.Editor
         public Action<object> OnDoubleClick { get; set; } = null;
     }
 
+    public class JsonTreeMenuItem
+    {
+        public JsonTreeMenuItem(string name, Texture icon, Action<object, IDataEditorInput> action)
+        {
+            this.Name = name;
+            this.Icon = icon;
+            this.Action = action;
+        }
+
+        public string Name;
+        public Action<object, IDataEditorInput> Action;
+        public Texture Icon;
+    }
+
     public class JsonGenericEditorInputRowTree : JsonGenericEditorInputRow
     {
         public float EditorHeight { get; set; } = 100f;
@@ -320,5 +336,7 @@ namespace GodotCSharpToolkit.Editor
         /// Columns for the tree
         /// </summary>
         public List<DEA_TreeColumn> Columns { get; set; } = new List<DEA_TreeColumn>();
+
+        public List<JsonTreeMenuItem> MenuItems { get; set; } = null;
     }
 }

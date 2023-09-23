@@ -44,7 +44,7 @@ namespace GodotCSharpToolkit.Editor
         public PopupMenu PopupMenu { get; private set; }
         public Dictionary<string, Action> PopupMenuDelegates = new Dictionary<string, Action>();
 
-        private SearchWindow SearchWindow;
+        public SearchWindow SearchWindow { get; private set; }
 
         private Control CurrentDialog = null;
 

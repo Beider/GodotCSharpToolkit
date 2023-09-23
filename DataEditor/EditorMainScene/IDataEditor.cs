@@ -14,6 +14,8 @@ namespace GodotCSharpToolkit.Editor
         EditorToolbar Toolbar { get; }
         PopupMenu PopupMenu { get; }
 
+        SearchWindow SearchWindow { get; }
+
         /// <summary>
         /// Show the editor, must implement IDataEditorContent
         /// </summary>
@@ -87,5 +89,13 @@ namespace GodotCSharpToolkit.Editor
         /// Sent when a module tree item is pressed
         /// </summary>
         void NotifyOnModuleTreeItemPressed(string name, DelegateEditorTreeItem item);
+
+        /// <summary>
+        /// Search for json defs
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="exactMatch"></param>
+        /// <returns></returns>
+        List<JsonDefWithName> Search(string query, bool exactMatch);
     }
 }

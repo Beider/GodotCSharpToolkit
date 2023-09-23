@@ -288,10 +288,6 @@ namespace GodotCSharpToolkit.Editor
                 {
                     continue;
                 }
-                if (Editor.Tree.IsFiltered(def.GetUniqueId()))
-                {
-                    continue;
-                }
                 if (includeDelete || !def.IsTaggedForDelete)
                 {
                     returnList.Add((R)def);
@@ -320,6 +316,7 @@ namespace GodotCSharpToolkit.Editor
                 var itemList = new List<DelegateEditorTreeItem>();
                 foreach (var jDef in list)
                 {
+                    if (Editor.Tree.IsFiltered(jDef.GetUniqueId())) { continue; }
                     var aTreeItem = Editor.Tree.CreateDelegateTreeItem(fileItem, jDef.GetName(), jDef.GetUniqueId(), true, GetItemColor(jDef, true),
                                     GetItemColor(jDef, false), OnJsonItemSelected, ModPaths, ModName, FeatureName, jDef);
                     aTreeItem.OnContextMenuFill = FillContextMenuForItem;
@@ -471,6 +468,10 @@ namespace GodotCSharpToolkit.Editor
         {
             var data = (JsonDefWithName)item.RelatedData;
             Editor.AddPopupMenuSeparator(item.Name);
+            Editor.AddPopupMenuEntry("Filter For Usage", () =>
+            {
+                Editor.SearchWindow.Search(item.Key, false);
+            }, DataEditorConstants.ICON_SEARCH);
             Editor.AddPopupMenuEntry("Duplicate", () =>
             {
                 AddAndShowNewItem(Duplicate(data));

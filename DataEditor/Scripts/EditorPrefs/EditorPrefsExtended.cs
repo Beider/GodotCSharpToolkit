@@ -26,6 +26,7 @@ namespace GodotCSharpToolkit.Editor
         private const string PREFIX_TREE_COLLAPSED_STATE_PREF = "tree_col_state_";
         private const string PREFIX_TREE_COLOR_PREF = "tree_color_";
         private const string SETTING_AUTOLOAD = "editor_pref_autoload";
+        private const string SETTING_FILTER_VISIBILE = "editor_pref_filter_visible";
         private const string SETTING_SAVE_PATH = "editor_pref_save_path";
         private const string SETTING_WEB_MODE = "editor_web_mode";
         public EditorPrefsExtended(string path = null) : base(path)
@@ -80,6 +81,12 @@ namespace GodotCSharpToolkit.Editor
         {
             get { return GetValue(SETTING_AUTOLOAD, 0); }
             set { SetValue(SETTING_AUTOLOAD, value); }
+        }
+
+        public bool FilterVisible
+        {
+            get { return GetValue(SETTING_FILTER_VISIBILE, false); }
+            set { SetValue(SETTING_FILTER_VISIBILE, value); }
         }
 
         public bool SettingIsLoadLocalData

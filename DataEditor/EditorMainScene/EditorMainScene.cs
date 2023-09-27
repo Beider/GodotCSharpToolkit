@@ -62,7 +62,7 @@ namespace GodotCSharpToolkit.Editor
             PopupMenu.Connect("id_pressed", this, nameof(OnPopupMenuPressed));
 
             Tree.Visible = true;
-            SearchWindow.Visible = false;
+            SearchWindow.Visible = Preferences.FilterVisible;
             SearchWindow.MainScene = this;
 
             Tree.Init(this);
@@ -78,6 +78,11 @@ namespace GodotCSharpToolkit.Editor
             SaveTimer.Connect("timeout", this, nameof(SavePreferences));
             AddChild(SaveTimer);
             SaveTimer.Start();
+        }
+
+        public override void _ExitTree()
+        {
+            SavePreferences();
         }
 
         private void SplitDragged(int offset)
@@ -192,6 +197,7 @@ namespace GodotCSharpToolkit.Editor
         public void NotifyOpenSearch()
         {
             SearchWindow.Visible = !SearchWindow.Visible;
+            Preferences.FilterVisible = SearchWindow.Visible;
         }
 
         public List<JsonDefWithName> Search(string query, bool exactMatch)

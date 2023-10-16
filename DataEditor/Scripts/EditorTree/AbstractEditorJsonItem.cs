@@ -217,8 +217,6 @@ namespace GodotCSharpToolkit.Editor
             path += GetRelativeDataPath();
             path = FileUtils.NormalizePath(path);
 
-            FileUtils.CreateDirectory(path);
-
             foreach (var cat in FileNames)
             {
                 var fileName = path + GetFileName(cat);
@@ -233,6 +231,7 @@ namespace GodotCSharpToolkit.Editor
                     continue;
                 }
 
+                FileUtils.CreateDirectory(path);
                 SaveFileContent<X, R>(list, fileName);
             }
             return true;

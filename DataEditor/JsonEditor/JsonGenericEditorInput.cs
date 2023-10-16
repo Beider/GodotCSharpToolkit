@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using GodotCSharpToolkit.Extensions;
+using System.Globalization;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -176,8 +177,7 @@ namespace GodotCSharpToolkit.Editor
 
         public static bool ValidateDecimalValue(string name, object data, object value)
         {
-            if (value == null || value.ToString().Contains(",")) { return false; }
-            return float.TryParse(value.ToString(), out var outValue);
+            return float.TryParse(value.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var outValue);
         }
     }
 

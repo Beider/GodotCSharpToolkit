@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Globalization;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -65,7 +66,7 @@ namespace GodotCSharpToolkit.Editor
             if (SettingExists(name))
             {
                 float value = defaultValue;
-                if (float.TryParse(GetValue(name), out value))
+                if (float.TryParse(GetValue(name), NumberStyles.Any, CultureInfo.InvariantCulture, out value))
                 {
                     return value;
                 }

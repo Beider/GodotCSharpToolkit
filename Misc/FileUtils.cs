@@ -94,6 +94,10 @@ namespace GodotCSharpToolkit.Misc
 
             // Release builds do not like backslashes
             String path = NormalizeDirectory(parentPath);
+            if (!dir.DirExists(path))
+            {
+                return retList;
+            }
             dir.Open(path);
             dir.ListDirBegin(true, true);
             while (true)

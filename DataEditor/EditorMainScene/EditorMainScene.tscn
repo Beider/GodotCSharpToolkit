@@ -197,14 +197,14 @@ __meta__ = {
 }
 
 [node name="VSplitContainer" type="VSplitContainer" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit"]
-margin_right = 200.0
+margin_right = 255.0
 margin_bottom = 500.0
-rect_min_size = Vector2( 200, 0 )
+rect_min_size = Vector2( 255, 0 )
 collapsed = true
 dragger_visibility = 2
 
 [node name="SearchWindow" type="Panel" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/VSplitContainer"]
-margin_right = 200.0
+margin_right = 255.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 0, 60 )
 script = ExtResource( 15 )
@@ -218,7 +218,7 @@ margin_right = -5.0
 margin_bottom = -20.0
 
 [node name="GridContainer" type="GridContainer" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/VSplitContainer/SearchWindow/GridContainer"]
-margin_right = 238.0
+margin_right = 245.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 columns = 2
@@ -231,40 +231,40 @@ text = "Filter:"
 
 [node name="SearchInput" type="LineEdit" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/VSplitContainer/SearchWindow/GridContainer/GridContainer"]
 margin_left = 41.0
-margin_right = 238.0
+margin_right = 245.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="GridButtons" type="GridContainer" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/VSplitContainer/SearchWindow/GridContainer"]
 margin_top = 28.0
-margin_right = 238.0
+margin_right = 245.0
 margin_bottom = 52.0
 size_flags_horizontal = 3
 columns = 3
 
 [node name="SearchBtn" type="Button" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/VSplitContainer/SearchWindow/GridContainer/GridButtons"]
-margin_right = 45.0
+margin_right = 52.0
 margin_bottom = 24.0
 focus_mode = 0
 size_flags_horizontal = 3
 text = "Filter"
 
 [node name="ClearBtn" type="Button" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/VSplitContainer/SearchWindow/GridContainer/GridButtons"]
-margin_left = 49.0
-margin_right = 130.0
+margin_left = 56.0
+margin_right = 137.0
 margin_bottom = 24.0
 text = "Clear Filter"
 
 [node name="ChkExact" type="CheckBox" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/VSplitContainer/SearchWindow/GridContainer/GridButtons"]
-margin_left = 134.0
-margin_right = 238.0
+margin_left = 141.0
+margin_right = 245.0
 margin_bottom = 24.0
 focus_mode = 0
 text = "Exact Match"
 
 [node name="EditorTreeView" type="Tree" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/VSplitContainer"]
 margin_top = 60.0
-margin_right = 200.0
+margin_right = 255.0
 margin_bottom = 500.0
 rect_min_size = Vector2( 200, 0 )
 focus_mode = 0
@@ -273,7 +273,7 @@ allow_rmb_select = true
 script = ExtResource( 3 )
 
 [node name="EditorArea" type="ScrollContainer" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit"]
-margin_left = 212.0
+margin_left = 267.0
 margin_right = 960.0
 margin_bottom = 500.0
 size_flags_horizontal = 3

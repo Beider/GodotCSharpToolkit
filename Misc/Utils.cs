@@ -130,5 +130,30 @@ namespace GodotCSharpToolkit.Misc
             }
             return array;
         }
+
+        private static NumberFormatInfo nfi = null;
+
+        public static NumberFormatInfo NFormatInfo
+        {
+            get
+            {
+                if (nfi == null)
+                {
+                    nfi = new NumberFormatInfo();
+                    nfi.NumberDecimalSeparator = ".";
+                }
+                return nfi;
+            }
+        }
+
+        public static string ToNumericString(this object obj)
+        {
+            if (obj == null) { return null; }
+            if (obj is float f)
+            {
+                return f.ToString(NFormatInfo);
+            }
+            return obj.ToString();
+        }
     }
 }

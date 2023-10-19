@@ -190,7 +190,7 @@ namespace GodotCSharpToolkit.Editor
                 ActiveEditor.QueueFree();
             }
             OnDataRefreshed();
-            Tree.RefreshTree(true, uniqueId);
+            Tree.RefreshTree(true);
             Toolbar.Init(this);
         }
 

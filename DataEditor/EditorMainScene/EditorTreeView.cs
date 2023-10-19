@@ -70,13 +70,20 @@ namespace GodotCSharpToolkit.Editor
             return null;
         }
 
-        public void RefreshTree(bool reload = true, string reloadEditor = "")
+        public void RefreshTree(bool reload = true)
         {
             if (RefreshInProgress) { return; }
             if (ModProvider == null)
             {
                 Logger.Error($"Please provide a AbstractEditorTreeModFolderProvider provider for the editor.");
                 return;
+            }
+
+            string selectedItem = "";
+
+            if (GetSelected() != null)
+            {
+                selectedItem = (string)GetSelected().GetMetadata(0);
             }
 
             // Mark as refresh starting
@@ -168,13 +175,19 @@ namespace GodotCSharpToolkit.Editor
                 PruneEmptyTreeItems(Root);
             }
 
-            InCode = false;
-            if (reloadEditor != "")
-            {
-                OnSelectItemRequest(reloadEditor);
-            }
+            FindAndSelect(selectedItem);
 
+            InCode = false;
             RefreshInProgress = false;
+        }
+
+        private void FindAndSelect(string id)
+        {
+            if (id.IsNullOrEmpty()) { return; }
+            var tItem = GetTreeItemById(id);
+            if (tItem == null) { return; }
+            ScrollToItem(tItem.TreeItemSelf);
+            tItem.TreeItemSelf.Select(0);
         }
 
         public Dictionary<string, List<string>> GetFeatures(string modName)

@@ -130,5 +130,29 @@ namespace GodotCSharpToolkit.Editor
                 Rows.Add(CurrentRow, row);
             }
         }
+
+        public override Action<string> GetOpenAction()
+        {
+            return (key) =>
+            {
+                var data = EditorScene.GetJsonDefById<JsonDefWithName>(key);
+                EditorUtils.ShowEditor(data);
+            };
+        }
+
+        public override Color GetColor()
+        {
+            return JsonItemListDialog.GetItemColor(Data);
+        }
+
+        public override string GetContentName()
+        {
+            return Data.GetName();
+        }
+
+        public override string GetContentID()
+        {
+            return Data.GetUniqueId();
+        }
     }
 }

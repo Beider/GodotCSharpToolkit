@@ -16,6 +16,7 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         public event Action OnDataSaved = delegate { };
         public event Action OnDataRefreshed = delegate { };
+        public event Action<Action<string>, string, string, Color> OnEditorOpened = delegate { };
         public event Func<bool> HasUnsavedChanges = null;
 
         /// <summary>
@@ -43,6 +44,7 @@ namespace GodotCSharpToolkit.Editor
         public EditorToolbar Toolbar { get; private set; }
         public PopupMenu PopupMenu { get; private set; }
         public Dictionary<string, Action> PopupMenuDelegates = new Dictionary<string, Action>();
+        public EditorRecentTracker EditorRecentTracker;
 
         public SearchWindow SearchWindow { get; private set; }
 
@@ -60,6 +62,9 @@ namespace GodotCSharpToolkit.Editor
             SearchWindow = FindNode("SearchWindow") as SearchWindow;
             EditorTreeSplit = FindNode("EditorTreeSplit") as HSplitContainer;
             PopupMenu.Connect("id_pressed", this, nameof(OnPopupMenuPressed));
+
+            EditorRecentTracker = FindNode("EditorRecentTracker") as EditorRecentTracker;
+            EditorRecentTracker.SetEditor(this);
 
             Tree.Visible = true;
             SearchWindow.Visible = Preferences.FilterVisible;

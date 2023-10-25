@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://GodotCSharpToolkit/DataEditor/Assets/Icons/search.png" type="Texture" id=1]
 [ext_resource path="res://GodotCSharpToolkit/DataEditor/EditorMainScene/EditorMainScene.cs" type="Script" id=2]
@@ -15,6 +15,7 @@
 [ext_resource path="res://GodotCSharpToolkit/DataEditor/Assets/Icons/manager.png" type="Texture" id=13]
 [ext_resource path="res://GodotCSharpToolkit/DataEditor/Assets/Icons/open-book.png" type="Texture" id=14]
 [ext_resource path="res://GodotCSharpToolkit/DataEditor/EditorMainScene/SearchWindow.cs" type="Script" id=15]
+[ext_resource path="res://GodotCSharpToolkit/DataEditor/EditorMainScene/EditorRecentTracker.cs" type="Script" id=16]
 
 [node name="EditorMainScene" type="Control"]
 anchor_right = 1.0
@@ -272,9 +273,27 @@ allow_reselect = true
 allow_rmb_select = true
 script = ExtResource( 3 )
 
-[node name="EditorArea" type="ScrollContainer" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit"]
+[node name="HSplitContainer" type="VSplitContainer" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit"]
 margin_left = 267.0
 margin_right = 960.0
+margin_bottom = 500.0
+dragger_visibility = 2
+
+[node name="RecentList" type="Panel" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/HSplitContainer"]
+self_modulate = Color( 0, 0, 0, 1 )
+margin_right = 693.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+
+[node name="EditorRecentTracker" type="GridContainer" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/HSplitContainer/RecentList"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+columns = 10
+script = ExtResource( 16 )
+
+[node name="EditorArea" type="ScrollContainer" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/HSplitContainer"]
+margin_top = 40.0
+margin_right = 693.0
 margin_bottom = 500.0
 size_flags_horizontal = 3
 size_flags_vertical = 3

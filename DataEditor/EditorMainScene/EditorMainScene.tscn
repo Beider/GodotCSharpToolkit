@@ -282,8 +282,8 @@ dragger_visibility = 2
 [node name="RecentList" type="Panel" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/HSplitContainer"]
 self_modulate = Color( 0, 0, 0, 1 )
 margin_right = 693.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 0, 40 )
+margin_bottom = 26.0
+rect_min_size = Vector2( 0, 26 )
 
 [node name="EditorRecentTracker" type="GridContainer" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/HSplitContainer/RecentList"]
 anchor_right = 1.0
@@ -292,7 +292,7 @@ columns = 10
 script = ExtResource( 16 )
 
 [node name="EditorArea" type="ScrollContainer" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/HSplitContainer"]
-margin_top = 40.0
+margin_top = 26.0
 margin_right = 693.0
 margin_bottom = 500.0
 size_flags_horizontal = 3

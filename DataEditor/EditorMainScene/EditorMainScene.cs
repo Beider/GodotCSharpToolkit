@@ -16,8 +16,14 @@ namespace GodotCSharpToolkit.Editor
         /// </summary>
         public event Action OnDataSaved = delegate { };
         public event Action OnDataRefreshed = delegate { };
-        public event Action<Action<string>, string, string, Color> OnEditorOpened = delegate { };
+        public event Action<int, string, string, Color> OnEditorOpened = delegate { };
         public event Func<bool> HasUnsavedChanges = null;
+
+        /// <summary>
+        /// Request the opening of the editor
+        /// First is unique id, second is type
+        /// </summary>
+        public event Action<string, int> OnOpenEditorRequest = delegate { };
 
         /// <summary>
         /// Called to open dialogs
@@ -65,6 +71,7 @@ namespace GodotCSharpToolkit.Editor
 
             EditorRecentTracker = FindNode("EditorRecentTracker") as EditorRecentTracker;
             EditorRecentTracker.SetEditor(this);
+            EditorRecentTracker.OnOpenEditorRequest += OnOpenEditorRequest;
 
             Tree.Visible = true;
             SearchWindow.Visible = Preferences.FilterVisible;

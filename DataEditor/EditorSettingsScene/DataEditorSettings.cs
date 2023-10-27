@@ -102,13 +102,9 @@ namespace GodotCSharpToolkit.Editor
             return "";
         }
 
-        public Action<string> GetOpenAction()
+        public int GetTypeId()
         {
-            return (key) =>
-            {
-                Control settings = DataEditorConstants.SCENE_SETTINGS.Instance() as Control;
-                Editor.ShowEditor(settings);
-            };
+            return 0;
         }
 
         public Color GetColor()

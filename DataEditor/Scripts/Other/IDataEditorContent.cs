@@ -16,9 +16,9 @@ namespace GodotCSharpToolkit.Editor
         string GetUniqueId();
 
         /// <summary>
-        /// Get the opening action to reopen this
+        /// Get the ID for this
         /// </summary>
-        Action<string> GetOpenAction();
+        int GetTypeId();
 
         /// <summary>
         /// The color that represents the object opened

@@ -24,7 +24,7 @@ namespace GodotCSharpToolkit.Editor
                 ActiveEditor = iContent;
                 iContent.Init(this);
                 EditorArea.AddChild(editorContent);
-                OnEditorOpened(iContent.GetOpenAction(), iContent.GetContentName(), iContent.GetContentID(), iContent.GetColor());
+                OnEditorOpened(iContent.GetTypeId(), iContent.GetContentName(), iContent.GetContentID(), iContent.GetColor());
             }
             else
             {

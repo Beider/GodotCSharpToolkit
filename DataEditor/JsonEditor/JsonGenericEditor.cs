@@ -131,13 +131,9 @@ namespace GodotCSharpToolkit.Editor
             }
         }
 
-        public override Action<string> GetOpenAction()
+        public override int GetTypeId()
         {
-            return (key) =>
-            {
-                var data = EditorScene.GetJsonDefById<JsonDefWithName>(key);
-                EditorUtils.ShowEditor(data);
-            };
+            return 1;
         }
 
         public override Color GetColor()

@@ -61,10 +61,7 @@ namespace GodotCSharpToolkit.Editor
             return Data.GetUniqueId();
         }
 
-        public virtual Action<string> GetOpenAction()
-        {
-            return (key) => { };
-        }
+        public virtual int GetTypeId() { return -1; }
         public virtual Color GetColor() { return Colors.Transparent; }
         public virtual string GetContentName() { return "Not Set"; }
         public virtual string GetContentID() { return null; }

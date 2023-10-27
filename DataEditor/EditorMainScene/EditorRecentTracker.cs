@@ -12,9 +12,9 @@ namespace GodotCSharpToolkit.Editor
         private class RecentEditorData
         {
             public int TypeId { get; }
-            public string Name { get; }
+            public string Name { get; set; }
             public string UniqueId { get; }
-            public Color Color { get; }
+            public Color Color { get; set; }
             public Button Button { get; set; }
 
             public RecentEditorData(int typeId, string name, string uniqueId, Color color)
@@ -106,6 +106,9 @@ namespace GodotCSharpToolkit.Editor
         {
             if (RecentData.ContainsKey(uniqueId))
             {
+                RecentData[uniqueId].Name = name;
+                RecentData[uniqueId].Color = color;
+                SetButtonText(RecentData[uniqueId]);
                 MoveToFront(RecentData[uniqueId]);
                 return RecentData[uniqueId];
             }
@@ -115,7 +118,6 @@ namespace GodotCSharpToolkit.Editor
                 var btn = new Button();
                 data.Button = btn;
                 SetButtonText(data);
-                btn.SelfModulate = color;
                 btn.SizeFlagsVertical = (int)SizeFlags.ExpandFill;
                 btn.HintTooltip = name;
 
@@ -151,6 +153,7 @@ namespace GodotCSharpToolkit.Editor
         private void SetButtonText(RecentEditorData data, bool full = false)
         {
             data.Button.Text = data.Name.Length > 15 && !full ? $"{data.Name.Substr(0, 13)}..." : data.Name;
+            data.Button.SelfModulate = data.Color;
         }
 
         private void PinButton(InputEvent evnt, string key)

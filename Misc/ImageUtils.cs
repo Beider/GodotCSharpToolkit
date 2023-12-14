@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using GodotCSharpToolkit.Logging;
+using GodotCSharpToolkit.Extensions;
 
 /// <summary>
 /// The file utils in this class work on both godot paths (res:// or user://) and absolute file paths.
@@ -30,6 +31,11 @@ namespace GodotCSharpToolkit.Misc
 
         public static ImageTexture LoadExternal(string fullPath)
         {
+            if (fullPath.IsNullOrEmpty())
+            {
+                Logger.Error($"Could not load external image path is empty");
+                return null;
+            }
             var image = new Image();
             var error = image.Load(fullPath);
             if (error != 0)

@@ -177,7 +177,7 @@ namespace GodotCSharpToolkit.Editor
 
         public static bool ValidateDecimalValue(string name, object data, object value)
         {
-            return float.TryParse(value.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var outValue);
+            return value.ToString().TryParseFloat(out var outValue);
         }
     }
 

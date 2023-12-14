@@ -81,8 +81,11 @@ namespace GodotCSharpToolkit.Editor
             Editor.Preferences.SettingWebMode = WebMode.Pressed;
             SetupWebMode();
             var path = FileUtils.NormalizeDirectory(SavePath.Text);
-            Editor.Preferences.SettingLocalSavePath = path;
-            SavePath.Text = path;
+            if (path != Editor.Preferences.SettingLocalSavePath)
+            {
+                Editor.Preferences.SettingLocalSavePath = path;
+                SavePath.Text = path;
+            }
         }
 
         private void SetupWebMode()

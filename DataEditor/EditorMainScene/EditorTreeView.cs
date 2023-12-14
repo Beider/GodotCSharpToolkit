@@ -169,7 +169,7 @@ namespace GodotCSharpToolkit.Editor
 
 
             }
-            if (FilterActive)
+            if (FilterActive || Editor.Preferences.PrefIsLocalOnly)
             {
                 // Prune empty items
                 PruneEmptyTreeItems(Root);

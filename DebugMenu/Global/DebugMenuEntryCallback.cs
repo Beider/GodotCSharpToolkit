@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace GodotCSharpToolkit.DebugMenu
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class DebugMenuEntryCallback : DebugMenuEntry
+    public partial class DebugMenuEntryCallback : DebugMenuEntry
     {
         public readonly object[] Parameters;
         public readonly string TextCallback;

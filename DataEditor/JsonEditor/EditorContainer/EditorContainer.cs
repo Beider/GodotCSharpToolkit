@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class EditorContainerData : JsonGenericEditorInputRow
+    public partial class EditorContainerData : JsonGenericEditorInputRow
     {
         /// <summary>
         /// The input used for the generic editor inside this editor
@@ -21,10 +21,10 @@ namespace GodotCSharpToolkit.Editor
         /// <summary>
         /// Min size
         /// </summary>
-        public Vector2 RectMinSize = Vector2.Zero;
+        public Vector2 CustomMinimumSize = Vector2.Zero;
     }
 
-    public class EditorContainer : Panel, IDataEditorInput
+    public partial class EditorContainer : Panel, IDataEditorInput
     {
         private JsonDefWithName Data;
         private IDataEditor Editor;
@@ -38,8 +38,8 @@ namespace GodotCSharpToolkit.Editor
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            Grid = FindNode("Grid") as GridContainer;
-            NameLabel = FindNode("Label") as Label;
+            Grid = FindChild("Grid") as GridContainer;
+            NameLabel = FindChild("Label") as Label;
 
         }
 
@@ -69,7 +69,7 @@ namespace GodotCSharpToolkit.Editor
 
             Grid.AddChild(GenericEditor);
             NameLabel.Text = Input.ContainerTitle;
-            RectMinSize = Input.RectMinSize;
+            CustomMinimumSize = Input.CustomMinimumSize;
         }
 
         private static EditorContainer GetEditor()
@@ -85,7 +85,7 @@ namespace GodotCSharpToolkit.Editor
             row.Name = System.Guid.NewGuid().ToString();
             row.EditorType = JsonGenericEditorInputRow.EditorTypes.Custom;
             row.ContainerTitle = containerTitle;
-            row.RectMinSize = rectMinSize;
+            row.CustomMinimumSize = rectMinSize;
             row.Input = input;
             row.GetCustomEditor = GetEditor;
             row.RowNumber = rowNum;

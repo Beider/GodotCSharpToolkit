@@ -5,7 +5,7 @@ using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.DebugMenu
 {
-    public class DebugMenuDialog : Control
+    public partial class DebugMenuDialog : Control
     {
         public static DebugMenuDialog Instance;
 
@@ -28,12 +28,12 @@ namespace GodotCSharpToolkit.DebugMenu
             Instance = this;
             Visible = false;
 
-            Title = (Label)FindNode("Title");
-            ControlGrid = (GridContainer)FindNode("ControlGrid");
+            Title = (Label)FindChild("Title");
+            ControlGrid = (GridContainer)FindChild("ControlGrid");
 
-            ErrorPanel = (Panel)FindNode("ErrorPanel");
-            ErrorLabel = (Label)FindNode("ErrorMessage");
-            ButtonOk = (Button)FindNode("BtnOk");
+            ErrorPanel = (Panel)FindChild("ErrorPanel");
+            ErrorLabel = (Label)FindChild("ErrorMessage");
+            ButtonOk = (Button)FindChild("BtnOk");
         }
 
         public static void ShowDialog(string title, Color titleColor, Node node,
@@ -90,9 +90,9 @@ namespace GodotCSharpToolkit.DebugMenu
         private void AddTextField(DebugMenuDialogField entry)
         {
             LineEdit edit = new LineEdit();
-            edit.SizeFlagsHorizontal = (int)SizeFlags.ExpandFill;
+            edit.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             edit.Text = entry.GetInitialTextValue(Node, DialogId, entry.FieldName);
-            edit.Connect("text_changed", this, nameof(TextChanged));
+            edit.Connect("text_changed", new Callable(this, nameof(TextChanged)));
             ActiveControls.Add(entry.FieldName, () => edit.Text);
             ControlGrid.AddChild(edit);
         }
@@ -105,28 +105,26 @@ namespace GodotCSharpToolkit.DebugMenu
         private void AddCheckboxField(DebugMenuDialogField entry)
         {
             CheckBox checkBox = new CheckBox();
-            checkBox.SizeFlagsHorizontal = (int)SizeFlags.ExpandFill;
-            checkBox.Pressed = entry.GetInitialBoolValue(Node, DialogId, entry.FieldName);
-            checkBox.Text = checkBox.Pressed.ToString();
-            var array = new Godot.Collections.Array();
-            array.Add(checkBox);
-            checkBox.Connect("pressed", this, nameof(CheckboxChanged), array);
-            ActiveControls.Add(entry.FieldName, () => checkBox.Pressed);
+            checkBox.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            checkBox.ButtonPressed = entry.GetInitialBoolValue(Node, DialogId, entry.FieldName);
+            checkBox.Text = checkBox.ButtonPressed.ToString();
+            checkBox.Connect("pressed", Callable.From(() => CheckboxChanged(checkBox)));
+            ActiveControls.Add(entry.FieldName, () => checkBox.ButtonPressed);
             ControlGrid.AddChild(checkBox);
         }
 
         private void CheckboxChanged(CheckBox checkBox)
         {
-            checkBox.Text = checkBox.Pressed.ToString();
+            checkBox.Text = checkBox.ButtonPressed.ToString();
             Validate();
         }
 
         private void AddListField(DebugMenuDialogField entry)
         {
             MenuButton menu = new MenuButton();
-            menu.SizeFlagsHorizontal = (int)SizeFlags.ExpandFill;
+            menu.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             menu.Text = entry.GetInitialTextValue(Node, DialogId, entry.FieldName);
-            menu.Align = Button.TextAlign.Left;
+            menu.Alignment = HorizontalAlignment.Left;
             ActiveControls.Add(entry.FieldName, () => menu.Text);
             ControlGrid.AddChild(menu);
 
@@ -136,9 +134,7 @@ namespace GodotCSharpToolkit.DebugMenu
             {
                 popup.AddItem(value);
             }
-            var array = new Godot.Collections.Array();
-            array.Add(menu);
-            popup.Connect("id_pressed", this, nameof(PopupPressed), array);
+            popup.Connect("id_pressed", Callable.From((int id) => PopupPressed(id, menu)));
         }
 
         private void PopupPressed(int id, MenuButton button)

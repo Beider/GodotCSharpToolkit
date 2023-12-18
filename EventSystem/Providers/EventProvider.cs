@@ -6,7 +6,7 @@ using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.EventSystem.Providers
 {
-    public class EventProvider : Node
+    public partial class EventProvider : Node
     {
         public event Action<RecordableEvent> OnEvent = delegate { };
 

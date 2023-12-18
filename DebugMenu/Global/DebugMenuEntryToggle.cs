@@ -6,7 +6,7 @@ using GodotCSharpToolkit.Logging;
 namespace GodotCSharpToolkit.DebugMenu
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class DebugMenuEntryToggle : DebugMenuEntry
+    public partial class DebugMenuEntryToggle : DebugMenuEntry
     {
         public readonly string GetValueMethodName;
 

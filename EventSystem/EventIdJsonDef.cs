@@ -24,7 +24,7 @@ namespace GodotCSharpToolkit.EventSystem
         }
     }
 
-    public class EventIdJsonDef : IJsonDefWithName
+    public partial class EventIdJsonDef : IJsonDefWithName
     {
         public EventIdJsonDef() { }
 

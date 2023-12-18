@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class JsonGenericEditorInput
+    public partial class JsonGenericEditorInput
     {
         /// <summary>
         /// Called when we want to save
@@ -182,7 +182,7 @@ namespace GodotCSharpToolkit.Editor
     }
 
 
-    public class JsonGenericEditorInputRow
+    public partial class JsonGenericEditorInputRow
     {
         public enum EditorTypes
         {
@@ -252,12 +252,12 @@ namespace GodotCSharpToolkit.Editor
         public bool Disabled { get; set; } = false;
     }
 
-    public class JsonGenericEditorInputRowButton : JsonGenericEditorInputRow
+    public partial class JsonGenericEditorInputRowButton : JsonGenericEditorInputRow
     {
         public JsonGenericEditorInput.OnPressedCallback OnPressed { get; set; } = null;
     }
 
-    public class JsonGenericEditorInputRowCombo : JsonGenericEditorInputRow
+    public partial class JsonGenericEditorInputRowCombo : JsonGenericEditorInputRow
     {
         /// <summary>
         /// First param is the key, second is display name
@@ -267,7 +267,7 @@ namespace GodotCSharpToolkit.Editor
         public bool Sort { get; set; } = true;
     }
 
-    public class JsonGenericEditorInputRowList : JsonGenericEditorInputRowCombo
+    public partial class JsonGenericEditorInputRowList : JsonGenericEditorInputRowCombo
     {
         public float EditorHeight { get; set; } = 100f;
 
@@ -288,9 +288,9 @@ namespace GodotCSharpToolkit.Editor
         public Action<object> OnDoubleClick { get; set; } = null;
     }
 
-    public class JsonTreeMenuItem
+    public partial class JsonTreeMenuItem
     {
-        public JsonTreeMenuItem(string name, Texture icon, Action<object, IDataEditorInput> action)
+        public JsonTreeMenuItem(string name, Texture2D icon, Action<object, IDataEditorInput> action)
         {
             this.Name = name;
             this.Icon = icon;
@@ -299,10 +299,10 @@ namespace GodotCSharpToolkit.Editor
 
         public string Name;
         public Action<object, IDataEditorInput> Action;
-        public Texture Icon;
+        public Texture2D Icon;
     }
 
-    public class JsonGenericEditorInputRowTree : JsonGenericEditorInputRow
+    public partial class JsonGenericEditorInputRowTree : JsonGenericEditorInputRow
     {
         public float EditorHeight { get; set; } = 100f;
 

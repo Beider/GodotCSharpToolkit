@@ -9,14 +9,14 @@ namespace GodotCSharpToolkit.Editor
     {
         public void SetValue(string name, Color value)
         {
-            SetValue(name, GD.Var2Str(value));
+            SetValue(name, GD.VarToStr(value));
         }
 
         public Color GetValue(string name, Color defaultValue)
         {
             if (SettingExists(name))
             {
-                return (Color)GD.Str2Var(GetValue(name));
+                return (Color)GD.StrToVar(GetValue(name));
             }
             return defaultValue;
         }
@@ -77,14 +77,14 @@ namespace GodotCSharpToolkit.Editor
 
         public void SetValue(string name, Vector2 value)
         {
-            SetValue(name, GD.Var2Str(value));
+            SetValue(name, GD.VarToStr(value));
         }
 
         public Vector2 GetValue(string name, Vector2 defaultValue)
         {
             if (SettingExists(name))
             {
-                object var = GD.Str2Var(GetValue(name));
+                object var = GD.StrToVar(GetValue(name));
                 if (var is Vector2 vec)
                 {
                     return vec;

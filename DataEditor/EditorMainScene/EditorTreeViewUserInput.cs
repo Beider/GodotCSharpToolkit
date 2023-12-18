@@ -26,20 +26,21 @@ namespace GodotCSharpToolkit.Editor
             Editor.Preferences.SetTreeItemCollapsedState(item);
         }
 
-        private void OnItemRmbSelected(Vector2 pos)
+        private void OnItemRmbSelected(Vector2 pos, int buttonIndex)
         {
             if (!Editor.Preferences.ShouldUseLocalPath()) { return; }
+            if (buttonIndex != (int)MouseButton.Right) { return; }
             if (GetSelected() == null) { return; }
             var item = GetAbstractTreeItem(GetSelected());
             if (item == null) { return; }
 
             var menu = Editor.PopupMenu;
             Editor.ClearPopupMenu();
-            menu.RectSize = menu.RectMinSize;
+            menu.Size = menu.MinSize;
             if (item.FillContextMenu())
             {
-                menu.RectPosition = GetViewport().GetMousePosition();
-                menu.Popup_();
+                menu.Position = GetViewport().GetMousePosition().ToVector2I();
+                menu.Popup();
             }
         }
 

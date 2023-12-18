@@ -6,7 +6,7 @@ using GodotCSharpToolkit.Extensions;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class GenericEditorDialogInput
+    public partial class GenericEditorDialogInput
     {
         public event Action RebuildDialog = delegate { };
         public event Action CheckOk = delegate { };
@@ -31,9 +31,9 @@ namespace GodotCSharpToolkit.Editor
     /// <summary>
     /// Dialog that displays a generic editor
     /// </summary>
-    public class GenericEditorDialog : ColorRect
+    public partial class GenericEditorDialog : ColorRect
     {
-        private WindowDialog Dialog;
+        private Window Dialog;
         private IDataEditor Editor;
         private Control ContentParent;
         private Button BtnOk;
@@ -46,18 +46,18 @@ namespace GodotCSharpToolkit.Editor
         public override void _Ready()
         {
             // Dialog
-            Dialog = FindNode("Dialog") as WindowDialog;
-            Dialog.Connect("popup_hide", this, nameof(OnCancelPressed));
-            Dialog.WindowTitle = Input.Name;
+            Dialog = FindChild("Dialog") as Window;
+            Dialog.Connect("close_requested", new Callable(this, nameof(OnCancelPressed)));
+            Dialog.Title = Input.Name;
 
             // Root
-            ContentParent = FindNode("Content") as Control;
+            ContentParent = FindChild("Content") as Control;
 
             // Buttons
-            BtnOk = FindNode("BtnOk") as Button;
-            BtnCancel = FindNode("BtnCancel") as Button;
-            BtnOk.Connect("pressed", this, nameof(OnOkPressed));
-            BtnCancel.Connect("pressed", this, nameof(OnCancelPressed));
+            BtnOk = FindChild("BtnOk") as Button;
+            BtnCancel = FindChild("BtnCancel") as Button;
+            BtnOk.Connect("pressed", new Callable(this, nameof(OnOkPressed)));
+            BtnCancel.Connect("pressed", new Callable(this, nameof(OnCancelPressed)));
             CheckOkEnabled();
 
             Input.Data.OnStatusChange += OnDataChanged;
@@ -67,10 +67,10 @@ namespace GodotCSharpToolkit.Editor
             Input.CheckOk += CheckOkEnabled;
             ReBuildGenericEditor();
 
-            Dialog.RectMinSize = Input.DialogSize;
-            Dialog.RectSize = Input.DialogSize;
+            Dialog.MinSize = Input.DialogSize.ToVector2I();
+            Dialog.Size = Input.DialogSize.ToVector2I();
 
-            Dialog.Popup_();
+            Dialog.Popup();
         }
 
         public override void _ExitTree()
@@ -105,15 +105,15 @@ namespace GodotCSharpToolkit.Editor
         {
             if (@event is InputEventKey key && key.Pressed)
             {
-                if (key.Scancode == (int)KeyList.Escape)
+                if (key.Keycode == Key.Escape)
                 {
                     OnCancelPressed();
-                    GetTree().SetInputAsHandled();
+                    GetViewport().SetInputAsHandled();
                 }
-                else if ((key.Scancode == (int)KeyList.Enter || key.Scancode == (int)KeyList.KpEnter) && !BtnOk.Disabled)
+                else if ((key.Keycode == Key.Enter || key.Keycode == Key.KpEnter) && !BtnOk.Disabled)
                 {
                     OnOkPressed();
-                    GetTree().SetInputAsHandled();
+                    GetViewport().SetInputAsHandled();
                 }
             }
         }

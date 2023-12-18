@@ -11,12 +11,12 @@ namespace GodotCSharpToolkit.Misc
 {
     public static class ImageUtils
     {
-        public static Texture LoadTexture(string fullPath)
+        public static Texture2D LoadTexture(string fullPath)
         {
-            Texture texture = null;
+            Texture2D texture = null;
             if (FileUtils.IsGodotPath(fullPath))
             {
-                texture = ResourceLoader.Load(fullPath) as Texture;
+                texture = ResourceLoader.Load(fullPath) as Texture2D;
                 if (texture == null)
                 {
                     Logger.Error($"Could not load internal image '{fullPath}'");
@@ -42,8 +42,7 @@ namespace GodotCSharpToolkit.Misc
             {
                 Logger.Error($"Could not load external image '{fullPath}': {error.ToString()}");
             }
-            ImageTexture imageTexture = new ImageTexture();
-            imageTexture.CreateFromImage(image);
+            ImageTexture imageTexture = ImageTexture.CreateFromImage(image);
             image = null;
             return imageTexture;
         }

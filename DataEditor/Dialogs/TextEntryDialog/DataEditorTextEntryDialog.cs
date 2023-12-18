@@ -10,7 +10,7 @@ namespace GodotCSharpToolkit.Editor
     /// Simple dialog that lets you create a new item.
     /// Contains a name entry field and an optional field to show a list for selecting an object to clone.
     /// </summary>
-    public class DataEditorTextEntryDialog : ColorRect
+    public partial class DataEditorTextEntryDialog : ColorRect
     {
         private Label LblTitle;
         private Button BtnConfirm;
@@ -33,14 +33,14 @@ namespace GodotCSharpToolkit.Editor
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            LblTitle = FindNode("Title") as Label;
-            BtnConfirm = FindNode("BtnConfirm") as Button;
-            BtnCancel = FindNode("BtnCancel") as Button;
-            ControlGrid = FindNode("ControlGrid") as GridContainer;
+            LblTitle = FindChild("Title") as Label;
+            BtnConfirm = FindChild("BtnConfirm") as Button;
+            BtnCancel = FindChild("BtnCancel") as Button;
+            ControlGrid = FindChild("ControlGrid") as GridContainer;
             LblTitle.Text = Title;
 
-            BtnConfirm.Connect("pressed", this, nameof(OnConfirmPressed));
-            BtnCancel.Connect("pressed", this, nameof(OnCancelPressed));
+            BtnConfirm.Connect("pressed", new Callable(this, nameof(OnConfirmPressed)));
+            BtnCancel.Connect("pressed", new Callable(this, nameof(OnCancelPressed)));
 
             if (!TextFieldName.IsNullOrEmpty())
             {
@@ -121,15 +121,15 @@ namespace GodotCSharpToolkit.Editor
         {
             if (@event is InputEventKey key && key.Pressed)
             {
-                if (key.Scancode == (int)KeyList.Escape)
+                if (key.Keycode == Key.Escape)
                 {
                     OnCancelPressed();
-                    GetTree().SetInputAsHandled();
+                    GetViewport().SetInputAsHandled();
                 }
-                else if ((key.Scancode == (int)KeyList.Enter || key.Scancode == (int)KeyList.KpEnter) && !BtnConfirm.Disabled)
+                else if ((key.Keycode == Key.Enter || key.Keycode == Key.KpEnter) && !BtnConfirm.Disabled)
                 {
                     OnConfirmPressed();
-                    GetTree().SetInputAsHandled();
+                    GetViewport().SetInputAsHandled();
                 }
             }
         }

@@ -9,7 +9,7 @@ namespace GodotCSharpToolkit.DebugMenu
 {
     public partial class DebugMenu
     {
-        private Thread CacheThread;
+        private Godot.GodotThread CacheThread;
         public static bool CacheBuildDone = false;
 
         #region REFLECTION LOOKUP

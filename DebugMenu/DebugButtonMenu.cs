@@ -24,7 +24,7 @@ namespace GodotCSharpToolkit.DebugMenu
     public delegate string DebugDialogInitialValueStringCallback(int dialogId, string fieldName);
     public delegate List<String> DebugDialogListValuesCallback(int dialogId, string fieldName);
 
-    public class DebugButtonMenu : Control
+    public partial class DebugButtonMenu : Control
     {
         private class ButtonInfo
         {
@@ -68,7 +68,7 @@ namespace GodotCSharpToolkit.DebugMenu
 
             for (int i = 1; i < 5; i++)
             {
-                GridContainer node = FindNode($"Column{i}") as GridContainer;
+                GridContainer node = FindChild($"Column{i}") as GridContainer;
                 Columns.Add(i, node);
                 node.ClearNodeChildren();
             }
@@ -140,22 +140,19 @@ namespace GodotCSharpToolkit.DebugMenu
 
         private static Button AddSimpleButton(Node node, string category, int dialogId, string text, Color color, bool closeOnClick, DebugMenuAction action, int column = 1)
         {
-            Button btn = new Button();
-            btn.Text = text;
-            btn.SizeFlagsHorizontal = (int)SizeFlags.Expand + (int)SizeFlags.Fill;
-            btn.Modulate = color;
-            Godot.Collections.Array parameters = new Godot.Collections.Array();
-            parameters.Add(node);
-            parameters.Add(btn);
-            parameters.Add(closeOnClick);
+            Button btn = new()
+            {
+                Text = text,
+                SizeFlagsHorizontal = SizeFlags.Expand & SizeFlags.Fill,
+                Modulate = color
+            };
             if (dialogId > 0)
             {
-                parameters.Add(dialogId);
-                btn.Connect("pressed", Instance, nameof(DialogButtonPressed), parameters);
+                btn.Connect("pressed", Callable.From(() => Instance.DialogButtonPressed(node, btn, closeOnClick, dialogId)));
             }
             else
             {
-                btn.Connect("pressed", Instance, nameof(SimpleButtonPressed), parameters);
+                btn.Connect("pressed", Callable.From(() => Instance.SimpleButtonPressed(node, btn, closeOnClick)));
             }
 
             Instance.GetCategoryRoot(category, column).AddChild(btn);
@@ -174,9 +171,9 @@ namespace GodotCSharpToolkit.DebugMenu
             GetColumn(defaultColumn).AddChild(gc);
 
             Label title = new Label();
-            title.RectMinSize = new Vector2(200, 30);
-            title.Align = Label.AlignEnum.Center;
-            title.Valign = Label.VAlign.Center;
+            title.CustomMinimumSize = new Vector2(200, 30);
+            title.HorizontalAlignment = HorizontalAlignment.Center;
+            title.VerticalAlignment = VerticalAlignment.Center;
             title.Text = category;
             title.Name = "Title";
             gc.AddChild(title);

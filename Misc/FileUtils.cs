@@ -64,20 +64,20 @@ namespace GodotCSharpToolkit.Misc
             }
             else
             {
-                return (new System.IO.DirectoryInfo(path)).Name;
+                return new System.IO.DirectoryInfo(path).Name;
             }
         }
 
         public static void CreateDirectory(string path)
         {
-            var dir = new Directory();
+            var dir = DirAccess.Open("res://");
             dir.MakeDirRecursive(path);
         }
 
         public static void CreateDirectory(string path, string dirName)
         {
-            var dir = new Directory();
-            dir.Open(path);
+            var dir = DirAccess.Open(path);
+            if (dir == null) { return; }
             if (!dir.DirExists(dirName))
             {
                 dir.MakeDir(dirName);
@@ -89,17 +89,16 @@ namespace GodotCSharpToolkit.Misc
         /// </summary>
         public static List<string> GetSubDirectories(string parentPath)
         {
-            List<string> retList = new List<string>();
-            Directory dir = new Directory();
+            List<string> retList = new();
 
             // Release builds do not like backslashes
             String path = NormalizeDirectory(parentPath);
-            if (!dir.DirExists(path))
+            DirAccess dir = DirAccess.Open(path);
+            if (dir == null)
             {
                 return retList;
             }
-            dir.Open(path);
-            dir.ListDirBegin(true, true);
+            dir.ListDirBegin();
             while (true)
             {
                 String filePath = dir.GetNext();
@@ -127,18 +126,17 @@ namespace GodotCSharpToolkit.Misc
         /// </summary>
         public static List<string> GetAllFilesInFolder(string pathToFolder, bool includeSubFolders, string extension = "")
         {
-            List<string> retList = new List<string>();
-            Directory dir = new Directory();
+            List<string> retList = new();
 
             // Release builds do not like backslashes
             String path = NormalizeDirectory(pathToFolder);
+            DirAccess dir = DirAccess.Open(path);
 
-            if (!dir.DirExists(path))
+            if (dir == null)
             {
                 return retList;
             }
-            dir.Open(path);
-            dir.ListDirBegin(true, true);
+            dir.ListDirBegin();
             while (true)
             {
                 String filePath = dir.GetNext();
@@ -152,10 +150,10 @@ namespace GodotCSharpToolkit.Misc
                     retList.AddRange(GetAllFilesInFolder(path + filePath + "/", includeSubFolders, extension));
                 }
                 else if ((extension == "" && !dir.CurrentIsDir()) ||
-                         (extension != "" && (filePath.ToLower().EndsWith(extension))))
+                         (extension != "" && filePath.ToLower().EndsWith(extension)))
                 {
                     // Grab name of all files found
-                    if (!Engine.EditorHint && filePath.EndsWith(IMPORT_EXTENSION))
+                    if (!Engine.IsEditorHint() && filePath.EndsWith(IMPORT_EXTENSION))
                     {
                         // In export builds get rid of the .import at the end
                         retList.Add(path + filePath.Replace(IMPORT_EXTENSION, ""));
@@ -165,7 +163,7 @@ namespace GodotCSharpToolkit.Misc
                         retList.Add(path + filePath);
                     }
                 }
-                else if (!Engine.EditorHint && extension != "" && filePath.ToLower().EndsWith($"{extension}{IMPORT_EXTENSION}"))
+                else if (!Engine.IsEditorHint() && extension != "" && filePath.ToLower().EndsWith($"{extension}{IMPORT_EXTENSION}"))
                 {
                     // This is an export build so we need to look for .Import files
                     retList.Add(path + filePath.Replace(IMPORT_EXTENSION, ""));
@@ -182,7 +180,7 @@ namespace GodotCSharpToolkit.Misc
         {
             if (IsGodotPath(path))
             {
-                return (new Godot.Directory()).DirExists(path);
+                return DirAccess.DirExistsAbsolute(path);
             }
             return System.IO.Directory.Exists(path);
         }
@@ -194,10 +192,10 @@ namespace GodotCSharpToolkit.Misc
         {
             if (IsGodotPath(path))
             {
-                var exists = (new Godot.File()).FileExists(path);
-                if (!exists && !Engine.EditorHint)
+                var exists = FileAccess.FileExists(path);
+                if (!exists && !Engine.IsEditorHint())
                 {
-                    exists = (new Godot.File()).FileExists($"{path}{IMPORT_EXTENSION}");
+                    exists = FileAccess.FileExists($"{path}{IMPORT_EXTENSION}");
                 }
                 return exists;
             }
@@ -206,8 +204,8 @@ namespace GodotCSharpToolkit.Misc
 
         public static void Delete(string path, bool recursive = false)
         {
-            var dir = new Directory();
-            if (recursive && dir.DirExists(path))
+            var dir = DirAccess.Open(path);
+            if (recursive && dir != null)
             {
                 // Delete all files
                 foreach (var file in GetAllFilesInFolder(path, false))
@@ -233,10 +231,9 @@ namespace GodotCSharpToolkit.Misc
         public static string LoadTextFile(string path)
         {
             string text = "";
-            var f = new Godot.File();
-            if (f.FileExists(path))
+            if (FileAccess.FileExists(path))
             {
-                f.Open(path, Godot.File.ModeFlags.Read);
+                var f = FileAccess.Open(path, FileAccess.ModeFlags.Read);
                 text = f.GetAsText();
                 f.Close();
             }
@@ -248,9 +245,8 @@ namespace GodotCSharpToolkit.Misc
         /// </summary>
         public static string SaveToFile(string content, string filePath)
         {
-            var file = new Godot.File();
-            var error = file.Open(filePath, File.ModeFlags.Write);
-            if (error == Error.Ok)
+            var file = FileAccess.Open(filePath, FileAccess.ModeFlags.Write);
+            if (file != null)
             {
                 file.StoreString(content);
                 file.Close();
@@ -258,7 +254,8 @@ namespace GodotCSharpToolkit.Misc
             }
             else
             {
-                Logger.Error($"Failed to write to file, error code: {error.ToString()}");
+                var error = FileAccess.GetOpenError();
+                Logger.Error($"Failed to write to file, error code: {error}");
                 return error.ToString();
             }
         }

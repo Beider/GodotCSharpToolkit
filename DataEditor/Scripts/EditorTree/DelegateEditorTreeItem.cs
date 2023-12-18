@@ -7,7 +7,7 @@ namespace GodotCSharpToolkit.Editor
     /// <summary>
     /// Delegate item can be used to implement simple tree items without creating a new class
     /// </summary>
-    public class DelegateEditorTreeItem : AbstractEditorSavableItem
+    public partial class DelegateEditorTreeItem : AbstractEditorSavableItem
     {
         public Action<DelegateEditorTreeItem> OnSelection { get; set; } = null;
         public Action<DelegateEditorTreeItem> OnSave { get; set; } = null;

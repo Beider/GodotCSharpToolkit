@@ -5,7 +5,7 @@ using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.EventSystem.Recorders
 {
-    public class EventRecorder
+    public partial class EventRecorder
     {
         public EventRecorder()
         {

@@ -5,7 +5,7 @@ using GodotCSharpToolkit.Extensions;
 
 namespace GodotCSharpToolkit.Logging
 {
-    public class LogGDPrint : LogWriter
+    public partial class LogGDPrint : LogWriter
     {
         int Level = 0;
         public LogGDPrint(LogLevel minLevel)

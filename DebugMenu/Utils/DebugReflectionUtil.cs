@@ -14,7 +14,7 @@ namespace GodotCSharpToolkit.DebugMenu
     /// Class taken from MDFramework
     /// https://github.com/DoubleDeez/MDFramework
     /// </summary>
-    public class DebugReflectionUtil
+    public partial class DebugReflectionUtil
     {
         public static BindingFlags BindFlagsAll = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.Static;
 

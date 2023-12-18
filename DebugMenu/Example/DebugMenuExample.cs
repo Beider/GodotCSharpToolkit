@@ -20,7 +20,7 @@ namespace GodotCSharpToolkit.DebugMenu
     /// For info on how to use debug tools see IDebugTool.cs
     /// </summary>
     [DebugIncludeClass]
-    public class DebugMenuExample : Node
+    public partial class DebugMenuExample : Node
     {
         private const string EXAMPLE_CATEGORY = "Examples";
         private const string EXAMPLE_CAT_SIMPLE = EXAMPLE_CATEGORY + " Simple";
@@ -82,7 +82,7 @@ namespace GodotCSharpToolkit.DebugMenu
             return "";
         }
 
-        [DebugMenuEntrySimple(EXAMPLE_CAT_DIALOG, "Open a different dialog", nameof(Colors.BurlyWood), false, 100)]
+        [DebugMenuEntrySimple(EXAMPLE_CAT_DIALOG, "Open a different dialog", nameof(Colors.Burlywood), false, 100)]
         [DebugMenuDialogValidator(100, nameof(DialogValidatorExample02))]
         [DebugMenuDialogField(100, "bool_value", nameof(InitialBoolValueExample), true)]
         [DebugMenuDialogField(100, "list_value", nameof(InitialStringValueListExample), nameof(ListValuesProviderExample))]

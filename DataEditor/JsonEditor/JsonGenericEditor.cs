@@ -9,7 +9,7 @@ namespace GodotCSharpToolkit.Editor
     /// <summary>
     /// Generic editor for any type of json object. Simply define the input and it should work.
     /// </summary>
-    public class JsonGenericEditor : JsonEditorContentBase
+    public partial class JsonGenericEditor : JsonEditorContentBase
     {
         public event Action OnDataUpdated = delegate { };
 
@@ -40,13 +40,13 @@ namespace GodotCSharpToolkit.Editor
         private void CreateGridContainer()
         {
             ControlContainer = new GridContainer();
-            ControlContainer.MarginTop = 10;
-            ControlContainer.MarginLeft = 10;
-            ControlContainer.MarginRight = -10;
-            ControlContainer.MarginBottom = -10;
+            ControlContainer.OffsetTop = 10;
+            ControlContainer.OffsetLeft = 10;
+            ControlContainer.OffsetRight = -10;
+            ControlContainer.OffsetBottom = -10;
             ControlContainer.AnchorRight = 1;
             ControlContainer.AnchorBottom = 1;
-            ControlContainer.AddConstantOverride("vseparation", Input.RowSpacing);
+            ControlContainer.AddThemeConstantOverride("vseparation", Input.RowSpacing);
             AddChild(ControlContainer);
         }
 

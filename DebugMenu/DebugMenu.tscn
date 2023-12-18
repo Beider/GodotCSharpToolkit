@@ -35,17 +35,17 @@ __meta__ = {
 self_modulate = Color( 1, 1, 1, 0.392157 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 50.0
-margin_top = 50.0
-margin_right = -50.0
-margin_bottom = -50.0
+offset_left = 50.0
+offset_top = 50.0
+offset_right = -50.0
+offset_bottom = -50.0
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="LblDebugMenu" type="Label" parent="CanvasLayer/DebugButtonMenu/Background"]
 anchor_right = 1.0
-margin_bottom = 30.0
+offset_bottom = 30.0
 text = "Debug Menu"
 align = 1
 valign = 1
@@ -54,7 +54,7 @@ valign = 1
 self_modulate = Color( 0.858824, 0.972549, 1, 0.392157 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 35.0
+offset_top = 35.0
 __meta__ = {
 "_edit_lock_": true
 }
@@ -62,15 +62,15 @@ __meta__ = {
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DebugButtonMenu/Background/Root"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 5.0
-margin_bottom = -5.0
+offset_left = 5.0
+offset_bottom = -5.0
 scroll_horizontal_enabled = false
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="RootGrid" type="GridContainer" parent="CanvasLayer/DebugButtonMenu/Background/Root/ScrollContainer"]
-margin_right = 919.0
+offset_right = 919.0
 size_flags_horizontal = 3
 columns = 4
 __meta__ = {
@@ -78,25 +78,25 @@ __meta__ = {
 }
 
 [node name="Column1" type="GridContainer" parent="CanvasLayer/DebugButtonMenu/Background/Root/ScrollContainer/RootGrid"]
-margin_right = 227.0
+offset_right = 227.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Column2" type="GridContainer" parent="CanvasLayer/DebugButtonMenu/Background/Root/ScrollContainer/RootGrid"]
-margin_left = 231.0
-margin_right = 458.0
+offset_left = 231.0
+offset_right = 458.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Column3" type="GridContainer" parent="CanvasLayer/DebugButtonMenu/Background/Root/ScrollContainer/RootGrid"]
-margin_left = 462.0
-margin_right = 689.0
+offset_left = 462.0
+offset_right = 689.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Column4" type="GridContainer" parent="CanvasLayer/DebugButtonMenu/Background/Root/ScrollContainer/RootGrid"]
-margin_left = 693.0
-margin_right = 919.0
+offset_left = 693.0
+offset_right = 919.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -104,57 +104,57 @@ size_flags_vertical = 3
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 5.0
-margin_top = 30.0
-margin_right = -5.0
-margin_bottom = -5.0
+offset_left = 5.0
+offset_top = 30.0
+offset_right = -5.0
+offset_bottom = -5.0
 dragger_visibility = 1
 
 [node name="VSplitContainer" type="VSplitContainer" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer"]
-margin_right = 239.0
-margin_bottom = 465.0
+offset_right = 239.0
+offset_bottom = 465.0
 dragger_visibility = 1
 
 [node name="LblVisibilityGroups" type="Label" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer/VSplitContainer"]
-margin_right = 239.0
-margin_bottom = 14.0
-rect_min_size = Vector2( 239, 0 )
+offset_right = 239.0
+offset_bottom = 14.0
+custom_minimum_size = Vector2( 239, 0 )
 text = "Visibility Groups"
 align = 1
 valign = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer/VSplitContainer"]
-margin_top = 26.0
-margin_right = 239.0
-margin_bottom = 465.0
+offset_top = 26.0
+offset_right = 239.0
+offset_bottom = 465.0
 
 [node name="VisibilityGroupGrid" type="GridContainer" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer/VSplitContainer/ScrollContainer"]
-margin_right = 239.0
-margin_bottom = 439.0
+offset_right = 239.0
+offset_bottom = 439.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VSplitContainer2" type="VSplitContainer" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer"]
-margin_left = 251.0
-margin_right = 914.0
-margin_bottom = 465.0
+offset_left = 251.0
+offset_right = 914.0
+offset_bottom = 465.0
 dragger_visibility = 1
 
 [node name="LblActions" type="Label" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer/VSplitContainer2"]
-margin_right = 663.0
-margin_bottom = 14.0
+offset_right = 663.0
+offset_bottom = 14.0
 text = "Actions"
 align = 1
 valign = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer/VSplitContainer2"]
-margin_top = 26.0
-margin_right = 663.0
-margin_bottom = 465.0
+offset_top = 26.0
+offset_right = 663.0
+offset_bottom = 465.0
 
 [node name="ActionGrid" type="GridContainer" parent="CanvasLayer/DebugButtonMenu/Background/HSplitContainer/VSplitContainer2/ScrollContainer"]
-margin_right = 663.0
-margin_bottom = 439.0
+offset_right = 663.0
+offset_bottom = 439.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -172,16 +172,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -175.0
-margin_top = -150.0
-margin_right = 175.0
-margin_bottom = 150.0
+offset_left = -175.0
+offset_top = -150.0
+offset_right = 175.0
+offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Title" type="Label" parent="CanvasLayer/DialogBackground/Dialog"]
 anchor_right = 1.0
-margin_bottom = 30.0
+offset_bottom = 30.0
 text = "Button text here"
 align = 1
 valign = 1
@@ -189,83 +189,83 @@ valign = 1
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/DialogBackground/Dialog"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 5.0
-margin_top = 36.0
-margin_right = -5.0
-margin_bottom = -41.0
+offset_left = 5.0
+offset_top = 36.0
+offset_right = -5.0
+offset_bottom = -41.0
 scroll_horizontal_enabled = false
 __meta__ = {
 "_edit_lock_": true
 }
 
 [node name="ControlGrid" type="GridContainer" parent="CanvasLayer/DialogBackground/Dialog/ScrollContainer"]
-margin_right = 340.0
-margin_bottom = 76.0
+offset_right = 340.0
+offset_bottom = 76.0
 size_flags_horizontal = 3
 columns = 2
 
 [node name="Label" type="Label" parent="CanvasLayer/DialogBackground/Dialog/ScrollContainer/ControlGrid"]
-margin_top = 5.0
-margin_right = 70.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 70.0
+offset_bottom = 19.0
 text = "Bool_Value"
 
 [node name="CheckBox" type="CheckBox" parent="CanvasLayer/DialogBackground/Dialog/ScrollContainer/ControlGrid"]
-margin_left = 74.0
-margin_right = 340.0
-margin_bottom = 24.0
+offset_left = 74.0
+offset_right = 340.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 text = "Some checkbox"
 
 [node name="Label2" type="Label" parent="CanvasLayer/DialogBackground/Dialog/ScrollContainer/ControlGrid"]
-margin_top = 31.0
-margin_right = 70.0
-margin_bottom = 45.0
+offset_top = 31.0
+offset_right = 70.0
+offset_bottom = 45.0
 text = "List_value"
 
 [node name="MenuButton" type="MenuButton" parent="CanvasLayer/DialogBackground/Dialog/ScrollContainer/ControlGrid"]
-margin_left = 74.0
-margin_top = 28.0
-margin_right = 340.0
-margin_bottom = 48.0
+offset_left = 74.0
+offset_top = 28.0
+offset_right = 340.0
+offset_bottom = 48.0
 size_flags_horizontal = 3
 text = "Dropdown List"
 
 [node name="Label3" type="Label" parent="CanvasLayer/DialogBackground/Dialog/ScrollContainer/ControlGrid"]
-margin_top = 57.0
-margin_right = 70.0
-margin_bottom = 71.0
+offset_top = 57.0
+offset_right = 70.0
+offset_bottom = 71.0
 text = "Text value"
 
 [node name="LineEdit" type="LineEdit" parent="CanvasLayer/DialogBackground/Dialog/ScrollContainer/ControlGrid"]
-margin_left = 74.0
-margin_top = 52.0
-margin_right = 340.0
-margin_bottom = 76.0
+offset_left = 74.0
+offset_top = 52.0
+offset_right = 340.0
+offset_bottom = 76.0
 text = "Some text value"
 
 [node name="HSplitContainer" type="HSplitContainer" parent="CanvasLayer/DialogBackground/Dialog"]
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 5.0
-margin_top = -35.0
-margin_right = -5.0
-margin_bottom = -5.0
+offset_left = 5.0
+offset_top = -35.0
+offset_right = -5.0
+offset_bottom = -5.0
 dragger_visibility = 1
 
 [node name="BtnOk" type="Button" parent="CanvasLayer/DialogBackground/Dialog/HSplitContainer"]
 self_modulate = Color( 0, 1, 0.156863, 1 )
-margin_right = 164.0
-margin_bottom = 30.0
+offset_right = 164.0
+offset_bottom = 30.0
 size_flags_horizontal = 3
 text = "Ok"
 
 [node name="BtnCancel" type="Button" parent="CanvasLayer/DialogBackground/Dialog/HSplitContainer"]
 self_modulate = Color( 1, 0, 0, 1 )
-margin_left = 176.0
-margin_right = 340.0
-margin_bottom = 30.0
+offset_left = 176.0
+offset_right = 340.0
+offset_bottom = 30.0
 size_flags_horizontal = 3
 text = "Cancel"
 
@@ -274,10 +274,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -175.0
-margin_top = 4.0
-margin_right = 175.0
-margin_bottom = 104.0
+offset_left = -175.0
+offset_top = 4.0
+offset_right = 175.0
+offset_bottom = 104.0
 __meta__ = {
 "_edit_group_": true
 }

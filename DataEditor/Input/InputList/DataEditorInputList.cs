@@ -2,10 +2,11 @@ using Godot;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using GodotCSharpToolkit.Extensions;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class DataEditorInputList : DataEditorInput
+    public partial class DataEditorInputList : DataEditorInput
     {
         private ItemList ListField;
         private Dictionary<int, object> ReturnValueLookup = new Dictionary<int, object>();
@@ -14,22 +15,9 @@ namespace GodotCSharpToolkit.Editor
         public override void _Ready()
         {
             base._Ready();
-            ListField = FindNode("ItemList") as ItemList;
-            ListField.Connect("rmb_clicked", this, nameof(OnRmbClicked));
-            ListField.Connect("item_activated", this, nameof(OnItemActivated));
-            ListField.Connect("item_rmb_selected", this, nameof(ShowPopupMenu));
-        }
-
-        private void OnRmbClicked(Vector2 pos)
-        {
-            if (ListField.IsAnythingSelected())
-            {
-                ShowPopupMenu(ListField.GetSelectedItems()[0], pos);
-            }
-            else
-            {
-                ShowPopupMenu(-1, pos);
-            }
+            ListField = FindChild("ItemList") as ItemList;
+            ListField.Connect("item_clicked", new Callable(this, nameof(ShowPopupMenu)));
+            ListField.Connect("item_activated", new Callable(this, nameof(OnItemActivated)));
         }
 
         private void OnItemActivated(int index)
@@ -50,8 +38,10 @@ namespace GodotCSharpToolkit.Editor
             ListField?.GrabFocus();
         }
 
-        private void ShowPopupMenu(int index, Vector2 pos)
+        private void ShowPopupMenu(int index, Vector2 pos, int buttonIndex)
         {
+            if (buttonIndex != (int)MouseButton.Right) { return; }
+            if (ListField.GetSelectedItems().IsEmpty()) { return; }
             if (InputData is JsonGenericEditorInputRowList iData)
             {
                 if (iData.OnAdd == null && iData.OnRemove == null)
@@ -61,10 +51,10 @@ namespace GodotCSharpToolkit.Editor
             }
             var menu = Editor.PopupMenu;
             Editor.ClearPopupMenu();
-            menu.RectSize = menu.RectMinSize;
+            menu.Size = menu.MinSize;
             FillPopupMenu(index);
-            menu.RectPosition = GetViewport().GetMousePosition();
-            menu.Popup_();
+            menu.Position = GetViewport().GetMousePosition().ToVector2I();
+            menu.Popup();
         }
 
         private void FillPopupMenu(int index)
@@ -87,9 +77,9 @@ namespace GodotCSharpToolkit.Editor
         protected override void Init()
         {
             var input = (JsonGenericEditorInputRowList)InputData;
-            ListField.RectMinSize = new Vector2(input.EditorWidth, input.EditorHeight);
-            TextLabel.HintTooltip = InputData.ToolTip;
-            ListField.HintTooltip = InputData.ToolTip;
+            ListField.CustomMinimumSize = new Vector2(input.EditorWidth, input.EditorHeight);
+            TextLabel.TooltipText = InputData.ToolTip;
+            ListField.TooltipText = InputData.ToolTip;
             Refresh();
         }
 
@@ -108,7 +98,7 @@ namespace GodotCSharpToolkit.Editor
                 foreach (var item in valueList)
                 {
                     ListField.AddItem(item.Value);
-                    ReturnValueLookup.Add(ListField.GetItemCount() - 1, item.Key);
+                    ReturnValueLookup.Add(ListField.ItemCount - 1, item.Key);
                 }
             }
         }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class DataEditorAdvancedListDialogInput
+    public partial class DataEditorAdvancedListDialogInput
     {
         public string Name { get; set; } = "List dialog";
 
@@ -75,7 +75,7 @@ namespace GodotCSharpToolkit.Editor
 
     }
 
-    public class DEA_TreeColumn
+    public partial class DEA_TreeColumn
     {
         /// <summary>
         /// Name of the column

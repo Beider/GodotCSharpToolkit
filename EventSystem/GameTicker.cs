@@ -3,7 +3,7 @@ using System;
 
 namespace GodotCSharpToolkit.EventSystem
 {
-    public class GameTicker : Node
+    public partial class GameTicker : Node
     {
         public static GameTicker Instance;
 
@@ -24,7 +24,7 @@ namespace GodotCSharpToolkit.EventSystem
             Tick = tick;
         }
 
-        public override void _PhysicsProcess(float delta)
+        public override void _PhysicsProcess(double delta)
         {
             if (!IsActive)
             {
@@ -43,7 +43,7 @@ namespace GodotCSharpToolkit.EventSystem
         /// <returns>The ticks</returns>
         public static ulong GetSecondsAsTicks(ulong seconds)
         {
-            return (ulong)Engine.IterationsPerSecond * seconds;
+            return (ulong)Engine.PhysicsTicksPerSecond * seconds;
         }
     }
 }

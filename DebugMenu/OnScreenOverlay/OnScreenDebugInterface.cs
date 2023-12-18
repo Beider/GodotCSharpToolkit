@@ -9,7 +9,7 @@ namespace GodotCSharpToolkit.DebugMenu
     /// Class taken from MDFramework
     /// https://github.com/DoubleDeez/MDFramework
     /// </summary>
-    public class OnScreenDebugInterface : Control
+    public partial class OnScreenDebugInterface : Control
     {
         private RichTextLabel DisplayLabel;
 
@@ -20,15 +20,15 @@ namespace GodotCSharpToolkit.DebugMenu
             AnchorLeft = 0;
             AnchorRight = 1;
             AnchorBottom = 1;
-            MarginBottom = 0;
-            MarginLeft = 0;
-            MarginRight = 0;
-            MarginTop = 0;
+            OffsetBottom = 0;
+            OffsetLeft = 0;
+            OffsetRight = 0;
+            OffsetTop = 0;
             CreateControls();
             Visible = true;
         }
 
-        public override void _Process(float delta)
+        public override void _Process(double delta)
         {
             UpdateLabel();
         }
@@ -74,7 +74,7 @@ namespace GodotCSharpToolkit.DebugMenu
         {
             DisplayLabel.PushCell();
             DisplayLabel.PushColor(Color);
-            DisplayLabel.AppendBbcode(Text);
+            DisplayLabel.AppendText(Text);
             DisplayLabel.Pop();
             DisplayLabel.Pop();
         }
@@ -93,7 +93,7 @@ namespace GodotCSharpToolkit.DebugMenu
             DisplayLabel.PushColor(Colors.White);
             DisplayLabel.PushBold();
             DisplayLabel.PushUnderline();
-            DisplayLabel.AppendBbcode(Category);
+            DisplayLabel.AppendText(Category);
             DisplayLabel.Pop();
             DisplayLabel.Pop();
             DisplayLabel.Pop();
@@ -110,10 +110,10 @@ namespace GodotCSharpToolkit.DebugMenu
             DisplayLabel.Name = nameof(DisplayLabel);
             DisplayLabel.Text = "";
             DisplayLabel.MouseFilter = MouseFilterEnum.Ignore;
-            DisplayLabel.RectMinSize = GetViewport().GetVisibleRect().Size;
+            DisplayLabel.CustomMinimumSize = GetViewport().GetVisibleRect().Size;
             if (DebugMenu.GetFont() != null)
             {
-                DisplayLabel.AddFontOverride("normal_font", DebugMenu.GetFont());
+                DisplayLabel.AddThemeFontOverride("normal_font", DebugMenu.GetFont());
             }
             AddChild(DisplayLabel);
         }

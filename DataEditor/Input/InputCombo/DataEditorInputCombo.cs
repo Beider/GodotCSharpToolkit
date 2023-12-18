@@ -9,7 +9,7 @@ namespace GodotCSharpToolkit.Editor
     /// Used to show a list. It expects a dictionary of string, string
     /// where first string is key and second is value to show
     /// </summary>
-    public class DataEditorInputCombo : DataEditorInput
+    public partial class DataEditorInputCombo : DataEditorInput
     {
         private OptionButton OptButton;
 
@@ -20,8 +20,8 @@ namespace GodotCSharpToolkit.Editor
         public override void _Ready()
         {
             base._Ready();
-            OptButton = FindNode("OptionButton") as OptionButton;
-            OptButton.Connect("item_selected", this, nameof(_OnItemChanged));
+            OptButton = FindChild("OptionButton") as OptionButton;
+            OptButton.Connect("item_selected", new Callable(this, nameof(_OnItemChanged)));
         }
 
         private void _OnItemChanged(int index)
@@ -45,17 +45,17 @@ namespace GodotCSharpToolkit.Editor
                 foreach (var item in valueList)
                 {
                     OptButton.AddItem(item.Value);
-                    ItemIndexLookup.Add(item.Value, OptButton.GetItemCount() - 1);
-                    ReturnValueLookup.Add(OptButton.GetItemCount() - 1, item.Key);
+                    ItemIndexLookup.Add(item.Value, OptButton.ItemCount - 1);
+                    ReturnValueLookup.Add(OptButton.ItemCount - 1, item.Key);
                 }
             }
         }
 
         protected override void Init()
         {
-            OptButton.RectMinSize = new Vector2(InputData.EditorWidth, 0f);
-            OptButton.HintTooltip = InputData.ToolTip;
-            TextLabel.HintTooltip = InputData.ToolTip;
+            OptButton.CustomMinimumSize = new Vector2(InputData.EditorWidth, 0f);
+            OptButton.TooltipText = InputData.ToolTip;
+            TextLabel.TooltipText = InputData.ToolTip;
             Disable(InputData.Disabled);
             RefreshItemList();
             Refresh();

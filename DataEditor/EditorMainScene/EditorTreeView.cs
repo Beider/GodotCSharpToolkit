@@ -39,9 +39,9 @@ namespace GodotCSharpToolkit.Editor
         public override void _Ready()
         {
             ResolveRootItems();
-            this.Connect("item_collapsed", this, nameof(OnTreeItemCollapsed));
-            this.Connect("item_selected", this, nameof(OnTreeItemSelected));
-            this.Connect("item_rmb_selected", this, nameof(OnItemRmbSelected));
+            this.Connect("item_collapsed", new Callable(this, nameof(OnTreeItemCollapsed)));
+            this.Connect("item_selected", new Callable(this, nameof(OnTreeItemSelected)));
+            this.Connect("item_mouse_selected", new Callable(this, nameof(OnItemRmbSelected)));
             AllowReselect = true;
             AllowRmbSelect = true;
 
@@ -234,8 +234,7 @@ namespace GodotCSharpToolkit.Editor
                 return false;
             }
 
-            var child = item.GetChildren();
-            while (child != null)
+            foreach (var child in item.GetChildren())
             {
                 if (PruneEmptyTreeItems(child))
                 {
@@ -245,7 +244,6 @@ namespace GodotCSharpToolkit.Editor
                 {
                     hasLeafs = true;
                 }
-                child = child.GetNext();
             }
 
             foreach (var c in removeList)

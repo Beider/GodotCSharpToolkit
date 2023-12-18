@@ -14,7 +14,7 @@ namespace GodotCSharpToolkit.EventSystem
     /// If any are found it is added to our JSON file that lists all RecordableEvents.
     /// We do this to ensure each RecordableEvent has a consistent unique ID.
     /// </summary>
-    public class DebugToolEvents : IDebugTool
+    public partial class DebugToolEvents : IDebugTool
     {
         private List<Type> NewEvents = new List<Type>();
 

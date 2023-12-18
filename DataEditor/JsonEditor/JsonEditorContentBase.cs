@@ -6,7 +6,7 @@ using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public abstract class JsonEditorContentBase : Panel, IDataEditorContent
+    public abstract partial class JsonEditorContentBase : Panel, IDataEditorContent
     {
         protected IDataEditor Editor;
         protected JsonDefWithName Data;
@@ -14,11 +14,13 @@ namespace GodotCSharpToolkit.Editor
 
         protected GridContainer CreateRow(Control parent, int columns)
         {
-            var container = new GridContainer();
-            container.SizeFlagsHorizontal = (int)SizeFlags.ExpandFill;
+            var container = new GridContainer
+            {
+                SizeFlagsHorizontal = SizeFlags.ExpandFill
+            };
             parent.AddChild(container);
             container.Columns = columns;
-            container.AddConstantOverride("hseparation", 20);
+            container.AddThemeConstantOverride("hseparation", 20);
             return container;
         }
 

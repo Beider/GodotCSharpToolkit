@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace GodotCSharpToolkit.Editor
 {
 
-    public class EditorRecentTracker : GridContainer
+    public partial class EditorRecentTracker : GridContainer
     {
         private class RecentEditorData
         {
@@ -41,12 +41,12 @@ namespace GodotCSharpToolkit.Editor
         private Dictionary<string, RecentEditorData> RecentData = new Dictionary<string, RecentEditorData>();
         private List<RecentEditorData> PinnedItems = new List<RecentEditorData>();
 
-        private Texture PinTexture = null;
+        private Texture2D PinTexture = null;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            PinTexture = ResourceLoader.Load(IMAGE_PATH) as Texture;
+            PinTexture = ResourceLoader.Load(IMAGE_PATH) as Texture2D;
             PinnedItems.Clear();
             RecentData.Clear();
             CallDeferred(nameof(Load));
@@ -64,7 +64,7 @@ namespace GodotCSharpToolkit.Editor
                 try
                 {
                     var lineSettings = line.Split(SPLIT2);
-                    var data = AddData(int.Parse(lineSettings[3]), lineSettings[1], lineSettings[2], (Color)GD.Str2Var(lineSettings[4]));
+                    var data = AddData(int.Parse(lineSettings[3]), lineSettings[1], lineSettings[2], (Color)GD.StrToVar(lineSettings[4]));
                     if (bool.Parse(lineSettings[5]))
                     {
                         PinItem(data, false);
@@ -91,7 +91,7 @@ namespace GodotCSharpToolkit.Editor
             {
                 if (saveKey.Length > 0) { saveKey += SPLIT1; }
                 bool pinned = PinnedItems.Contains(value);
-                saveKey += $"{value.Button.GetIndex()}{SPLIT2}{value.Name}{SPLIT2}{value.UniqueId}{SPLIT2}{value.TypeId}{SPLIT2}{GD.Var2Str(value.Color)}{SPLIT2}{pinned}";
+                saveKey += $"{value.Button.GetIndex()}{SPLIT2}{value.Name}{SPLIT2}{value.UniqueId}{SPLIT2}{value.TypeId}{SPLIT2}{GD.VarToStr(value.Color)}{SPLIT2}{pinned}";
             }
             Editor.Preferences.SetValue(PREF_KEY, saveKey);
             Editor.Preferences.Save();
@@ -118,15 +118,15 @@ namespace GodotCSharpToolkit.Editor
                 var btn = new Button();
                 data.Button = btn;
                 SetButtonText(data);
-                btn.SizeFlagsVertical = (int)SizeFlags.ExpandFill;
-                btn.HintTooltip = name;
+                btn.SizeFlagsVertical = SizeFlags.ExpandFill;
+                btn.TooltipText = name;
 
                 var arry = new Godot.Collections.Array();
                 arry.Add(uniqueId);
-                btn.Connect("pressed", this, nameof(OpenEditor), arry);
-                btn.Connect("gui_input", this, nameof(PinButton), arry);
-                btn.Connect("mouse_entered", this, nameof(OnMouseOver), arry);
-                btn.Connect("mouse_exited", this, nameof(OnMouseExit), arry);
+                btn.Connect("pressed", Callable.From(() => OpenEditor(uniqueId)));
+                btn.Connect("gui_input", Callable.From((InputEvent ie) => PinButton(ie, uniqueId)));
+                btn.Connect("mouse_entered", Callable.From(() => OnMouseOver(uniqueId)));
+                btn.Connect("mouse_exited", Callable.From(() => OnMouseExit(uniqueId)));
                 RecentData.Add(uniqueId, data);
 
                 MoveToFront(data);
@@ -158,7 +158,7 @@ namespace GodotCSharpToolkit.Editor
 
         private void PinButton(InputEvent evnt, string key)
         {
-            if (evnt is InputEventMouseButton btn && btn.Pressed && btn.ButtonIndex == (int)ButtonList.Right)
+            if (evnt is InputEventMouseButton btn && btn.Pressed && btn.ButtonIndex == MouseButton.Right)
             {
                 if (RecentData.ContainsKey(key))
                 {

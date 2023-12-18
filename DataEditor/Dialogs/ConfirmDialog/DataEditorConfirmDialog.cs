@@ -3,7 +3,7 @@ using System;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class DataEditorConfirmDialog : ColorRect
+    public partial class DataEditorConfirmDialog : ColorRect
     {
         private Label LblMessage;
         private Button BtnConfirm;
@@ -15,13 +15,13 @@ namespace GodotCSharpToolkit.Editor
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            LblMessage = FindNode("Message") as Label;
-            BtnConfirm = FindNode("BtnConfirm") as Button;
-            BtnCancel = FindNode("BtnCancel") as Button;
+            LblMessage = FindChild("Message") as Label;
+            BtnConfirm = FindChild("BtnConfirm") as Button;
+            BtnCancel = FindChild("BtnCancel") as Button;
 
             LblMessage.Text = Message;
-            BtnConfirm.Connect("pressed", this, nameof(OnConfirmPressed));
-            BtnCancel.Connect("pressed", this, nameof(OnCancelPressed));
+            BtnConfirm.Connect("pressed", new Callable(this, nameof(OnConfirmPressed)));
+            BtnCancel.Connect("pressed", new Callable(this, nameof(OnCancelPressed)));
 
         }
 
@@ -41,15 +41,15 @@ namespace GodotCSharpToolkit.Editor
         {
             if (@event is InputEventKey key && key.Pressed)
             {
-                if (key.Scancode == (int)KeyList.Escape)
+                if (key.Keycode == Key.Escape)
                 {
                     OnCancelPressed();
-                    GetTree().SetInputAsHandled();
+                    GetViewport().SetInputAsHandled();
                 }
-                else if (key.Scancode == (int)KeyList.Enter || key.Scancode == (int)KeyList.KpEnter)
+                else if (key.Keycode == Key.Enter || key.Keycode == Key.KpEnter)
                 {
                     OnConfirmPressed();
-                    GetTree().SetInputAsHandled();
+                    GetViewport().SetInputAsHandled();
                 }
             }
         }

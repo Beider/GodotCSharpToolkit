@@ -6,13 +6,13 @@ using GodotCSharpToolkit.Extensions;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class FolderManagerTree : Tree
+    public partial class FolderManagerTree : Tree
     {
         public FolderManager FolderManager { get; set; } = null;
 
         public FolderManagerTree()
         {
-            this.Connect("item_collapsed", this, nameof(OnCollapsed));
+            this.Connect("item_collapsed", new Callable(this, nameof(OnCollapsed)));
         }
 
         private void OnCollapsed(TreeItem treeItem)
@@ -23,14 +23,15 @@ namespace GodotCSharpToolkit.Editor
 
         }
 
-        public override object GetDragData(Vector2 position)
+
+        public override Variant _GetDragData(Vector2 position)
         {
             Godot.Collections.Array arry = new Godot.Collections.Array();
             TreeItem current = GetNextSelected(null);
-            if (current == null) { return null; }
+            if (current == null) { return new Variant(); }
 
             var first = GetData(current);
-            if (!first.AllowMove) { return null; }
+            if (!first.AllowMove) { return new Variant(); }
 
             while (current != null)
             {
@@ -38,11 +39,11 @@ namespace GodotCSharpToolkit.Editor
                 if (!first.Type.Equals(GetData(current).Type))
                 {
                     // We cant drag different types at the same time
-                    return null;
+                    return new Variant();
                 }
                 current = GetNextSelected(current);
             }
-            if (arry.Count == 0) { return null; }
+            if (arry.Count == 0) { return new Variant(); }
 
             DropModeFlags = (int)DropModeFlagsEnum.Inbetween;
 
@@ -59,9 +60,10 @@ namespace GodotCSharpToolkit.Editor
             return FolderManager.ItemLookup[key];
         }
 
-        public override bool CanDropData(Vector2 position, object data)
+        public override bool _CanDropData(Vector2 position, Variant data)
         {
-            if (!(data is Godot.Collections.Array))
+
+            if (data.VariantType != Variant.Type.Array)
             {
                 DropModeFlags = (int)DropModeFlagsEnum.Disabled;
                 return false;
@@ -82,9 +84,9 @@ namespace GodotCSharpToolkit.Editor
             return dropMode != DropModeFlagsEnum.Disabled;
         }
 
-        public override void DropData(Vector2 position, object data)
+        public override void _DropData(Vector2 position, Variant data)
         {
-            if (!(data is Godot.Collections.Array)) { return; }
+            if (data.VariantType != Variant.Type.Array) { return; }
             TreeItem treeItem = GetItemAtPosition(position);
             if (treeItem == null) { return; }
 

@@ -5,13 +5,13 @@ using Newtonsoft.Json;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class EditorPrefsJson
+    public partial class EditorPrefsJson
     {
         [JsonProperty("Values")]
         public List<EditorPrefEntry> Values = new List<EditorPrefEntry>();
     }
 
-    public class EditorPrefEntry
+    public partial class EditorPrefEntry
     {
         [JsonProperty("Name")]
         public string Name = "";

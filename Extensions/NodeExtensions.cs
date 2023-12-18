@@ -38,7 +38,7 @@ namespace GodotCSharpToolkit.Extensions
         public static bool IsNetworkActive(this Node instance)
         {
             SceneTree Tree = instance.GetTree();
-            return Tree != null && Tree.HasNetworkPeer();
+            return Tree != null;//&& Tree.HasMultiplayerPeer();
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace GodotCSharpToolkit.Extensions
         /// <returns>The PeerID of the server</returns>
         public static int GetServerId(this Node instance)
         {
-            return instance.GetNetworkMaster();
+            return instance.GetMultiplayerAuthority();
         }
 
         /// <summary>
@@ -59,10 +59,13 @@ namespace GodotCSharpToolkit.Extensions
         public static int GetPeerId(this Node instance)
         {
             SceneTree Tree = instance.GetTree();
-            if (Tree != null && Tree.HasNetworkPeer())
+            /*
+             BROKEN
+            if (Tree != null && Tree.peer())
             {
-                return Tree.GetNetworkUniqueId();
+                return Tree.GetUniqueId();
             }
+            */
 
             return 1;
         }
@@ -98,7 +101,7 @@ namespace GodotCSharpToolkit.Extensions
                 return default(T);
             }
 
-            return (T)pScene.Instance();
+            return (T)pScene.Instantiate();
         }
 
         #endregion

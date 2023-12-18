@@ -3,14 +3,14 @@
 [ext_resource path="res://GodotCSharpToolkit/DataEditor/Input/InputButton/DataEditorInputButton.cs" type="Script" id=1]
 
 [node name="DataEditorInputButton" type="GridContainer"]
-margin_right = 235.0
-margin_bottom = 24.0
+offset_right = 235.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 script = ExtResource( 1 )
 
 [node name="Button" type="Button" parent="."]
-margin_right = 235.0
-margin_bottom = 20.0
+offset_right = 235.0
+offset_bottom = 20.0
 focus_mode = 0
 size_flags_horizontal = 3
 text = "Button text goes here"

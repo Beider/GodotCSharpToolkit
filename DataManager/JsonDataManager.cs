@@ -7,7 +7,7 @@ using GodotCSharpToolkit.Misc;
 namespace GodotCSharpToolkit.DataManager
 {
 
-    public class JsonDataManager : Node
+    public partial class JsonDataManager : Node
     {
         public static JsonDataManager Instance;
 

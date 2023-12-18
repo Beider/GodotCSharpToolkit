@@ -113,7 +113,7 @@ public abstract class JsonDefWithName : IJsonDefWithName
     public string GetCategory()
     {
         var filename = SourceFile.GetFile();
-        return filename.Replace($".{SourceFile.Extension()}", "");
+        return filename.Replace($".{SourceFile.GetExtension()}", "");
     }
 
     #region Metadata

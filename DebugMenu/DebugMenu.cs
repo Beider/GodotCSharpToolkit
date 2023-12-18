@@ -46,8 +46,8 @@ namespace GodotCSharpToolkit.DebugMenu
 				return;
 			}
 			Instance = this;
-			OnScreenDebugControl = FindNode("OnScreenDebug") as OnScreenDebugInterface;
-			DebugButtonMenu = FindNode("DebugButtonMenu") as DebugButtonMenu;
+			OnScreenDebugControl = FindChild("OnScreenDebug") as OnScreenDebugInterface;
+			DebugButtonMenu = FindChild("DebugButtonMenu") as DebugButtonMenu;
 			DebugButtonMenu.Visible = false;
 			OnScreenDebugControl.Visible = false;
 			if (GetTheme() != null)
@@ -60,7 +60,7 @@ namespace GodotCSharpToolkit.DebugMenu
 			CallDeferred(nameof(InitTools));
 		}
 
-		public override void _Process(float delta)
+		public override void _Process(double delta)
 		{
 			if (CacheBuildDone)
 			{
@@ -71,13 +71,14 @@ namespace GodotCSharpToolkit.DebugMenu
 
 		public override void _EnterTree()
 		{
-			CacheThread = new Thread();
-			CacheThread.Start(this, nameof(BuildReflectionCache));
+
+			CacheThread = new Godot.GodotThread();
+			CacheThread.Start(Callable.From(() => BuildReflectionCache()));
 			// This is done in _EnterTree so that we get the signal of other autoloads being added to the tree
 			Instance = this;
 			OnScreenDebug.Init();
-			GetTree().Connect("node_added", this, nameof(OnNodeAdded));
-			GetTree().Connect("node_removed", this, nameof(OnNodeRemoved));
+			GetTree().Connect("node_added", new Callable(this, nameof(OnNodeAdded)));
+			GetTree().Connect("node_removed", new Callable(this, nameof(OnNodeRemoved)));
 		}
 
 		public static Font GetFont()
@@ -100,11 +101,11 @@ namespace GodotCSharpToolkit.DebugMenu
 				{
 					return;
 				}
-				if (eventKey.Scancode == (int)KeyList.F11)
+				if (eventKey.Keycode == Key.F11)
 				{
 					OnScreenDebugControl.Visible = !OnScreenDebugControl.Visible;
 				}
-				else if (eventKey.Scancode == (int)KeyList.F12)
+				else if (eventKey.Keycode == Key.F12)
 				{
 					DebugButtonMenu.Visible = !DebugButtonMenu.Visible;
 					if (DebugButtonMenu.Visible)

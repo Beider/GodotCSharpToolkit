@@ -6,7 +6,7 @@ using GodotCSharpToolkit.Extensions;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class DataEditorSettings : Control, IDataEditorContent
+    public partial class DataEditorSettings : Control, IDataEditorContent
     {
         private CheckBox LoadLocalData;
         private CheckBox WebMode;
@@ -20,14 +20,14 @@ namespace GodotCSharpToolkit.Editor
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            var btn = FindNode("BtnSave") as Button;
-            btn.Connect("pressed", this, nameof(SavePressed));
+            var btn = FindChild("BtnSave") as Button;
+            btn.Connect("pressed", new Callable(this, nameof(SavePressed)));
 
-            LoadLocalData = FindNode("AutoLoad") as CheckBox;
-            WebMode = FindNode("WebMode") as CheckBox;
-            WebMode.Connect("pressed", this, nameof(WebModePressed));
-            SavePath = FindNode("SavePath") as LineEdit;
-            SaveLabel = FindNode("SaveLabel") as Label;
+            LoadLocalData = FindChild("AutoLoad") as CheckBox;
+            WebMode = FindChild("WebMode") as CheckBox;
+            WebMode.Connect("pressed", new Callable(this, nameof(WebModePressed)));
+            SavePath = FindChild("SavePath") as LineEdit;
+            SaveLabel = FindChild("SaveLabel") as Label;
             Refresh();
         }
 
@@ -38,24 +38,24 @@ namespace GodotCSharpToolkit.Editor
 
         private void WebModePressed()
         {
-            SavePath.Editable = !WebMode.Pressed;
+            SavePath.Editable = !WebMode.ButtonPressed;
         }
 
         public void Refresh()
         {
-            LoadLocalData.Pressed = Editor.Preferences.SettingIsLoadLocalData;
+            LoadLocalData.ButtonPressed = Editor.Preferences.SettingIsLoadLocalData;
             SavePath.Text = Editor.Preferences.SettingLocalSavePath;
             if (OS.HasFeature("web"))
             {
                 Editor.Preferences.SettingWebMode = true;
-                WebMode.Pressed = true;
+                WebMode.ButtonPressed = true;
                 WebMode.Disabled = true;
                 WebModePressed();
                 Save();
             }
             else
             {
-                WebMode.Pressed = Editor.Preferences.SettingWebMode;
+                WebMode.ButtonPressed = Editor.Preferences.SettingWebMode;
                 WebModePressed();
             }
 
@@ -77,8 +77,8 @@ namespace GodotCSharpToolkit.Editor
 
         public void Save()
         {
-            Editor.Preferences.SettingIsLoadLocalData = LoadLocalData.Pressed;
-            Editor.Preferences.SettingWebMode = WebMode.Pressed;
+            Editor.Preferences.SettingIsLoadLocalData = LoadLocalData.ButtonPressed;
+            Editor.Preferences.SettingWebMode = WebMode.ButtonPressed;
             SetupWebMode();
             var path = FileUtils.NormalizeDirectory(SavePath.Text);
             if (path != Editor.Preferences.SettingLocalSavePath)
@@ -90,7 +90,7 @@ namespace GodotCSharpToolkit.Editor
 
         private void SetupWebMode()
         {
-            if (!WebMode.Pressed) { return; };
+            if (!WebMode.ButtonPressed) { return; };
             FileUtils.CreateDirectory("user://", "mods");
             SavePath.Text = "user://mods/";
         }

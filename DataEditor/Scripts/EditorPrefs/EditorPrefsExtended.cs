@@ -7,7 +7,7 @@ namespace GodotCSharpToolkit.Editor
     /// <summary>
     /// An extension for accessability methods
     /// </summary>
-    public class EditorPrefsExtended : EditorPrefsStorage
+    public partial class EditorPrefsExtended : EditorPrefsStorage
     {
         public event Action OnPrefsChanged = delegate { };
 
@@ -71,8 +71,7 @@ namespace GodotCSharpToolkit.Editor
             if (path.IsNullOrEmpty()) { return false; }
             if (path.StartsWith("user:")) { return true; }
             if (path.Equals("/") || path.Equals("\\")) { return false; }
-            Directory dir = new Directory();
-            return dir.DirExists(path);
+            return DirAccess.DirExistsAbsolute(path);
         }
 
         #region Settings

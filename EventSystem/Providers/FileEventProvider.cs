@@ -8,7 +8,7 @@ using GodotCSharpToolkit.Misc;
 
 namespace GodotCSharpToolkit.EventSystem.Providers
 {
-    public class FileEventProvider : EventProvider
+    public partial class FileEventProvider : EventProvider
     {
         private static readonly int BUFFER_SIZE = 20;
         private static readonly int BUFFER_READ_TRIGGER = 10;
@@ -31,12 +31,11 @@ namespace GodotCSharpToolkit.EventSystem.Providers
         public string Load(String path, Func<List<string>, String> settingsMethod)
         {
             string relPath = path;
-            var file = new Godot.File();
             if (relPath == null || relPath == "")
             {
                 return $"File provider path is null or empty";
             }
-            else if (!file.FileExists(relPath))
+            else if (!Godot.FileAccess.FileExists(relPath))
             {
                 return $"File provider recording path does not exist";
             }
@@ -56,10 +55,7 @@ namespace GodotCSharpToolkit.EventSystem.Providers
 
         private String GetFileAbsPath(String relPath)
         {
-            var file = new Godot.File();
-
-            // Make file
-            file.Open(relPath, Godot.File.ModeFlags.Read);
+            var file = Godot.FileAccess.Open(relPath, Godot.FileAccess.ModeFlags.Read);
 
             // Get real path
             string realPath = file.GetPathAbsolute();

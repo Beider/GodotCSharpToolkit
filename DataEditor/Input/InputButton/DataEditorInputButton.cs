@@ -7,7 +7,7 @@ namespace GodotCSharpToolkit.Editor
     /// An input button, calls the OnSave method when pressed.
     /// Sets the text to the getValue string
     /// </summary>
-    public class DataEditorInputButton : DataEditorInput
+    public partial class DataEditorInputButton : DataEditorInput
     {
         private Button BtnInput;
 
@@ -15,8 +15,8 @@ namespace GodotCSharpToolkit.Editor
         public override void _Ready()
         {
             base._Ready();
-            BtnInput = FindNode("Button") as Button;
-            BtnInput.Connect("pressed", this, nameof(_OnButtonPressed));
+            BtnInput = FindChild("Button") as Button;
+            BtnInput.Connect("pressed", new Callable(this, nameof(_OnButtonPressed)));
         }
 
         public override void Disable(bool disabled)
@@ -36,8 +36,8 @@ namespace GodotCSharpToolkit.Editor
 
         protected override void Init()
         {
-            BtnInput.RectMinSize = new Vector2(InputData.EditorWidth, 0f);
-            BtnInput.HintTooltip = InputData.ToolTip;
+            BtnInput.CustomMinimumSize = new Vector2(InputData.EditorWidth, 0f);
+            BtnInput.TooltipText = InputData.ToolTip;
             BtnInput.Text = (string)InputData.GetValue(Data);
             Disable(InputData.Disabled);
             Refresh();

@@ -7,13 +7,13 @@ using GodotCSharpToolkit.Misc;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class FolderManager : ColorRect
+    public partial class FolderManager : ColorRect
     {
         public static bool IsLoading { get; private set; } = false;
         private const string PREF_SIZE = "folder_manager_size_";
         private const string PREF_POS = "folder_manager_pos_";
 
-        private WindowDialog Dialog;
+        private Window Dialog;
 
         private FolderManagerTree Tree;
         private Button BtnOk;
@@ -26,22 +26,21 @@ namespace GodotCSharpToolkit.Editor
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            Dialog = FindNode("Dialog") as WindowDialog;
-            Dialog.Connect("popup_hide", this, nameof(OnCancelPressed));
+            Dialog = FindChild("Dialog") as Window;
+            Dialog.Connect("close_requested", new Callable(this, nameof(OnCancelPressed)));
 
             // Tree
-            Tree = FindNode("Tree") as FolderManagerTree;
-            Tree.Connect("item_double_clicked", this, nameof(OnOkPressed));
-            Tree.Connect("item_activated", this, nameof(OnOkPressed));
+            Tree = FindChild("Tree") as FolderManagerTree;
+            Tree.Connect("item_activated", new Callable(this, nameof(OnOkPressed)));
             Tree.FolderManager = this;
 
             // Buttons
-            BtnOk = FindNode("BtnOk") as Button;
-            BtnCancel = FindNode("BtnCancel") as Button;
-            BtnOk.Connect("pressed", this, nameof(OnOkPressed));
-            BtnCancel.Connect("pressed", this, nameof(OnCancelPressed));
+            BtnOk = FindChild("BtnOk") as Button;
+            BtnCancel = FindChild("BtnCancel") as Button;
+            BtnOk.Connect("pressed", new Callable(this, nameof(OnOkPressed)));
+            BtnCancel.Connect("pressed", new Callable(this, nameof(OnCancelPressed)));
 
-            Dialog.Popup_();
+            Dialog.Popup();
             LoadPrefs();
             Load();
         }
@@ -50,15 +49,15 @@ namespace GodotCSharpToolkit.Editor
         {
             if (@event is InputEventKey key && key.Pressed)
             {
-                if (key.Scancode == (int)KeyList.Escape)
+                if (key.Keycode == Key.Escape)
                 {
                     OnCancelPressed();
-                    GetTree().SetInputAsHandled();
+                    GetViewport().SetInputAsHandled();
                 }
-                else if ((key.Scancode == (int)KeyList.Enter || key.Scancode == (int)KeyList.KpEnter) && !BtnOk.Disabled)
+                else if ((key.Keycode == Key.Enter || key.Keycode == Key.KpEnter) && !BtnOk.Disabled)
                 {
                     OnOkPressed();
-                    GetTree().SetInputAsHandled();
+                    GetViewport().SetInputAsHandled();
                 }
             }
         }
@@ -179,8 +178,8 @@ namespace GodotCSharpToolkit.Editor
         {
             if (Editor != null)
             {
-                Editor.Preferences.SetValue(PREF_SIZE, GD.Var2Str(Dialog.RectSize));
-                Editor.Preferences.SetValue(PREF_POS, GD.Var2Str(Dialog.RectPosition));
+                Editor.Preferences.SetValue(PREF_SIZE, GD.VarToStr(Dialog.Size));
+                Editor.Preferences.SetValue(PREF_POS, GD.VarToStr(Dialog.Position));
             }
         }
 
@@ -188,11 +187,11 @@ namespace GodotCSharpToolkit.Editor
         {
             if (Editor != null)
             {
-                var size = Editor.Preferences.GetValue(PREF_SIZE, GD.Var2Str(Dialog.RectSize));
-                var pos = Editor.Preferences.GetValue(PREF_POS, GD.Var2Str(Dialog.RectPosition));
+                var size = Editor.Preferences.GetValue(PREF_SIZE, GD.VarToStr(Dialog.Size));
+                var pos = Editor.Preferences.GetValue(PREF_POS, GD.VarToStr(Dialog.Position));
 
-                Dialog.RectSize = (Vector2)GD.Str2Var(size);
-                Dialog.RectPosition = (Vector2)GD.Str2Var(pos);
+                Dialog.Size = ((Vector2)GD.StrToVar(size)).ToVector2I();
+                Dialog.Position = ((Vector2)GD.StrToVar(pos)).ToVector2I();
             }
         }
 
@@ -207,7 +206,7 @@ namespace GodotCSharpToolkit.Editor
                     foreach (var dataType in feature.Children)
                     {
                         if (!dataType.IsModified) { continue; }
-                        SaveDataType(dataType, feature.Path, dataType.SubPath);
+                        SaveDataType(dataType, feature.Path3D, dataType.SubPath);
                     }
                 }
             }
@@ -216,14 +215,14 @@ namespace GodotCSharpToolkit.Editor
         private void SaveDataType(FolderManagerTreeItem dataType, string featurePath, string subPath)
         {
             // Get list of current files in the system
-            var originalFiles = FileUtils.GetAllFilesInFolder(dataType.Path, false, FileUtils.JSON_EXTENSION);
+            var originalFiles = FileUtils.GetAllFilesInFolder(dataType.Path3D, false, FileUtils.JSON_EXTENSION);
             foreach (var fileObject in dataType.Children)
             {
-                originalFiles.Remove(fileObject.Path);
+                originalFiles.Remove(fileObject.Path3D);
                 if (!fileObject.IsModified) { continue; }
 
                 // Extract file name
-                var name = System.IO.Path.GetFileName(fileObject.Path);
+                var name = System.IO.Path.GetFileName(fileObject.Path3D);
                 var newPath = FileUtils.NormalizePath($"{featurePath}{subPath}{name}");
 
                 if (fileObject.Children.Count == 0)

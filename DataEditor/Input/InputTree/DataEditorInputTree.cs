@@ -2,11 +2,12 @@ using Godot;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using GodotCSharpToolkit.Extensions;
 
 namespace GodotCSharpToolkit.Editor
 {
 
-    public class DataEditorInputTree : DataEditorInput
+    public partial class DataEditorInputTree : DataEditorInput
     {
         private Tree Tree;
         private TreeItem Root;
@@ -16,28 +17,26 @@ namespace GodotCSharpToolkit.Editor
         public override void _Ready()
         {
             base._Ready();
-            Tree = FindNode("Tree") as Tree;
-            Tree.Connect("item_double_clicked", this, nameof(OnItemActivated));
-            Tree.Connect("item_activated", this, nameof(OnItemActivated));
-            Tree.Connect("item_rmb_selected", this, nameof(OnRmbClicked));
-            Tree.Connect("empty_rmb", this, nameof(OnRmbClicked));
-            Tree.Connect("empty_tree_rmb_selected", this, nameof(OnRmbClicked));
+            Tree = FindChild("Tree") as Tree;
+            Tree.Connect("item_activated", new Callable(this, nameof(OnItemActivated)));
+            Tree.Connect("item_mouse_selected", new Callable(this, nameof(OnRmbClicked)));
+            Tree.Connect("empty_clicked", new Callable(this, nameof(OnRmbClicked)));
         }
 
         protected override void Init()
         {
             Input = InputData as JsonGenericEditorInputRowTree;
-            Tree.RectMinSize = new Vector2(Input.EditorWidth, Input.EditorHeight);
+            Tree.CustomMinimumSize = new Vector2(Input.EditorWidth, Input.EditorHeight);
             if (TextLabel != null)
             {
-                TextLabel.HintTooltip = InputData.ToolTip;
+                TextLabel.TooltipText = InputData.ToolTip;
             }
-            Tree.HintTooltip = InputData.ToolTip;
+            Tree.TooltipText = InputData.ToolTip;
             BuildTreeColumns();
             Refresh();
         }
 
-        private void OnRmbClicked(Vector2 pos)
+        private void OnRmbClicked(Vector2 pos, int buttonIndex)
         {
             var item = Tree.GetSelected();
             if (item != null)
@@ -80,10 +79,10 @@ namespace GodotCSharpToolkit.Editor
             }
             var menu = Editor.PopupMenu;
             Editor.ClearPopupMenu();
-            menu.RectSize = menu.RectMinSize;
+            menu.Size = menu.MinSize;
             FillPopupMenu();
-            menu.RectPosition = GetViewport().GetMousePosition();
-            menu.Popup_();
+            menu.Position = GetViewport().GetMousePosition().ToVector2I();
+            menu.Popup();
         }
 
         private void FillPopupMenu()
@@ -133,7 +132,7 @@ namespace GodotCSharpToolkit.Editor
                 var colData = Input.Columns[i];
                 Tree.SetColumnTitle(i, colData.Name);
                 Tree.SetColumnExpand(i, colData.Expand);
-                Tree.SetColumnMinWidth(i, colData.MinWidth);
+                Tree.SetColumnCustomMinimumWidth(i, colData.MinWidth);
             }
 
         }

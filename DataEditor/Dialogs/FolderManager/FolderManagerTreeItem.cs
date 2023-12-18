@@ -6,7 +6,7 @@ using GodotCSharpToolkit.Extensions;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class FolderManagerTreeItem
+    public partial class FolderManagerTreeItem
     {
         public string Key { get; set; } = Guid.NewGuid().ToString();
 
@@ -26,7 +26,7 @@ namespace GodotCSharpToolkit.Editor
         public string ChildrenType { get; set; } = "";
 
         public string Name { get; set; } = null;
-        public string Path { get; set; } = null;
+        public string Path3D { get; set; } = null;
         public string SubPath { get; set; } = null;
         public Color Color { get; set; } = Colors.White;
         public Action<string, List<JsonDefWithName>> SaveAction;
@@ -91,7 +91,7 @@ namespace GodotCSharpToolkit.Editor
             var item = new FolderManagerTreeItem();
             item.Name = name;
             item.Type = "Module";
-            item.Path = path;
+            item.Path3D = path;
             item.AllowMove = false;
             item.Color = color;
             item.ChildrenType = "Feature";
@@ -104,7 +104,7 @@ namespace GodotCSharpToolkit.Editor
             var item = new FolderManagerTreeItem();
             item.Name = name;
             item.Type = type;
-            item.Path = path;
+            item.Path3D = path;
             item.AllowMove = false;
             item.Color = color;
             if (childrenType != null)
@@ -121,7 +121,7 @@ namespace GodotCSharpToolkit.Editor
             item.Name = name;
             item.Type = type;
             item.Data = data;
-            item.Path = path;
+            item.Path3D = path;
             item.AllowMove = true;
             item.AcceptDrop = false;
             item.Color = color;

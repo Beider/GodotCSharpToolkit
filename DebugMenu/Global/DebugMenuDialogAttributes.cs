@@ -12,7 +12,7 @@ namespace GodotCSharpToolkit.DebugMenu
     /// The button parameters comes first, then the dialog parameters
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class DebugMenuDialogField : DebugMenuEntry
+    public partial class DebugMenuDialogField : DebugMenuEntry
     {
         public enum FieldTypes
         {
@@ -98,7 +98,7 @@ namespace GodotCSharpToolkit.DebugMenu
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class DebugMenuDialogValidator : DebugMenuEntry
+    public partial class DebugMenuDialogValidator : DebugMenuEntry
     {
         public readonly string ValidationCallback;
 

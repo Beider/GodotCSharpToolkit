@@ -34,7 +34,7 @@ namespace GodotCSharpToolkit.Editor
 
         public void ShowConfirmDialog(string message, Action<bool> callback)
         {
-            var dialog = DataEditorConstants.SCENE_DIALOG_CONFIRM.Instance() as DataEditorConfirmDialog;
+            var dialog = DataEditorConstants.SCENE_DIALOG_CONFIRM.Instantiate() as DataEditorConfirmDialog;
             dialog.SetupBeforeAddChild(message, callback);
             CurrentDialog = dialog;
             AddChild(dialog);
@@ -44,7 +44,7 @@ namespace GodotCSharpToolkit.Editor
                     Action<string, string> callback, Func<string, bool> nameValidator,
                     string listName = "", Func<Dictionary<object, string>> getItemList = null)
         {
-            var dialog = DataEditorConstants.SCENE_DIALOG_TEXT_ENTRY.Instance() as DataEditorTextEntryDialog;
+            var dialog = DataEditorConstants.SCENE_DIALOG_TEXT_ENTRY.Instantiate() as DataEditorTextEntryDialog;
             dialog.SetupBeforeAddChild(title, textName, callback, nameValidator, listName, getItemList);
             CurrentDialog = dialog;
             AddChild(dialog);
@@ -52,7 +52,7 @@ namespace GodotCSharpToolkit.Editor
 
         public void ShowAdvancedListDialog(DataEditorAdvancedListDialogInput input)
         {
-            var dialog = DataEditorConstants.SCENE_DIALOG_ADVANCED_LIST.Instance() as DataEditorAdvancedListDialog;
+            var dialog = DataEditorConstants.SCENE_DIALOG_ADVANCED_LIST.Instantiate() as DataEditorAdvancedListDialog;
             dialog.Init(input, this);
             CurrentDialog = dialog;
             AddChild(dialog);
@@ -60,7 +60,7 @@ namespace GodotCSharpToolkit.Editor
 
         public void ShowFolderManagerDialog()
         {
-            var dialog = DataEditorConstants.SCENE_DIALOG_FOLDER_MANAGER.Instance() as FolderManager;
+            var dialog = DataEditorConstants.SCENE_DIALOG_FOLDER_MANAGER.Instantiate() as FolderManager;
             dialog.Init(this);
             CurrentDialog = dialog;
             AddChild(dialog);
@@ -68,7 +68,7 @@ namespace GodotCSharpToolkit.Editor
 
         public void ShowGenericEditorDialog(GenericEditorDialogInput input)
         {
-            var dialog = DataEditorConstants.SCENE_DIALOG_GENERIC_EDITOR.Instance() as GenericEditorDialog;
+            var dialog = DataEditorConstants.SCENE_DIALOG_GENERIC_EDITOR.Instantiate() as GenericEditorDialog;
             dialog.Init(input, this);
             CurrentDialog = dialog;
             AddChild(dialog);
@@ -86,12 +86,12 @@ namespace GodotCSharpToolkit.Editor
             PopupMenu.AddSeparator($" {name} ");
         }
 
-        public void AddPopupMenuEntry(string name, Action action, Texture icon = null, string subMenuName = "")
+        public void AddPopupMenuEntry(string name, Action action, Texture2D icon = null, string subMenuName = "")
         {
             var menu = PopupMenu;
             if (!subMenuName.IsNullOrEmpty())
             {
-                foreach (Control child in PopupMenu.GetChildren())
+                foreach (Node child in PopupMenu.GetChildren())
                 {
                     if (child.Name.Equals(subMenuName))
                     {

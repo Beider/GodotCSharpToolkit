@@ -13,9 +13,9 @@ namespace GodotCSharpToolkit.EventSystem.Recorders
     /// 
     /// TODO: In the future we either need to guarantee event numbers between releases or write them to recording file.
     /// </summary>
-    public class FileEventRecorder : EventRecorder
+    public partial class FileEventRecorder : EventRecorder
     {
-        private readonly String Path;
+        private readonly String Path3D;
         private StreamWriter Writer = null;
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace GodotCSharpToolkit.EventSystem.Recorders
                 Logger.Error($"File recorder path is null or empty");
                 return;
             }
-            Path = CreateFile(relPath);
+            Path3D = CreateFile(relPath);
             OpenFile(settings);
         }
 
@@ -52,18 +52,16 @@ namespace GodotCSharpToolkit.EventSystem.Recorders
         /// <returns>The real path to the created file</returns>
         private String CreateFile(String relPath)
         {
-            var file = new Godot.File();
-            var dir = new Godot.Directory();
-
             // Make directories
             string directory = relPath.Substr(0, relPath.LastIndexOf("/"));
             if (!directory.EndsWith(":/"))
             {
+                var dir = DirAccess.Open("res://");
                 dir.MakeDirRecursive(directory);
             }
 
             // Make file
-            file.Open(relPath, Godot.File.ModeFlags.Write);
+            var file = Godot.FileAccess.Open(relPath, Godot.FileAccess.ModeFlags.Write);
 
             // Get real path
             string realPath = file.GetPathAbsolute();
@@ -74,7 +72,7 @@ namespace GodotCSharpToolkit.EventSystem.Recorders
         private void OpenFile(List<String> settings)
         {
             // Open file
-            var fileStream = new FileStream(Path, FileMode.Open);
+            var fileStream = new FileStream(Path3D, FileMode.Open);
             Writer = new StreamWriter(fileStream);
 
             // Record settings
@@ -88,7 +86,7 @@ namespace GodotCSharpToolkit.EventSystem.Recorders
                 Writer.Flush();
             }
 
-            Logger.Info($"Recording to file: {Path}");
+            Logger.Info($"Recording to file: {Path3D}");
         }
 
         public override void RecordEvent(RecordableEvent rEvent)

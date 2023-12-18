@@ -5,7 +5,7 @@ using GodotCSharpToolkit.Misc;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class EditorToolbar : Panel
+    public partial class EditorToolbar : Panel
     {
         private EditorMainScene Editor;
         private Button BtnSettings;
@@ -23,46 +23,46 @@ namespace GodotCSharpToolkit.Editor
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            BtnSettings = FindNode("BtnSettings") as Button;
-            BtnSettings.Connect("pressed", this, nameof(OnSettingsPressed));
+            BtnSettings = FindChild("BtnSettings") as Button;
+            BtnSettings.Connect("pressed", new Callable(this, nameof(OnSettingsPressed)));
 
-            BtnSave = FindNode("BtnSave") as Button;
-            BtnSave.Connect("pressed", this, nameof(OnSavePressed));
+            BtnSave = FindChild("BtnSave") as Button;
+            BtnSave.Connect("pressed", new Callable(this, nameof(OnSavePressed)));
 
-            BtnSort = FindNode("BtnSort") as Button;
-            BtnSort.Connect("pressed", this, nameof(OnSortPressed));
+            BtnSort = FindChild("BtnSort") as Button;
+            BtnSort.Connect("pressed", new Callable(this, nameof(OnSortPressed)));
 
-            BtnDisplayName = FindNode("BtnDisplayName") as Button;
-            BtnDisplayName.Connect("pressed", this, nameof(OnToggleNamesPressed));
+            BtnDisplayName = FindChild("BtnDisplayName") as Button;
+            BtnDisplayName.Connect("pressed", new Callable(this, nameof(OnToggleNamesPressed)));
 
-            BtnLocalOnly = FindNode("BtnLocalOnly") as Button;
-            BtnLocalOnly.Connect("pressed", this, nameof(OnLocalOnlyPressed));
+            BtnLocalOnly = FindChild("BtnLocalOnly") as Button;
+            BtnLocalOnly.Connect("pressed", new Callable(this, nameof(OnLocalOnlyPressed)));
 
-            BtnRefresh = FindNode("BtnRefresh") as Button;
-            BtnRefresh.Connect("pressed", this, nameof(OnRefreshPressed));
+            BtnRefresh = FindChild("BtnRefresh") as Button;
+            BtnRefresh.Connect("pressed", new Callable(this, nameof(OnRefreshPressed)));
 
-            BtnAddMod = FindNode("BtnAddMod") as Button;
-            BtnAddMod.Connect("pressed", this, nameof(OnNewModPressed));
+            BtnAddMod = FindChild("BtnAddMod") as Button;
+            BtnAddMod.Connect("pressed", new Callable(this, nameof(OnNewModPressed)));
 
-            BtnClose = FindNode("BtnClose") as Button;
-            BtnClose.Connect("pressed", this, nameof(OnClosePressed));
+            BtnClose = FindChild("BtnClose") as Button;
+            BtnClose.Connect("pressed", new Callable(this, nameof(OnClosePressed)));
 
-            BtnBrowse = FindNode("BtnBrowse") as Button;
-            BtnBrowse.Connect("pressed", this, nameof(OnBrowsePressed));
+            BtnBrowse = FindChild("BtnBrowse") as Button;
+            BtnBrowse.Connect("pressed", new Callable(this, nameof(OnBrowsePressed)));
 
-            BtnSearch = FindNode("BtnSearch") as Button;
-            BtnSearch.Connect("pressed", this, nameof(OnSearchPressed));
+            BtnSearch = FindChild("BtnSearch") as Button;
+            BtnSearch.Connect("pressed", new Callable(this, nameof(OnSearchPressed)));
 
-            BtnFolderManager = FindNode("BtnFolderManager") as Button;
-            BtnFolderManager.Connect("pressed", this, nameof(OnBtnFolderManagerPressed));
+            BtnFolderManager = FindChild("BtnFolderManager") as Button;
+            BtnFolderManager.Connect("pressed", new Callable(this, nameof(OnBtnFolderManagerPressed)));
         }
 
         public void Init(EditorMainScene editor)
         {
             this.Editor = editor;
-            BtnSort.Pressed = Editor.Preferences.PrefSortTree;
+            BtnSort.ButtonPressed = Editor.Preferences.PrefSortTree;
             BtnDisplayName.Text = Editor.Preferences.PrefDisplayNameDelegateName;
-            BtnLocalOnly.Pressed = Editor.Preferences.PrefIsLocalOnly;
+            BtnLocalOnly.ButtonPressed = Editor.Preferences.PrefIsLocalOnly;
 
             BtnSave.Disabled = !Editor.Preferences.SettingIsLoadLocalData;
             BtnRefresh.Disabled = !Editor.Preferences.SettingIsLoadLocalData;
@@ -126,7 +126,7 @@ namespace GodotCSharpToolkit.Editor
         public void OnSortPressed()
         {
             Editor.Preferences.PrefSortTree = !Editor.Preferences.PrefSortTree;
-            BtnSort.Pressed = Editor.Preferences.PrefSortTree;
+            BtnSort.ButtonPressed = Editor.Preferences.PrefSortTree;
         }
 
         public void OnToggleNamesPressed()
@@ -138,7 +138,7 @@ namespace GodotCSharpToolkit.Editor
         public void OnLocalOnlyPressed()
         {
             Editor.Preferences.PrefIsLocalOnly = !Editor.Preferences.PrefIsLocalOnly;
-            BtnLocalOnly.Pressed = Editor.Preferences.PrefIsLocalOnly;
+            BtnLocalOnly.ButtonPressed = Editor.Preferences.PrefIsLocalOnly;
         }
 
         private void OnSavePressed()
@@ -148,7 +148,7 @@ namespace GodotCSharpToolkit.Editor
 
         public void OnSettingsPressed()
         {
-            Control settings = DataEditorConstants.SCENE_SETTINGS.Instance() as Control;
+            Control settings = DataEditorConstants.SCENE_SETTINGS.Instantiate() as Control;
             Editor.ShowEditor(settings);
         }
     }

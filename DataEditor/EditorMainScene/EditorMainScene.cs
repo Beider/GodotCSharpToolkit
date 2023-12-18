@@ -61,15 +61,15 @@ namespace GodotCSharpToolkit.Editor
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            Tree = FindNode("EditorTreeView") as EditorTreeView;
-            EditorArea = FindNode("EditorArea") as Control;
-            Toolbar = FindNode("Toolbar") as EditorToolbar;
-            PopupMenu = FindNode("PopupMenu") as PopupMenu;
-            SearchWindow = FindNode("SearchWindow") as SearchWindow;
-            EditorTreeSplit = FindNode("EditorTreeSplit") as HSplitContainer;
-            PopupMenu.Connect("id_pressed", this, nameof(OnPopupMenuPressed));
+            Tree = FindChild("EditorTreeView") as EditorTreeView;
+            EditorArea = FindChild("EditorArea") as Control;
+            Toolbar = FindChild("Toolbar") as EditorToolbar;
+            PopupMenu = FindChild("PopupMenu") as PopupMenu;
+            SearchWindow = FindChild("SearchWindow") as SearchWindow;
+            EditorTreeSplit = FindChild("EditorTreeSplit") as HSplitContainer;
+            PopupMenu.Connect("id_pressed", new Callable(this, nameof(OnPopupMenuPressed)));
 
-            EditorRecentTracker = FindNode("EditorRecentTracker") as EditorRecentTracker;
+            EditorRecentTracker = FindChild("EditorRecentTracker") as EditorRecentTracker;
             EditorRecentTracker.SetEditor(this);
             EditorRecentTracker.OnOpenEditorRequest += OnOpenEditorRequest;
 
@@ -81,13 +81,13 @@ namespace GodotCSharpToolkit.Editor
             Toolbar.Init(this);
 
             EditorTreeSplit.SplitOffset = Preferences.SettingEditorSplitOffset;
-            EditorTreeSplit.Connect("dragged", this, nameof(SplitDragged));
+            EditorTreeSplit.Connect("dragged", new Callable(this, nameof(SplitDragged)));
 
             // Start preferences save timer
             SaveTimer = new Timer();
             SaveTimer.OneShot = false;
             SaveTimer.WaitTime = PREF_SAVE_INTERVAL;
-            SaveTimer.Connect("timeout", this, nameof(SavePreferences));
+            SaveTimer.Connect("timeout", new Callable(this, nameof(SavePreferences)));
             AddChild(SaveTimer);
             SaveTimer.Start();
         }
@@ -116,36 +116,31 @@ namespace GodotCSharpToolkit.Editor
                 {
                     return;
                 }
-                if (CtrlOrCmd(keyEvent) && keyEvent.Scancode == (int)KeyList.S)
+                if (keyEvent.IsCommandOrControlPressed() && keyEvent.Keycode == Key.S)
                 {
                     Save();
                 }
-                else if (CtrlOrCmd(keyEvent) && keyEvent.Scancode == (int)KeyList.N)
+                else if (keyEvent.IsCommandOrControlPressed() && keyEvent.Keycode == Key.N)
                 {
                     Toolbar.OnNewModPressed();
                 }
-                else if (CtrlOrCmd(keyEvent) && keyEvent.Scancode == (int)KeyList.R)
+                else if (keyEvent.IsCommandOrControlPressed() && keyEvent.Keycode == Key.R)
                 {
                     Toolbar.OnRefreshPressed();
                 }
-                else if (keyEvent.Scancode == (int)KeyList.F2)
+                else if (keyEvent.Keycode == Key.F2)
                 {
                     Toolbar.OnSearchPressed();
                 }
-                else if (keyEvent.Scancode == (int)KeyList.F4)
+                else if (keyEvent.Keycode == Key.F4)
                 {
                     Toolbar.OnSortPressed();
                 }
-                else if (keyEvent.Scancode == (int)KeyList.F5)
+                else if (keyEvent.Keycode == Key.F5)
                 {
                     Toolbar.OnLocalOnlyPressed();
                 }
             }
-        }
-
-        private bool CtrlOrCmd(InputEventKey keyEvent)
-        {
-            return keyEvent.Control || keyEvent.Command;
         }
 
         public void Refresh(bool askForSave = true)

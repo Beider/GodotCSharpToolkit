@@ -6,7 +6,7 @@ using Godot;
 namespace GodotCSharpToolkit.DebugMenu
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method)]
-    public class OnScreenDebug : Attribute
+    public partial class OnScreenDebug : Attribute
     {
         private static ConcurrentDictionary<string, Color> ColorLookupDictionary = new ConcurrentDictionary<string, Color>();
         public readonly string DebugCategory;
@@ -51,13 +51,13 @@ namespace GodotCSharpToolkit.DebugMenu
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class DebugIncludeClass : Attribute
+    public partial class DebugIncludeClass : Attribute
     {
         public DebugIncludeClass() { }
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class DebugCategoryColumn : Attribute
+    public partial class DebugCategoryColumn : Attribute
     {
         public readonly string Category;
         public readonly int Column;

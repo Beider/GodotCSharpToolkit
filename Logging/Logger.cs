@@ -23,7 +23,7 @@ namespace GodotCSharpToolkit.Logging
         void Log(string message, LogLevel level, Exception ex);
     }
 
-    public class Logger : Node
+    public partial class Logger : Node
     {
         public static Logger Instance;
 

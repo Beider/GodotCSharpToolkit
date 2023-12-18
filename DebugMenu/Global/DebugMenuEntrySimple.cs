@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace GodotCSharpToolkit.DebugMenu
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class DebugMenuEntrySimple : DebugMenuEntry
+    public partial class DebugMenuEntrySimple : DebugMenuEntry
     {
         public readonly object[] Parameters;
 

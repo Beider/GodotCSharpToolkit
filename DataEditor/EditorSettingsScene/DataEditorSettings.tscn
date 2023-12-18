@@ -17,10 +17,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -289.0
-margin_top = -81.5
-margin_right = 289.0
-margin_bottom = 81.5
+offset_left = -289.0
+offset_top = -81.5
+offset_right = 289.0
+offset_bottom = 81.5
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -29,66 +29,66 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -253.0
-margin_top = -62.5
-margin_right = 253.0
-margin_bottom = 62.5
+offset_left = -253.0
+offset_top = -62.5
+offset_right = 253.0
+offset_bottom = 62.5
 
 [node name="AutoLoad" type="CheckBox" parent="Background/GridContainer"]
-margin_right = 496.0
-margin_bottom = 24.0
+offset_right = 496.0
+offset_bottom = 24.0
 focus_mode = 0
-enabled_focus_mode = 0
+focus_mode = 0
 text = "Load local data (You can not save without this on)"
 
 [node name="Control4" type="Control" parent="Background/GridContainer"]
-margin_top = 28.0
-margin_right = 496.0
-margin_bottom = 31.0
-rect_min_size = Vector2( 0, 3 )
+offset_top = 28.0
+offset_right = 496.0
+offset_bottom = 31.0
+custom_minimum_size = Vector2( 0, 3 )
 
 [node name="WebMode" type="CheckBox" parent="Background/GridContainer"]
-margin_top = 35.0
-margin_right = 496.0
-margin_bottom = 59.0
+offset_top = 35.0
+offset_right = 496.0
+offset_bottom = 59.0
 focus_mode = 0
-enabled_focus_mode = 0
+focus_mode = 0
 text = "Web mode (saves to browser instead of local file system)"
 
 [node name="Control5" type="Control" parent="Background/GridContainer"]
-margin_top = 63.0
-margin_right = 496.0
-margin_bottom = 66.0
-rect_min_size = Vector2( 0, 3 )
+offset_top = 63.0
+offset_right = 496.0
+offset_bottom = 66.0
+custom_minimum_size = Vector2( 0, 3 )
 
 [node name="GridContainer" type="GridContainer" parent="Background/GridContainer"]
-margin_top = 70.0
-margin_right = 496.0
-margin_bottom = 94.0
+offset_top = 70.0
+offset_right = 496.0
+offset_bottom = 94.0
 columns = 2
 
 [node name="SaveLabel" type="Label" parent="Background/GridContainer/GridContainer"]
-margin_top = 5.0
-margin_right = 142.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 142.0
+offset_bottom = 19.0
 text = "Work directory path:   "
 
 [node name="SavePath" type="LineEdit" parent="Background/GridContainer/GridContainer"]
-margin_left = 146.0
-margin_right = 496.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 350, 0 )
+offset_left = 146.0
+offset_right = 496.0
+offset_bottom = 24.0
+custom_minimum_size = Vector2( 350, 0 )
 
 [node name="Control3" type="Control" parent="Background/GridContainer"]
-margin_top = 98.0
-margin_right = 496.0
-margin_bottom = 101.0
-rect_min_size = Vector2( 0, 3 )
+offset_top = 98.0
+offset_right = 496.0
+offset_bottom = 101.0
+custom_minimum_size = Vector2( 0, 3 )
 
 [node name="BtnSave" type="Button" parent="Background/GridContainer"]
-margin_top = 105.0
-margin_right = 496.0
-margin_bottom = 125.0
+offset_top = 105.0
+offset_right = 496.0
+offset_bottom = 125.0
 focus_mode = 0
-enabled_focus_mode = 0
+focus_mode = 0
 text = "Save and refresh"

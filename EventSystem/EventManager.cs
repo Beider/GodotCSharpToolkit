@@ -12,7 +12,7 @@ using GodotCSharpToolkit.Misc;
 
 namespace GodotCSharpToolkit.EventSystem
 {
-    public class EventManager : Node
+    public partial class EventManager : Node
     {
         public static EventManager Instance;
         public static readonly int POS_TICK = 0;

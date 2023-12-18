@@ -83,7 +83,7 @@ namespace GodotCSharpToolkit.EventSystem.Events
             // Godot type
             if (key.StartsWith(GODOT_TYPE_PREFIX))
             {
-                SetValue(key, GD.Str2Var(value));
+                SetValue(key, GD.StrToVar(value));
             }
 
             // Default
@@ -107,7 +107,7 @@ namespace GodotCSharpToolkit.EventSystem.Events
             // Godot type
             if (key.StartsWith(GODOT_TYPE_PREFIX))
             {
-                return GD.Var2Str(Metadata[key]);
+                return GD.VarToStr((Variant)Metadata[key]);
             }
 
             // Default

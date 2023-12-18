@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using GodotCSharpToolkit.Extensions;
+using System.Numerics;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -10,12 +11,12 @@ namespace GodotCSharpToolkit.Editor
     /// Advanced list dialog that let's you define columns for the data to list.
     /// Also allows the user to search
     /// </summary>
-    public class DataEditorAdvancedListDialog : ColorRect
+    public partial class DataEditorAdvancedListDialog : ColorRect
     {
         private const string PREF_SIZE = "list_dia_size_";
         private const string PREF_POS = "list_dia_pos_";
 
-        private WindowDialog Dialog;
+        private Window Dialog;
         private Label LblDescription;
         private Label LblSearch;
         private LineEdit TxtSearchField;
@@ -36,36 +37,35 @@ namespace GodotCSharpToolkit.Editor
         public override void _Ready()
         {
             // Dialog
-            Dialog = FindNode("Dialog") as WindowDialog;
-            Dialog.Connect("popup_hide", this, nameof(OnCancelPressed));
+            Dialog = FindChild("Dialog") as Window;
+            Dialog.Connect("close_requested", new Callable(this, nameof(OnCancelPressed)));
 
             // Misc
-            LblDescription = FindNode("Description") as Label;
-            LblSearch = FindNode("SearchLabel") as Label;
+            LblDescription = FindChild("Description") as Label;
+            LblSearch = FindChild("SearchLabel") as Label;
 
             // Search field
-            TxtSearchField = FindNode("SearchField") as LineEdit;
-            TxtSearchField.Connect("text_changed", this, nameof(OnSearchTextChanged));
+            TxtSearchField = FindChild("SearchField") as LineEdit;
+            TxtSearchField.Connect("text_changed", new Callable(this, nameof(OnSearchTextChanged)));
 
             // Tree
-            Tree = FindNode("Tree") as Tree;
-            Tree.Connect("item_selected", this, nameof(OnItemSelected));
-            Tree.Connect("multi_selected", this, nameof(OnMultiSelected));
-            Tree.Connect("column_title_pressed", this, nameof(OnColumnTitlePressed));
-            Tree.Connect("item_double_clicked", this, nameof(OnOkPressed));
-            Tree.Connect("item_activated", this, nameof(OnOkPressed));
+            Tree = FindChild("Tree") as Tree;
+            Tree.Connect("item_selected", new Callable(this, nameof(OnItemSelected)));
+            Tree.Connect("multi_selected", new Callable(this, nameof(OnMultiSelected)));
+            Tree.Connect("column_title_clicked", new Callable(this, nameof(OnColumnTitlePressed)));
+            Tree.Connect("item_activated", new Callable(this, nameof(OnOkPressed)));
 
             // Buttons
-            BtnOk = FindNode("BtnOk") as Button;
-            BtnCancel = FindNode("BtnCancel") as Button;
-            BtnOk.Connect("pressed", this, nameof(OnOkPressed));
-            BtnCancel.Connect("pressed", this, nameof(OnCancelPressed));
+            BtnOk = FindChild("BtnOk") as Button;
+            BtnCancel = FindChild("BtnCancel") as Button;
+            BtnOk.Connect("pressed", new Callable(this, nameof(OnOkPressed)));
+            BtnCancel.Connect("pressed", new Callable(this, nameof(OnCancelPressed)));
             BtnOk.Disabled = true;
 
             // Refresh & show dialog
             LoadPrefs();
             RefreshDialog();
-            Dialog.Popup_();
+            Dialog.Popup();
             TxtSearchField.GrabFocus();
         }
 
@@ -73,15 +73,15 @@ namespace GodotCSharpToolkit.Editor
         {
             if (@event is InputEventKey key && key.Pressed)
             {
-                if (key.Scancode == (int)KeyList.Escape)
+                if (key.Keycode == Key.Escape)
                 {
                     OnCancelPressed();
-                    GetTree().SetInputAsHandled();
+                    GetViewport().SetInputAsHandled();
                 }
-                else if ((key.Scancode == (int)KeyList.Enter || key.Scancode == (int)KeyList.KpEnter) && !BtnOk.Disabled)
+                else if ((key.Keycode == Key.Enter || key.Keycode == Key.KpEnter) && !BtnOk.Disabled)
                 {
                     OnOkPressed();
-                    GetTree().SetInputAsHandled();
+                    GetViewport().SetInputAsHandled();
                 }
             }
         }
@@ -102,7 +102,7 @@ namespace GodotCSharpToolkit.Editor
             CheckOkEnabled();
         }
 
-        private void OnColumnTitlePressed(int col)
+        private void OnColumnTitlePressed(int col, int mouseButton)
         {
             if (col != SortedColumn)
             {
@@ -188,7 +188,7 @@ namespace GodotCSharpToolkit.Editor
         private void RefreshDialog()
         {
             // Misc
-            Dialog.WindowTitle = Input.Name;
+            Dialog.Title = Input.Name;
             LblSearch.Text = Input.SearchLabelText;
 
             // Description
@@ -210,7 +210,7 @@ namespace GodotCSharpToolkit.Editor
             var col = Input.SortedColumn;
             if (col < 0) { col = 0; }
             if (col >= Tree.Columns) { col = Tree.Columns - 1; }
-            OnColumnTitlePressed(col);
+            OnColumnTitlePressed(col, 0);
             RefreshTree();
         }
 
@@ -318,7 +318,7 @@ namespace GodotCSharpToolkit.Editor
                 var colData = Input.Columns[i];
                 Tree.SetColumnTitle(i, colData.Name);
                 Tree.SetColumnExpand(i, colData.Expand);
-                Tree.SetColumnMinWidth(i, colData.MinWidth);
+                Tree.SetColumnCustomMinimumWidth(i, colData.MinWidth);
             }
         }
 
@@ -345,17 +345,18 @@ namespace GodotCSharpToolkit.Editor
 
         private void SavePrefs()
         {
-            Editor.Preferences.SetValue($"{PREF_SIZE}{Input.UserPrefsKey}", GD.Var2Str(Dialog.RectSize));
-            Editor.Preferences.SetValue($"{PREF_POS}{Input.UserPrefsKey}", GD.Var2Str(Dialog.RectPosition));
+            Editor.Preferences.SetValue($"{PREF_SIZE}{Input.UserPrefsKey}", GD.VarToStr(Dialog.Size));
+            Editor.Preferences.SetValue($"{PREF_POS}{Input.UserPrefsKey}", GD.VarToStr(Dialog.Position));
         }
 
         private void LoadPrefs()
         {
-            var size = Editor.Preferences.GetValue($"{PREF_SIZE}{Input.UserPrefsKey}", GD.Var2Str(Dialog.RectSize));
-            var pos = Editor.Preferences.GetValue($"{PREF_POS}{Input.UserPrefsKey}", GD.Var2Str(Dialog.RectPosition));
+            var size = Editor.Preferences.GetValue($"{PREF_SIZE}{Input.UserPrefsKey}", GD.VarToStr(Dialog.Size));
+            var pos = Editor.Preferences.GetValue($"{PREF_POS}{Input.UserPrefsKey}", GD.VarToStr(Dialog.Position));
 
-            Dialog.RectSize = (Vector2)GD.Str2Var(size);
-            Dialog.RectPosition = (Vector2)GD.Str2Var(pos);
+
+            Dialog.Size = ((Godot.Vector2)GD.StrToVar(size)).ToVector2I();
+            Dialog.Position = ((Godot.Vector2)GD.StrToVar(pos)).ToVector2I();
         }
     }
 }

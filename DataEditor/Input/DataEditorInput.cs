@@ -3,7 +3,7 @@ using System;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class DataEditorInput : GridContainer, IDataEditorInput
+    public partial class DataEditorInput : GridContainer, IDataEditorInput
     {
         protected Label TextLabel;
         protected JsonDefWithName Data;
@@ -13,7 +13,7 @@ namespace GodotCSharpToolkit.Editor
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            TextLabel = FindNode("Label") as Label;
+            TextLabel = FindChild("Label") as Label;
         }
 
         public void SetInputData(JsonDefWithName data, JsonGenericEditorInputRow input, IDataEditor editor)
@@ -24,7 +24,7 @@ namespace GodotCSharpToolkit.Editor
             if (TextLabel != null)
             {
                 TextLabel.Text = $"{InputData.Name}: ";
-                TextLabel.RectMinSize = new Vector2(InputData.LabelWidth, 0f);
+                TextLabel.CustomMinimumSize = new Vector2(InputData.LabelWidth, 0f);
             }
             Init();
             DataUpdated();
@@ -42,11 +42,11 @@ namespace GodotCSharpToolkit.Editor
         {
             if (disabled)
             {
-                TextLabel.AddColorOverride("font_color", DataEditorConstants.COLOR_DISABLED);
+                TextLabel.AddThemeColorOverride("font_color", DataEditorConstants.COLOR_DISABLED);
             }
             else
             {
-                TextLabel.AddColorOverride("font_color", DataEditorConstants.COLOR_DEFAULT);
+                TextLabel.AddThemeColorOverride("font_color", DataEditorConstants.COLOR_DEFAULT);
             }
         }
 
@@ -94,12 +94,12 @@ namespace GodotCSharpToolkit.Editor
                     }
                     if (TextLabel != null)
                     {
-                        TextLabel.AddColorOverride("font_color", GetColor("font_color", "Label"));
+                        TextLabel.AddThemeColorOverride("font_color", GetThemeColor("font_color", "Label"));
                     }
                 }
                 else if (TextLabel != null)
                 {
-                    TextLabel.AddColorOverride("font_color", Colors.Red);
+                    TextLabel.AddThemeColorOverride("font_color", Colors.Red);
                 }
             }
         }

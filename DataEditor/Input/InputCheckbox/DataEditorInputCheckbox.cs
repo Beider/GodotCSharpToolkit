@@ -3,7 +3,7 @@ using System;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class DataEditorInputCheckbox : DataEditorInput
+    public partial class DataEditorInputCheckbox : DataEditorInput
     {
         private CheckBox CheckBox;
         private bool InCode = false;
@@ -12,8 +12,8 @@ namespace GodotCSharpToolkit.Editor
         public override void _Ready()
         {
             base._Ready();
-            CheckBox = FindNode("CheckBox") as CheckBox;
-            CheckBox.Connect("toggled", this, nameof(_OnCheckboxToggled));
+            CheckBox = FindChild("CheckBox") as CheckBox;
+            CheckBox.Connect("toggled", new Callable(this, nameof(_OnCheckboxToggled)));
         }
 
         private void _OnCheckboxToggled(bool newValue)
@@ -25,8 +25,8 @@ namespace GodotCSharpToolkit.Editor
         protected override void Init()
         {
             CheckBox.Text = InputData.Name;
-            CheckBox.RectMinSize = new Vector2(InputData.EditorWidth, 0f);
-            CheckBox.HintTooltip = InputData.ToolTip;
+            CheckBox.CustomMinimumSize = new Vector2(InputData.EditorWidth, 0f);
+            CheckBox.TooltipText = InputData.ToolTip;
             InCode = true;
             Disable(InputData.Disabled);
             Refresh();
@@ -46,10 +46,10 @@ namespace GodotCSharpToolkit.Editor
             bool curVal;
             if (bool.TryParse(value.ToString(), out curVal))
             {
-                CheckBox.Pressed = curVal;
+                CheckBox.ButtonPressed = curVal;
             }
 
-            OnValueChanged(CheckBox.Pressed, false, false);
+            OnValueChanged(CheckBox.ButtonPressed, false, false);
         }
 
 

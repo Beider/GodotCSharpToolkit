@@ -3,7 +3,7 @@ using System;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public class DataEditorInputText : DataEditorInput
+    public partial class DataEditorInputText : DataEditorInput
     {
         private LineEdit TextField;
 
@@ -11,8 +11,8 @@ namespace GodotCSharpToolkit.Editor
         public override void _Ready()
         {
             base._Ready();
-            TextField = FindNode("LineEdit") as LineEdit;
-            TextField.Connect("text_changed", this, nameof(_OnTextChanged));
+            TextField = FindChild("LineEdit") as LineEdit;
+            TextField.Connect("text_changed", new Callable(this, nameof(_OnTextChanged)));
         }
 
         public override void Disable(bool disabled)
@@ -28,9 +28,9 @@ namespace GodotCSharpToolkit.Editor
 
         protected override void Init()
         {
-            TextField.RectMinSize = new Vector2(InputData.EditorWidth, 0f);
-            TextField.HintTooltip = InputData.ToolTip;
-            TextLabel.HintTooltip = InputData.ToolTip;
+            TextField.CustomMinimumSize = new Vector2(InputData.EditorWidth, 0f);
+            TextField.TooltipText = InputData.ToolTip;
+            TextLabel.TooltipText = InputData.ToolTip;
             Disable(InputData.Disabled);
             Refresh();
         }
@@ -44,7 +44,7 @@ namespace GodotCSharpToolkit.Editor
         {
             if (TextField == null) { return; }
             TextField.GrabFocus();
-            TextField.CaretPosition = TextField.Text.Length;
+            TextField.CaretColumn = TextField.Text.Length;
         }
 
         public override void Refresh()

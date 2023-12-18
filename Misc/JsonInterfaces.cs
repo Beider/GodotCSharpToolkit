@@ -22,7 +22,7 @@ namespace GodotCSharpToolkit.Misc
         string GetSource();
     }
 
-    public class Vector2Json
+    public partial class Vector2Json
     {
         public Vector2Json() { }
 

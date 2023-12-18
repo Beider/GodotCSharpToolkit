@@ -15,7 +15,7 @@ namespace GodotCSharpToolkit.DebugMenu
     /// only in debug mode then make the root script a IDebugTool and during Initialize() use:</para>
     /// 
     /// <para>var scene = ResourceLoader.Load("scene path") as PackedScene</para>
-    /// <para>Node instance = scene.Instance();</para>
+    /// <para>Node instance = scene.Instantiate();</para>
     /// <para>someNode.Addchild(instance);</para>
     /// 
     /// <para>EXAMPLE 02:</para>

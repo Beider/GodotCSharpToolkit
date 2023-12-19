@@ -24,7 +24,7 @@ namespace GodotCSharpToolkit.Editor
         public Vector2 CustomMinimumSize = Vector2.Zero;
     }
 
-    public partial class EditorContainer : Panel, IDataEditorInput
+    public partial class EditorContainer : GridContainer, IDataEditorInput
     {
         private JsonDefWithName Data;
         private IDataEditor Editor;
@@ -32,13 +32,13 @@ namespace GodotCSharpToolkit.Editor
 
         private JsonGenericEditor GenericEditor;
 
-        private GridContainer Grid;
+        //private GridContainer Grid;
         private Label NameLabel;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            Grid = FindChild("Grid") as GridContainer;
+            //Grid = FindChild("Grid") as GridContainer;
             NameLabel = FindChild("Label") as Label;
 
         }
@@ -67,7 +67,7 @@ namespace GodotCSharpToolkit.Editor
             GenericEditor.SetData(Data, this);
             GenericEditor.Init(Editor);
 
-            Grid.AddChild(GenericEditor);
+            AddChild(GenericEditor);
             NameLabel.Text = Input.ContainerTitle;
             CustomMinimumSize = Input.CustomMinimumSize;
         }

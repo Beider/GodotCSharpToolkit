@@ -38,8 +38,9 @@ namespace GodotCSharpToolkit.Editor
 
         private void OnRmbClicked(Vector2 pos, int buttonIndex)
         {
+            if (buttonIndex != (int)MouseButton.Right) { return; }
             var item = Tree.GetSelected();
-            if (item != null)
+            if (item != null && item != Root)
             {
                 ShowPopupMenu(item, pos);
             }
@@ -61,7 +62,7 @@ namespace GodotCSharpToolkit.Editor
         private object GetSelectedObject()
         {
             var item = Tree.GetSelected();
-            if (item != null)
+            if (item != null && item != Root)
             {
                 int index = (int)item.GetMetadata(0);
                 return Input.GetObjectList()[index];
@@ -155,6 +156,7 @@ namespace GodotCSharpToolkit.Editor
                     FillTreeItemColumn(item, c, obj);
                 }
             }
+            Tree.HideRoot = list.Count != 0;
         }
 
         private void FillTreeItemColumn(TreeItem item, int colIndex, object obj)

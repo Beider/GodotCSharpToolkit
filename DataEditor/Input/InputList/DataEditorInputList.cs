@@ -18,6 +18,7 @@ namespace GodotCSharpToolkit.Editor
             ListField = FindChild("ItemList") as ItemList;
             ListField.Connect("item_clicked", new Callable(this, nameof(ShowPopupMenu)));
             ListField.Connect("item_activated", new Callable(this, nameof(OnItemActivated)));
+            ListField.Connect("empty_clicked", Callable.From((Vector2 pos, int buttonIndex) => ShowPopupMenu(-1, pos, buttonIndex)));
         }
 
         private void OnItemActivated(int index)
@@ -41,7 +42,6 @@ namespace GodotCSharpToolkit.Editor
         private void ShowPopupMenu(int index, Vector2 pos, int buttonIndex)
         {
             if (buttonIndex != (int)MouseButton.Right) { return; }
-            if (ListField.GetSelectedItems().IsEmpty()) { return; }
             if (InputData is JsonGenericEditorInputRowList iData)
             {
                 if (iData.OnAdd == null && iData.OnRemove == null)

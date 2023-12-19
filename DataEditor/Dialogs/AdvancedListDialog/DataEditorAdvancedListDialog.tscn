@@ -1,37 +1,49 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://brxx7m52urf48"]
 
-[ext_resource path="res://GodotCSharpToolkit/DataEditor/Dialogs/AdvancedListDialog/DataEditorAdvancedListDialog.cs" type="Script" id=1]
+[ext_resource type="Script" path="res://GodotCSharpToolkit/DataEditor/Dialogs/AdvancedListDialog/DataEditorAdvancedListDialog.cs" id="1"]
+[ext_resource type="Script" path="res://GodotCSharpToolkit/DataEditor/Dialogs/AdvancedListDialog/AdvancedDialogWindowInput.cs" id="2_q00wv"]
 
 [node name="AdvancedListDialog" type="ColorRect"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color( 0, 0, 0, 0.490196 )
-script = ExtResource( 1 )
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.490196)
+script = ExtResource("1")
+metadata/_edit_lock_ = true
 
 [node name="Dialog" type="Window" parent="."]
-visible = true
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -350.0
-offset_top = -200.0
-offset_right = 350.0
-offset_bottom = 200.0
-custom_minimum_size = Vector2( 300, 200 )
+title = "Dialog Title"
+initial_position = 1
+size = Vector2i(600, 400)
 exclusive = true
-window_title = "Advanced List Dialog"
-resizable = true
+script = ExtResource("2_q00wv")
 
-[node name="Frame" type="Control" parent="Dialog"]
+[node name="Panel" type="Panel" parent="Dialog"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 5.0
-offset_top = 5.0
-offset_right = -5.0
-offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"PanelNoBorder"
 
-[node name="VSplitContainer" type="VSplitContainer" parent="Dialog/Frame"]
+[node name="MarginContainer" type="MarginContainer" parent="Dialog/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+
+[node name="Frame" type="Control" parent="Dialog/Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="VSplitContainer" type="VSplitContainer" parent="Dialog/Panel/MarginContainer/Frame"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
@@ -39,74 +51,64 @@ size_flags_vertical = 3
 split_offset = 10
 dragger_visibility = 2
 
-[node name="VSplitContainer" type="VSplitContainer" parent="Dialog/Frame/VSplitContainer"]
-offset_right = 690.0
-offset_bottom = 74.0
+[node name="VSplitContainer" type="VSplitContainer" parent="Dialog/Panel/MarginContainer/Frame/VSplitContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 split_offset = 5
 dragger_visibility = 2
 
-[node name="DescArea" type="GridContainer" parent="Dialog/Frame/VSplitContainer/VSplitContainer"]
-offset_right = 690.0
-offset_bottom = 45.0
+[node name="DescArea" type="GridContainer" parent="Dialog/Panel/MarginContainer/Frame/VSplitContainer/VSplitContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Description" type="Label" parent="Dialog/Frame/VSplitContainer/VSplitContainer/DescArea"]
-offset_top = 2.0
-offset_right = 690.0
-offset_bottom = 42.0
-custom_minimum_size = Vector2( 0, 40 )
+[node name="Description" type="Label" parent="Dialog/Panel/MarginContainer/Frame/VSplitContainer/VSplitContainer/DescArea"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 6
 text = "Dialog description goes here
 Dont make it too long"
-align = 1
-valign = 1
-autowrap = true
+horizontal_alignment = 1
+vertical_alignment = 1
 clip_text = true
 
-[node name="SearchBar" type="GridContainer" parent="Dialog/Frame/VSplitContainer/VSplitContainer"]
-offset_top = 45.0
-offset_right = 690.0
-offset_bottom = 74.0
+[node name="SearchBar" type="GridContainer" parent="Dialog/Panel/MarginContainer/Frame/VSplitContainer/VSplitContainer"]
+layout_mode = 2
 columns = 2
 
-[node name="SearchLabel" type="Label" parent="Dialog/Frame/VSplitContainer/VSplitContainer/SearchBar"]
-offset_top = 5.0
-offset_right = 50.0
-offset_bottom = 19.0
+[node name="SearchLabel" type="Label" parent="Dialog/Panel/MarginContainer/Frame/VSplitContainer/VSplitContainer/SearchBar"]
+layout_mode = 2
 text = "Search: "
 
-[node name="SearchField" type="LineEdit" parent="Dialog/Frame/VSplitContainer/VSplitContainer/SearchBar"]
-offset_left = 54.0
-offset_right = 690.0
-offset_bottom = 24.0
+[node name="SearchField" type="LineEdit" parent="Dialog/Panel/MarginContainer/Frame/VSplitContainer/VSplitContainer/SearchBar"]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VSplitContainer2" type="VSplitContainer" parent="Dialog/Frame/VSplitContainer"]
-offset_top = 74.0
-offset_right = 690.0
-offset_bottom = 390.0
+[node name="VSplitContainer2" type="VSplitContainer" parent="Dialog/Panel/MarginContainer/Frame/VSplitContainer"]
+layout_mode = 2
 collapsed = true
 dragger_visibility = 2
 
-[node name="Tree" type="Tree" parent="Dialog/Frame/VSplitContainer/VSplitContainer2"]
-offset_right = 690.0
-offset_bottom = 276.0
-focus_mode = 0
+[node name="MarginContainer" type="MarginContainer" parent="Dialog/Panel/MarginContainer/Frame/VSplitContainer/VSplitContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_top = 5
+
+[node name="Tree" type="Tree" parent="Dialog/Panel/MarginContainer/Frame/VSplitContainer/VSplitContainer2/MarginContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+focus_mode = 0
 column_titles_visible = true
 hide_root = true
 select_mode = 1
 
-[node name="ButtonArea" type="Control" parent="Dialog/Frame/VSplitContainer/VSplitContainer2"]
-offset_top = 276.0
-offset_right = 690.0
-offset_bottom = 316.0
-custom_minimum_size = Vector2( 0, 40 )
+[node name="ButtonArea" type="Control" parent="Dialog/Panel/MarginContainer/Frame/VSplitContainer/VSplitContainer2"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="Dialog/Frame/VSplitContainer/VSplitContainer2/ButtonArea"]
+[node name="GridContainer" type="GridContainer" parent="Dialog/Panel/MarginContainer/Frame/VSplitContainer/VSplitContainer2/ButtonArea"]
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
@@ -118,13 +120,10 @@ offset_bottom = 10.0
 theme_override_constants/h_separation = 20
 columns = 2
 
-[node name="BtnOk" type="Button" parent="Dialog/Frame/VSplitContainer/VSplitContainer2/ButtonArea/GridContainer"]
-offset_right = 75.0
-offset_bottom = 20.0
+[node name="BtnOk" type="Button" parent="Dialog/Panel/MarginContainer/Frame/VSplitContainer/VSplitContainer2/ButtonArea/GridContainer"]
+layout_mode = 2
 text = "Ok (Enter)"
 
-[node name="BtnCancel" type="Button" parent="Dialog/Frame/VSplitContainer/VSplitContainer2/ButtonArea/GridContainer"]
-offset_left = 95.0
-offset_right = 182.0
-offset_bottom = 20.0
+[node name="BtnCancel" type="Button" parent="Dialog/Panel/MarginContainer/Frame/VSplitContainer/VSplitContainer2/ButtonArea/GridContainer"]
+layout_mode = 2
 text = "Cancel (Esc)"

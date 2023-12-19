@@ -27,6 +27,7 @@ namespace GodotCSharpToolkit.Editor
         private IDataEditor Editor;
 
         private DataEditorAdvancedListDialogInput Input;
+        private AdvancedDialogWindowInput WindowDialog;
 
         private int SortedColumn = -1;
         private bool AscendingSort = true;
@@ -62,28 +63,15 @@ namespace GodotCSharpToolkit.Editor
             BtnCancel.Connect("pressed", new Callable(this, nameof(OnCancelPressed)));
             BtnOk.Disabled = true;
 
+            WindowDialog = FindChild("Dialog") as AdvancedDialogWindowInput;
+            WindowDialog.OnCancelPressed += OnCancelPressed;
+            WindowDialog.OnOkPressed += OnOkPressed;
+
             // Refresh & show dialog
             LoadPrefs();
             RefreshDialog();
             Dialog.Popup();
             TxtSearchField.GrabFocus();
-        }
-
-        public override void _Input(InputEvent @event)
-        {
-            if (@event is InputEventKey key && key.Pressed)
-            {
-                if (key.Keycode == Key.Escape)
-                {
-                    OnCancelPressed();
-                    GetViewport().SetInputAsHandled();
-                }
-                else if ((key.Keycode == Key.Enter || key.Keycode == Key.KpEnter) && !BtnOk.Disabled)
-                {
-                    OnOkPressed();
-                    GetViewport().SetInputAsHandled();
-                }
-            }
         }
 
         private void OnSearchTextChanged(string newText)
@@ -354,9 +342,13 @@ namespace GodotCSharpToolkit.Editor
             var size = Editor.Preferences.GetValue($"{PREF_SIZE}{Input.UserPrefsKey}", GD.VarToStr(Dialog.Size));
             var pos = Editor.Preferences.GetValue($"{PREF_POS}{Input.UserPrefsKey}", GD.VarToStr(Dialog.Position));
 
-
             Dialog.Size = ((Godot.Vector2)GD.StrToVar(size)).ToVector2I();
             Dialog.Position = ((Godot.Vector2)GD.StrToVar(pos)).ToVector2I();
+
+            if (Dialog.Position.Y <= 10)
+            {
+                Dialog.Position = new Vector2I(Dialog.Position.X, 10);
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ namespace GodotCSharpToolkit.Editor
         public Action<JsonDefWithName> OnDialogOk { get; set; } = null;
         public Func<JsonDefWithName, bool> IsOkEnabled { get; set; } = null;
         public Action OnClose { get; set; } = null;
-        public Vector2 DialogSize = new Vector2(500f, 300f);
+        public Vector2I DialogSize = new Vector2I(500, 300);
 
         public void NotifyRebuildDialog()
         {
@@ -39,6 +39,7 @@ namespace GodotCSharpToolkit.Editor
         private Button BtnOk;
         private Button BtnCancel;
         private JsonGenericEditor GenericEditor;
+        private AdvancedDialogWindowInput WindowDialog;
 
         private GenericEditorDialogInput Input;
 
@@ -67,8 +68,12 @@ namespace GodotCSharpToolkit.Editor
             Input.CheckOk += CheckOkEnabled;
             ReBuildGenericEditor();
 
-            Dialog.MinSize = Input.DialogSize.ToVector2I();
-            Dialog.Size = Input.DialogSize.ToVector2I();
+            WindowDialog = FindChild("Dialog") as AdvancedDialogWindowInput;
+            WindowDialog.OnCancelPressed += OnCancelPressed;
+            WindowDialog.OnOkPressed += OnOkPressed;
+
+            Dialog.MinSize = Input.DialogSize;
+            Dialog.Size = Input.DialogSize;
 
             Dialog.Popup();
         }
@@ -99,23 +104,6 @@ namespace GodotCSharpToolkit.Editor
         {
             Input = input;
             Editor = editor;
-        }
-
-        public override void _Input(InputEvent @event)
-        {
-            if (@event is InputEventKey key && key.Pressed)
-            {
-                if (key.Keycode == Key.Escape)
-                {
-                    OnCancelPressed();
-                    GetViewport().SetInputAsHandled();
-                }
-                else if ((key.Keycode == Key.Enter || key.Keycode == Key.KpEnter) && !BtnOk.Disabled)
-                {
-                    OnOkPressed();
-                    GetViewport().SetInputAsHandled();
-                }
-            }
         }
 
         private void CheckOkEnabled()

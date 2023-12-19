@@ -22,6 +22,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("2")
 
 [node name="BlackBackground" type="ColorRect" parent="."]
@@ -89,6 +91,7 @@ icon = ExtResource("9")
 layout_mode = 2
 tooltip_text = "Filter for data. You can also use right mouse button menu to find usages.
 Shortcut: F2"
+focus_mode = 0
 shortcut_in_tooltip = false
 text = "Filter"
 icon = ExtResource("1")
@@ -118,6 +121,7 @@ icon = ExtResource("11")
 [node name="BtnFolderManager" type="Button" parent="Background/ToolBarSplit/Toolbar/GridRight"]
 layout_mode = 2
 tooltip_text = "Manage your modules. Move things between modules."
+focus_mode = 0
 shortcut_in_tooltip = false
 text = "Manager"
 icon = ExtResource("13")
@@ -156,6 +160,7 @@ icon = ExtResource("4")
 
 [node name="BtnClose" type="Button" parent="Background/ToolBarSplit/Toolbar/GridRight"]
 layout_mode = 2
+focus_mode = 0
 text = "Close"
 icon = ExtResource("12")
 
@@ -213,6 +218,7 @@ text = "Filter"
 
 [node name="ClearBtn" type="Button" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/VSplitContainer/SearchWindow/GridContainer/GridButtons"]
 layout_mode = 2
+focus_mode = 0
 text = "Clear Filter"
 
 [node name="ChkExact" type="CheckBox" parent="Background/ToolBarSplit/MainArea/EditorTreeSplit/VSplitContainer/SearchWindow/GridContainer/GridButtons"]

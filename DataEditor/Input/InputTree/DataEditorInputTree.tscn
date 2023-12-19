@@ -1,30 +1,32 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://blvrth71vsbvt"]
 
-[ext_resource path="res://GodotCSharpToolkit/DataEditor/Input/InputTree/DataEditorInputTree.cs" type="Script" id=1]
+[ext_resource type="Script" path="res://GodotCSharpToolkit/DataEditor/Input/InputTree/DataEditorInputTree.cs" id="1"]
 
 [node name="DataEditorInputTree" type="GridContainer"]
 offset_right = 235.0
 offset_bottom = 24.0
 size_flags_horizontal = 3
 columns = 2
-script = ExtResource( 1 )
+script = ExtResource("1")
 
 [node name="Label" type="Label" parent="."]
-offset_right = 300.0
-offset_bottom = 14.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Title here"
 
 [node name="Spacer" type="Control" parent="."]
-offset_left = 304.0
-offset_right = 304.0
-offset_bottom = 14.0
+layout_mode = 2
 
-[node name="Tree" type="Tree" parent="."]
-offset_top = 18.0
-offset_right = 300.0
-offset_bottom = 118.0
-custom_minimum_size = Vector2( 300, 100 )
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_right = 1
+
+[node name="Tree" type="Tree" parent="MarginContainer"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+size_flags_horizontal = 3
 column_titles_visible = true
 allow_reselect = true
 allow_rmb_select = true

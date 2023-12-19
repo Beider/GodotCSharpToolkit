@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dfynu2xqk6pm"]
+[gd_scene load_steps=4 format=3 uid="uid://dfynu2xqk6pm"]
 
 [ext_resource type="Script" path="res://GodotCSharpToolkit/DataEditor/Dialogs/FolderManager/FolderManager.cs" id="1"]
 [ext_resource type="Script" path="res://GodotCSharpToolkit/DataEditor/Dialogs/FolderManager/FolderManagerTree.cs" id="2"]
+[ext_resource type="Script" path="res://GodotCSharpToolkit/DataEditor/Dialogs/AdvancedListDialog/AdvancedDialogWindowInput.cs" id="2_ehrkt"]
 
 [node name="FolderManager" type="ColorRect"]
 anchors_preset = 15
@@ -9,19 +10,41 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0, 0, 0, 0.490196)
 script = ExtResource("1")
+metadata/_edit_lock_ = true
 
 [node name="Dialog" type="Window" parent="."]
+title = "Feature Manager"
 initial_position = 1
+size = Vector2i(500, 500)
 exclusive = true
+script = ExtResource("2_ehrkt")
 
-[node name="VSplitContainer" type="VSplitContainer" parent="Dialog"]
+[node name="Panel" type="Panel" parent="Dialog"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"PanelNoBorder"
+
+[node name="MarginContainer" type="MarginContainer" parent="Dialog/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VSplitContainer" type="VSplitContainer" parent="Dialog/Panel/MarginContainer"]
+layout_mode = 2
 collapsed = true
 dragger_visibility = 2
 
-[node name="Tree" type="Tree" parent="Dialog/VSplitContainer"]
+[node name="Tree" type="Tree" parent="Dialog/Panel/MarginContainer/VSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -29,27 +52,27 @@ hide_root = true
 select_mode = 2
 script = ExtResource("2")
 
-[node name="ButtonArea" type="Control" parent="Dialog/VSplitContainer"]
-custom_minimum_size = Vector2(0, 40)
+[node name="ButtonArea" type="Control" parent="Dialog/Panel/MarginContainer/VSplitContainer"]
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="Dialog/VSplitContainer/ButtonArea"]
+[node name="GridContainer" type="GridContainer" parent="Dialog/Panel/MarginContainer/VSplitContainer/ButtonArea"]
 layout_mode = 0
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -190.0
-offset_top = -10.0
-offset_right = -8.0
-offset_bottom = 10.0
+offset_left = -195.0
+offset_top = -5.0
+offset_right = 10.0
+offset_bottom = 26.0
 theme_override_constants/h_separation = 20
 columns = 2
 
-[node name="BtnOk" type="Button" parent="Dialog/VSplitContainer/ButtonArea/GridContainer"]
+[node name="BtnOk" type="Button" parent="Dialog/Panel/MarginContainer/VSplitContainer/ButtonArea/GridContainer"]
 layout_mode = 2
 text = "Ok (Enter)"
 
-[node name="BtnCancel" type="Button" parent="Dialog/VSplitContainer/ButtonArea/GridContainer"]
+[node name="BtnCancel" type="Button" parent="Dialog/Panel/MarginContainer/VSplitContainer/ButtonArea/GridContainer"]
 layout_mode = 2
 text = "Cancel (Esc)"

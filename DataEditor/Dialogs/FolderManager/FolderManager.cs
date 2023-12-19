@@ -23,6 +23,8 @@ namespace GodotCSharpToolkit.Editor
         private FolderManagerTreeItem RootFolderItem;
         public Dictionary<string, FolderManagerTreeItem> ItemLookup = new Dictionary<string, FolderManagerTreeItem>();
 
+        AdvancedDialogWindowInput WindowDialog;
+
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
@@ -40,26 +42,13 @@ namespace GodotCSharpToolkit.Editor
             BtnOk.Connect("pressed", new Callable(this, nameof(OnOkPressed)));
             BtnCancel.Connect("pressed", new Callable(this, nameof(OnCancelPressed)));
 
+            WindowDialog = FindChild("Dialog") as AdvancedDialogWindowInput;
+            WindowDialog.OnCancelPressed += OnCancelPressed;
+            WindowDialog.OnOkPressed += OnOkPressed;
+
             Dialog.Popup();
             LoadPrefs();
             Load();
-        }
-
-        public override void _Input(InputEvent @event)
-        {
-            if (@event is InputEventKey key && key.Pressed)
-            {
-                if (key.Keycode == Key.Escape)
-                {
-                    OnCancelPressed();
-                    GetViewport().SetInputAsHandled();
-                }
-                else if ((key.Keycode == Key.Enter || key.Keycode == Key.KpEnter) && !BtnOk.Disabled)
-                {
-                    OnOkPressed();
-                    GetViewport().SetInputAsHandled();
-                }
-            }
         }
 
         private void Load()
@@ -192,6 +181,11 @@ namespace GodotCSharpToolkit.Editor
 
                 Dialog.Size = ((Vector2)GD.StrToVar(size)).ToVector2I();
                 Dialog.Position = ((Vector2)GD.StrToVar(pos)).ToVector2I();
+
+                if (Dialog.Position.Y <= 10)
+                {
+                    Dialog.Position = new Vector2I(Dialog.Position.X, 10);
+                }
             }
         }
 

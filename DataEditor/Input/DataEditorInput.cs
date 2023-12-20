@@ -3,7 +3,7 @@ using System;
 
 namespace GodotCSharpToolkit.Editor
 {
-    public partial class DataEditorInput : GridContainer, IDataEditorInput
+    public partial class DataEditorInput : Control, IDataEditorInput
     {
         protected Label TextLabel;
         protected JsonDefWithName Data;

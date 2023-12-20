@@ -27,10 +27,6 @@ namespace GodotCSharpToolkit.Editor
         {
             Input = InputData as JsonGenericEditorInputRowTree;
             Tree.CustomMinimumSize = new Vector2(Input.EditorWidth, Input.EditorHeight);
-            if (TextLabel != null)
-            {
-                TextLabel.TooltipText = InputData.ToolTip;
-            }
             Tree.TooltipText = InputData.ToolTip;
             BuildTreeColumns();
             Refresh();

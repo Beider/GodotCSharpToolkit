@@ -76,9 +76,12 @@ namespace GodotCSharpToolkit.Editor
 
         protected override void Init()
         {
+            if (InputData.Name.IsNullOrEmpty())
+            {
+                TextLabel.QueueFree();
+            }
             var input = (JsonGenericEditorInputRowList)InputData;
             ListField.CustomMinimumSize = new Vector2(input.EditorWidth, input.EditorHeight);
-            TextLabel.TooltipText = InputData.ToolTip;
             ListField.TooltipText = InputData.ToolTip;
             Refresh();
         }

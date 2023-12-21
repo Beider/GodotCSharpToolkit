@@ -183,9 +183,11 @@ namespace GodotCSharpToolkit.Editor
 
         private void FindAndSelect(string id)
         {
+            if (Root == null) { return; }
+            if (Root.GetChildCount() == 0) { return; }
             if (id.IsNullOrEmpty()) { return; }
             var tItem = GetTreeItemById(id);
-            if (tItem == null) { return; }
+            if (tItem == null || tItem.TreeItemSelf == null || !IsInstanceValid(tItem.TreeItemSelf)) { return; }
             ScrollToItem(tItem.TreeItemSelf);
             tItem.TreeItemSelf.Select(0);
         }

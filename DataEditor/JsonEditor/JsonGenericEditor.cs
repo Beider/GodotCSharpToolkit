@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using GodotCSharpToolkit.Logging;
 using GodotCSharpToolkit.Extensions;
+using ScriptSystem.Data;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -12,6 +13,7 @@ namespace GodotCSharpToolkit.Editor
     public partial class JsonGenericEditor : JsonEditorContentBase
     {
         public event Action OnDataUpdated = delegate { };
+        public event Action<JsonDefWithName, JsonGenericEditor> OnRequestInputUpdate = delegate { };
 
         private GridContainer ControlContainer;
 
@@ -35,6 +37,18 @@ namespace GodotCSharpToolkit.Editor
             {
                 field.DataUpdated();
             }
+        }
+
+        public void Refresh()
+        {
+            ControlContainer.Visible = false;
+            ControlContainer.QueueFree();
+            CurrentRow = 0;
+            Rows.Clear();
+            InputFields.Clear();
+            OnRequestInputUpdate(Data, this);
+            CreateGridContainer();
+            BuildControls();
         }
 
         private void CreateGridContainer()

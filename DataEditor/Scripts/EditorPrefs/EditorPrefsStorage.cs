@@ -13,7 +13,7 @@ namespace GodotCSharpToolkit.Editor
 
         public bool HasChanges { get; set; } = false;
 
-        private string Path3D = DEFAULT_PATH;
+        private string Path = DEFAULT_PATH;
 
         private Dictionary<string, EditorPrefEntry> Entries = new Dictionary<string, EditorPrefEntry>();
 
@@ -21,7 +21,7 @@ namespace GodotCSharpToolkit.Editor
         {
             if (!path.IsNullOrEmpty())
             {
-                this.Path3D = path;
+                this.Path = path;
             }
 
             Load();
@@ -70,7 +70,7 @@ namespace GodotCSharpToolkit.Editor
         private void Load()
         {
             Entries.Clear();
-            var text = FileUtils.LoadTextFile(Path3D);
+            var text = FileUtils.LoadTextFile(Path);
             if (text != "")
             {
                 var prefs = (EditorPrefsJson)Utils.FromJson(text, typeof(EditorPrefsJson));
@@ -94,7 +94,7 @@ namespace GodotCSharpToolkit.Editor
                 EditorPrefsJson file = new EditorPrefsJson();
                 file.Values = new List<EditorPrefEntry>(Entries.Values);
                 var json = Utils.ToJson(file);
-                FileUtils.SaveToFile(json, Path3D);
+                FileUtils.SaveToFile(json, Path);
             }
             catch (Exception ex)
             {

@@ -200,7 +200,7 @@ namespace GodotCSharpToolkit.Editor
                     foreach (var dataType in feature.Children)
                     {
                         if (!dataType.IsModified) { continue; }
-                        SaveDataType(dataType, feature.Path3D, dataType.SubPath);
+                        SaveDataType(dataType, feature.Path, dataType.SubPath);
                     }
                 }
             }
@@ -209,14 +209,14 @@ namespace GodotCSharpToolkit.Editor
         private void SaveDataType(FolderManagerTreeItem dataType, string featurePath, string subPath)
         {
             // Get list of current files in the system
-            var originalFiles = FileUtils.GetAllFilesInFolder(dataType.Path3D, false, FileUtils.JSON_EXTENSION);
+            var originalFiles = FileUtils.GetAllFilesInFolder(dataType.Path, false, FileUtils.JSON_EXTENSION);
             foreach (var fileObject in dataType.Children)
             {
-                originalFiles.Remove(fileObject.Path3D);
+                originalFiles.Remove(fileObject.Path);
                 if (!fileObject.IsModified) { continue; }
 
                 // Extract file name
-                var name = System.IO.Path.GetFileName(fileObject.Path3D);
+                var name = System.IO.Path.GetFileName(fileObject.Path);
                 var newPath = FileUtils.NormalizePath($"{featurePath}{subPath}{name}");
 
                 if (fileObject.Children.Count == 0)

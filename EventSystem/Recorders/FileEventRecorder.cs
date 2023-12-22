@@ -15,7 +15,7 @@ namespace GodotCSharpToolkit.EventSystem.Recorders
     /// </summary>
     public partial class FileEventRecorder : EventRecorder
     {
-        private readonly String Path3D;
+        private readonly String Path;
         private StreamWriter Writer = null;
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace GodotCSharpToolkit.EventSystem.Recorders
                 Logger.Error($"File recorder path is null or empty");
                 return;
             }
-            Path3D = CreateFile(relPath);
+            Path = CreateFile(relPath);
             OpenFile(settings);
         }
 
@@ -72,7 +72,7 @@ namespace GodotCSharpToolkit.EventSystem.Recorders
         private void OpenFile(List<String> settings)
         {
             // Open file
-            var fileStream = new FileStream(Path3D, FileMode.Open);
+            var fileStream = new FileStream(Path, FileMode.Open);
             Writer = new StreamWriter(fileStream);
 
             // Record settings
@@ -86,7 +86,7 @@ namespace GodotCSharpToolkit.EventSystem.Recorders
                 Writer.Flush();
             }
 
-            Logger.Info($"Recording to file: {Path3D}");
+            Logger.Info($"Recording to file: {Path}");
         }
 
         public override void RecordEvent(RecordableEvent rEvent)

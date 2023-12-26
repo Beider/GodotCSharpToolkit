@@ -70,7 +70,7 @@ namespace GodotCSharpToolkit.Editor
             // Refresh & show dialog
             LoadPrefs();
             RefreshDialog();
-            Dialog.Popup();
+            Dialog.Show();
             TxtSearchField.GrabFocus();
         }
 

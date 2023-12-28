@@ -153,6 +153,10 @@ namespace GodotCSharpToolkit.Misc
             {
                 return f.ToString(NFormatInfo);
             }
+            if (obj is int i)
+            {
+                return i.ToString();
+            }
             return obj.ToString();
         }
     }

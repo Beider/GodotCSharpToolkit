@@ -204,6 +204,14 @@ namespace GodotCSharpToolkit.Misc
 
         public static void Delete(string path, bool recursive = false)
         {
+            if (!DirAccess.DirExistsAbsolute(path))
+            {
+                if (FileAccess.FileExists(path))
+                {
+                    DirAccess.RemoveAbsolute(path);
+                    return;
+                }
+            }
             var dir = DirAccess.Open(path);
             if (recursive && dir != null)
             {
@@ -221,7 +229,7 @@ namespace GodotCSharpToolkit.Misc
             }
 
             // Remove self
-            dir.Remove(path);
+            dir?.Remove(path);
         }
 
         /// <summary>

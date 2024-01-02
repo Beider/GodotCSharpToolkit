@@ -188,6 +188,8 @@ namespace GodotCSharpToolkit.Editor
                 if (Root == null) { return; }
                 if (Root.GetChildCount() == 0) { return; }
                 if (id.IsNullOrEmpty()) { return; }
+                if (IsFiltered(id)) { return; }
+
                 var tItem = GetTreeItemById(id);
                 if (tItem == null || tItem.TreeItemSelf == null || !IsInstanceValid(tItem.TreeItemSelf)) { return; }
                 ScrollToItem(tItem.TreeItemSelf);

@@ -93,9 +93,19 @@ namespace GodotCSharpToolkit.Editor
             OnSelectItemRequest = delegate { };
 
             Clear();
+            TreeItemLookup.ForEach(vp =>
+            {
+                if (vp.Value.ResolveSelfItem() != null &&
+                    !IsInstanceValid(vp.Value.ResolveSelfItem()))
+                {
+                    vp.Value.ResolveSelfItem().Dispose();
+                }
+            });
             TreeItemLookup.Clear();
+
             InCode = true;
             HideRoot = true;
+            Root?.Dispose();
             Root = CreateItem(null);
             Root.SetMetadata(0, "root");
 
@@ -110,6 +120,8 @@ namespace GodotCSharpToolkit.Editor
                 foreach (var val in ModItems.Values) { val.Dispose(); }
                 ModItems.Clear();
             }
+
+            GC.Collect();
 
             // Add local paths
             AddLocalMods();
@@ -191,9 +203,9 @@ namespace GodotCSharpToolkit.Editor
                 if (IsFiltered(id)) { return; }
 
                 var tItem = GetTreeItemById(id);
-                if (tItem == null || tItem.TreeItemSelf == null || !IsInstanceValid(tItem.TreeItemSelf)) { return; }
-                ScrollToItem(tItem.TreeItemSelf);
-                tItem.TreeItemSelf.Select(0);
+                if (tItem == null || tItem.ResolveSelfItem() == null || !IsInstanceValid(tItem.ResolveSelfItem())) { return; }
+                ScrollToItem(tItem.ResolveSelfItem());
+                tItem.ResolveSelfItem().Select(0);
             }
             catch (Exception ex)
             {
@@ -260,6 +272,7 @@ namespace GodotCSharpToolkit.Editor
             foreach (var c in removeList)
             {
                 item.RemoveChild(c);
+                c.Free();
             }
 
             return !hasLeafs;

@@ -53,6 +53,7 @@ namespace GodotCSharpToolkit.Editor
 
         public override void Dispose()
         {
+            base.Dispose();
             Values.Clear();
         }
 
@@ -371,9 +372,9 @@ namespace GodotCSharpToolkit.Editor
             }
             editor.SetData(jsonDef, this);
             var item = Editor.Tree.GetTreeItemById(jsonDef.GetUniqueId());
-            if (item != null)
+            if (item != null && item.ResolveSelfItem() != null)
             {
-                SelectExpandAndScrollTo(item.TreeItemSelf);
+                SelectExpandAndScrollTo(item.ResolveSelfItem());
             }
             Editor.ShowEditor((Control)editor);
         }
@@ -409,9 +410,10 @@ namespace GodotCSharpToolkit.Editor
 
         private void RefreshItem(AbstractEditorTreeItem item, JsonDefWithName def)
         {
-            item.TreeItemSelf.SetCustomColor(0, GetItemColor(def, true));
-            item.TreeItemSelf.SetCustomBgColor(0, GetItemColor(def, false));
-            item.TreeItemSelf.SetText(0, def.GetName());
+            var itm = item.ResolveSelfItem();
+            itm.SetCustomColor(0, GetItemColor(def, true));
+            itm.SetCustomBgColor(0, GetItemColor(def, false));
+            itm.SetText(0, def.GetName());
             item.Name = def.GetName();
         }
 
@@ -504,7 +506,7 @@ namespace GodotCSharpToolkit.Editor
                 }, DataEditorConstants.ICON_DELETE);
             }
 
-            var parentKey = item.TreeItemSelf.GetParent().GetMetadata(0).ToString();
+            var parentKey = item.ResolveSelfItem().GetParent().GetMetadata(0).ToString();
             var parent = (DelegateEditorTreeItem)Editor.Tree.GetTreeItemById(parentKey);
             FillContextMenuForFile(parent);
 

@@ -22,7 +22,7 @@ namespace GodotCSharpToolkit.Editor
 
         public List<string> ModPaths;
 
-        public TreeItem TreeItemSelf { get; set; } = null;
+        protected WeakRef TreeItemSelf { get; set; } = null;
 
 
         public string Key { get; set; } = "Tree Item";
@@ -57,6 +57,22 @@ namespace GodotCSharpToolkit.Editor
 
         }
 
+        public void SetTreeItemReference(WeakRef weakref)
+        {
+            TreeItemSelf = weakref;
+        }
+
+        public TreeItem ResolveSelfItem()
+        {
+            if (TreeItemSelf == null) { return null; }
+            var refItem = TreeItemSelf.GetRef();
+            if (refItem.VariantType != Variant.Type.Nil)
+            {
+                return (TreeItem)refItem.Obj;
+            }
+            return null;
+        }
+
         /// <summary>
         /// Called when this item is selected
         /// </summary>
@@ -71,6 +87,12 @@ namespace GodotCSharpToolkit.Editor
         public virtual bool FillContextMenu()
         {
             return false;
+        }
+
+        public virtual void Dispose()
+        {
+            TreeItemSelf?.Dispose();
+            TreeItemSelf = null;
         }
     }
 }

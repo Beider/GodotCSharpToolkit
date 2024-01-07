@@ -26,7 +26,7 @@ namespace GodotCSharpToolkit.Editor
             }
             var nameDelegate = Editor.Tree.GetDisplayNameDelegate();
             var treeItem = CreateTreeItem(parent, nameDelegate(item), item.Color, item.ColorBg, item.Collapsed, item.Key);
-            item.TreeItemSelf = treeItem;
+            item.SetTreeItemReference(WeakRef(treeItem));
             return treeItem;
         }
 

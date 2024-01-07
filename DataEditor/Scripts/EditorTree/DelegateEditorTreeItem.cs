@@ -63,6 +63,7 @@ namespace GodotCSharpToolkit.Editor
             {
                 OnDispose(this);
             }
+            base.Dispose();
         }
 
         public override bool HasUnsavedChanges()

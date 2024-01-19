@@ -48,8 +48,7 @@ namespace GodotCSharpToolkit.Editor
         private Timer SaveTimer;
         public EditorTreeView Tree { get; private set; }
         public EditorToolbar Toolbar { get; private set; }
-        public PopupMenu PopupMenu { get; private set; }
-        public Dictionary<string, Action> PopupMenuDelegates = new Dictionary<string, Action>();
+
         public EditorRecentTracker EditorRecentTracker;
 
         public SearchWindow SearchWindow { get; private set; }
@@ -64,10 +63,9 @@ namespace GodotCSharpToolkit.Editor
             Tree = FindChild("EditorTreeView") as EditorTreeView;
             EditorArea = FindChild("EditorArea") as Control;
             Toolbar = FindChild("Toolbar") as EditorToolbar;
-            PopupMenu = FindChild("PopupMenu") as PopupMenu;
+
             SearchWindow = FindChild("SearchWindow") as SearchWindow;
             EditorTreeSplit = FindChild("EditorTreeSplit") as HSplitContainer;
-            PopupMenu.Connect("id_pressed", new Callable(this, nameof(OnPopupMenuPressed)));
 
             EditorRecentTracker = FindChild("EditorRecentTracker") as EditorRecentTracker;
             EditorRecentTracker.SetEditor(this);

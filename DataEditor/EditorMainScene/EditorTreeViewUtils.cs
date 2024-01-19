@@ -52,7 +52,7 @@ namespace GodotCSharpToolkit.Editor
             var item = CreateDelegateTreeItem(parent, name, key, true,
                     Editor.Preferences.GetModColor(), DataEditorConstants.COLOR_BG_DEFAULT,
                     (dte) => Editor.NotifyOnModuleTreeItemPressed(name, dte), modPaths, name, "");
-            item.OnContextMenuFill = (a) => { return FillModContextMenu(name); };
+            item.OnContextMenuFill = (a, m) => { return FillModContextMenu(name, m); };
 
             return item;
         }
@@ -63,7 +63,7 @@ namespace GodotCSharpToolkit.Editor
             var item = CreateDelegateTreeItem(parent, name, key, true,
                     Colors.White, DataEditorConstants.COLOR_BG_DEFAULT,
                     null, modPaths, modName, featureName);
-            item.OnContextMenuFill = (a) => { return FillModFeatureContextMenu(modName, name); };
+            item.OnContextMenuFill = (a, m) => { return FillModFeatureContextMenu(modName, name, m); };
 
             return item;
         }

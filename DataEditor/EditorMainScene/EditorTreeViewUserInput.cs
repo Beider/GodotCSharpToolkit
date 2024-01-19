@@ -34,21 +34,20 @@ namespace GodotCSharpToolkit.Editor
             var item = GetAbstractTreeItem(GetSelected());
             if (item == null) { return; }
 
-            var menu = Editor.PopupMenu;
-            Editor.ClearPopupMenu();
+            var menu = DataEditorConstants.CreatePopupMenu(this);
             menu.Size = menu.MinSize;
-            if (item.FillContextMenu())
+            if (item.FillContextMenu(menu))
             {
-                menu.Position = GetViewport().GetMousePosition().ToVector2I();
+                menu.PositionInParent(GetViewport().GetMousePosition());
                 menu.Popup();
             }
         }
 
-        private bool FillModContextMenu(string name)
+        private bool FillModContextMenu(string name, EditorPopupMenu menu)
         {
-            Editor.AddPopupMenuSeparator(name);
-            Editor.AddPopupMenuEntry($"Delete {name}", () => { DeleteMod(name); }, DataEditorConstants.ICON_DELETE);
-            Editor.AddPopupMenuEntry($"Add Feature", () => { AddModFeature(name); }, DataEditorConstants.ICON_NEW);
+            menu.AddPopupMenuSeparator(name);
+            menu.AddPopupMenuEntry($"Delete {name}", () => { DeleteMod(name); }, DataEditorConstants.ICON_DELETE);
+            menu.AddPopupMenuEntry($"Add Feature", () => { AddModFeature(name); }, DataEditorConstants.ICON_NEW);
             return true;
         }
 
@@ -99,10 +98,10 @@ namespace GodotCSharpToolkit.Editor
             Editor.Refresh(false);
         }
 
-        private bool FillModFeatureContextMenu(string modname, string featureName)
+        private bool FillModFeatureContextMenu(string modname, string featureName, EditorPopupMenu menu)
         {
-            Editor.AddPopupMenuSeparator(featureName);
-            Editor.AddPopupMenuEntry($"Delete {featureName}", () => { DeleteModFeature(modname, featureName); }, DataEditorConstants.ICON_DELETE);
+            menu.AddPopupMenuSeparator(featureName);
+            menu.AddPopupMenuEntry($"Delete {featureName}", () => { DeleteModFeature(modname, featureName); }, DataEditorConstants.ICON_DELETE);
             return true;
         }
 

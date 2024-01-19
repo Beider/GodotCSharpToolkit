@@ -49,25 +49,24 @@ namespace GodotCSharpToolkit.Editor
                     return;
                 }
             }
-            var menu = Editor.PopupMenu;
-            Editor.ClearPopupMenu();
+            var menu = DataEditorConstants.CreatePopupMenu(this);
             menu.Size = menu.MinSize;
-            FillPopupMenu(index);
-            menu.Position = GetViewport().GetMousePosition().ToVector2I();
+            FillPopupMenu(index, menu);
+            menu.PositionInParent(GetViewport().GetMousePosition());
             menu.Popup();
         }
 
-        private void FillPopupMenu(int index)
+        private void FillPopupMenu(int index, EditorPopupMenu menu)
         {
             if (InputData is JsonGenericEditorInputRowList iData)
             {
-                Editor.AddPopupMenuSeparator(InputData.Name);
-                Editor.AddPopupMenuEntry($"Add new ", () =>
+                menu.AddPopupMenuSeparator(InputData.Name);
+                menu.AddPopupMenuEntry($"Add new ", () =>
                 {
                     iData.OnAdd(this);
                 }, DataEditorConstants.ICON_NEW);
                 if (index < 0) { return; }
-                Editor.AddPopupMenuEntry($"Remove {ListField.GetItemText(index)} ", () =>
+                menu.AddPopupMenuEntry($"Remove {ListField.GetItemText(index)} ", () =>
                 {
                     iData.OnRemove(ReturnValueLookup[index], this);
                 }, DataEditorConstants.ICON_DELETE);

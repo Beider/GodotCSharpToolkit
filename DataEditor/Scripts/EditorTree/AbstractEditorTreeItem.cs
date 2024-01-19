@@ -84,7 +84,7 @@ namespace GodotCSharpToolkit.Editor
         /// <summary>
         /// Should return true to show menu, false if not
         /// </summary>
-        public virtual bool FillContextMenu()
+        public virtual bool FillContextMenu(EditorPopupMenu menu)
         {
             return false;
         }

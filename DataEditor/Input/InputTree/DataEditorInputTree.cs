@@ -74,22 +74,21 @@ namespace GodotCSharpToolkit.Editor
             {
                 return;
             }
-            var menu = Editor.PopupMenu;
-            Editor.ClearPopupMenu();
+            var menu = DataEditorConstants.CreatePopupMenu(this);
             menu.Size = menu.MinSize;
-            FillPopupMenu();
-            menu.Position = GetViewport().GetMousePosition().ToVector2I();
+            FillPopupMenu(menu);
+            menu.PositionInParent(GetViewport().GetMousePosition());
             menu.Popup();
         }
 
-        private void FillPopupMenu()
+        private void FillPopupMenu(EditorPopupMenu menu)
         {
             var item = Tree.GetSelected();
             var selectedItem = GetSelectedObject();
-            Editor.AddPopupMenuSeparator(InputData.Name);
+            menu.AddPopupMenuSeparator(InputData.Name);
             if (Input.OnAdd != null)
             {
-                Editor.AddPopupMenuEntry($"Add new ", () =>
+                menu.AddPopupMenuEntry($"Add new ", () =>
                 {
                     Input.OnAdd(this);
                 }, DataEditorConstants.ICON_NEW);
@@ -97,14 +96,14 @@ namespace GodotCSharpToolkit.Editor
             if (selectedItem == null) { return; }
             if (Input.OnEdit != null)
             {
-                Editor.AddPopupMenuEntry($"Edit {item.GetText(0)} ", () =>
+                menu.AddPopupMenuEntry($"Edit {item.GetText(0)} ", () =>
                 {
                     Input.OnEdit(selectedItem, this);
                 }, DataEditorConstants.ICON_EDIT);
             }
             if (Input.OnRemove != null)
             {
-                Editor.AddPopupMenuEntry($"Remove {item.GetText(0)} ", () =>
+                menu.AddPopupMenuEntry($"Remove {item.GetText(0)} ", () =>
                 {
                     Input.OnRemove(selectedItem, this);
                 }, DataEditorConstants.ICON_DELETE);
@@ -113,7 +112,7 @@ namespace GodotCSharpToolkit.Editor
             {
                 foreach (var mItem in Input.MenuItems)
                 {
-                    Editor.AddPopupMenuEntry(mItem.Name, () =>
+                    menu.AddPopupMenuEntry(mItem.Name, () =>
                     {
                         mItem.Action(selectedItem, this);
                     }, mItem.Icon);

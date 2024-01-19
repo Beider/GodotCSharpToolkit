@@ -443,7 +443,7 @@ namespace GodotCSharpToolkit.Editor
             return treeItem;
         }
 
-        private TreeItem CreateFileItem(TreeItem parent, string name, Func<DelegateEditorTreeItem, bool> contextMenu = null)
+        private TreeItem CreateFileItem(TreeItem parent, string name, Func<DelegateEditorTreeItem, EditorPopupMenu, bool> contextMenu = null)
         {
             var key = Editor.Tree.GetUniqueKey(parent, name);
             var item = Editor.Tree.CreateDelegateTreeItem(parent, name, key, true,
@@ -465,19 +465,19 @@ namespace GodotCSharpToolkit.Editor
             return false;
         }
 
-        public bool FillContextMenuForItem(DelegateEditorTreeItem item)
+        public bool FillContextMenuForItem(DelegateEditorTreeItem item, EditorPopupMenu menu)
         {
             var data = (JsonDefWithName)item.RelatedData;
-            Editor.AddPopupMenuSeparator(item.Name);
-            Editor.AddPopupMenuEntry("Filter For Usage", () =>
+            menu.AddPopupMenuSeparator(item.Name);
+            menu.AddPopupMenuEntry("Filter For Usage", () =>
             {
                 Editor.SearchWindow.Search(item.Key, false);
             }, DataEditorConstants.ICON_SEARCH);
-            Editor.AddPopupMenuEntry("Duplicate", () =>
+            menu.AddPopupMenuEntry("Duplicate", () =>
             {
                 AddAndShowNewItem(Duplicate(data));
             }, DataEditorConstants.ICON_DUPLICATE);
-            Editor.AddPopupMenuEntry("Copy", () =>
+            menu.AddPopupMenuEntry("Copy", () =>
             {
                 Editor.Tree.CopiedObject = data;
             }, DataEditorConstants.ICON_COPY);
@@ -485,7 +485,7 @@ namespace GodotCSharpToolkit.Editor
             {
                 if ((data.IsModified || data.IsTaggedForDelete) && !data.IsNew)
                 {
-                    Editor.AddPopupMenuEntry("Revert", () =>
+                    menu.AddPopupMenuEntry("Revert", () =>
                     {
                         Editor.ShowConfirmDialog($"Are you sure you wish to revert {data.GetName()}? All unsaved changes will be lost.",
                         accept =>
@@ -499,7 +499,7 @@ namespace GodotCSharpToolkit.Editor
                     }, DataEditorConstants.ICON_REVERT);
                 }
                 var deleteString = data.IsTaggedForDelete ? "Remove delete tag " : "Tag for delete ";
-                Editor.AddPopupMenuEntry(deleteString, () =>
+                menu.AddPopupMenuEntry(deleteString, () =>
                 {
                     data.IsTaggedForDelete = !data.IsTaggedForDelete;
                     RefreshItem(item, data);
@@ -508,26 +508,26 @@ namespace GodotCSharpToolkit.Editor
 
             var parentKey = item.ResolveSelfItem().GetParent().GetMetadata(0).ToString();
             var parent = (DelegateEditorTreeItem)Editor.Tree.GetTreeItemById(parentKey);
-            FillContextMenuForFile(parent);
+            FillContextMenuForFile(parent, menu);
 
             return true;
         }
 
-        public bool FillContextMenuForFile(DelegateEditorTreeItem item)
+        public bool FillContextMenuForFile(DelegateEditorTreeItem item, EditorPopupMenu menu)
         {
-            Editor.AddPopupMenuSeparator(item.Name);
-            Editor.AddPopupMenuEntry($"Add new {ContextMenuAddNewItemName}", () =>
+            menu.AddPopupMenuSeparator(item.Name);
+            menu.AddPopupMenuEntry($"Add new {ContextMenuAddNewItemName}", () =>
             {
                 AddAndShowNewItem(CreateNew(item.Name));
             }, DataEditorConstants.ICON_NEW);
             if (Editor.Tree.CopiedObject != null && typeof(U) == Editor.Tree.CopiedObject.GetType())
             {
-                Editor.AddPopupMenuEntry($"Paste '{Editor.Tree.CopiedObject.GetName()}' ", () =>
+                menu.AddPopupMenuEntry($"Paste '{Editor.Tree.CopiedObject.GetName()}' ", () =>
                 {
                     AddAndShowNewItem(Duplicate(Editor.Tree.CopiedObject, item.Name));
                 }, DataEditorConstants.ICON_PASTE);
             }
-            FillContextMenu();
+            FillContextMenu(menu);
             return true;
         }
 
@@ -543,10 +543,10 @@ namespace GodotCSharpToolkit.Editor
         /// <summary>
         /// Our own context menu
         /// </summary>
-        public override bool FillContextMenu()
+        public override bool FillContextMenu(EditorPopupMenu menu)
         {
-            Editor.AddPopupMenuSeparator(Name);
-            Editor.AddPopupMenuEntry("Add new file", () =>
+            menu.AddPopupMenuSeparator(Name);
+            menu.AddPopupMenuEntry("Add new file", () =>
             {
                 Action<string, string> addNew = (name, listValue) =>
                 {

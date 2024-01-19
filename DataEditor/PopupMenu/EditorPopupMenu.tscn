@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8yb5dx633o3v"]
+
+[ext_resource type="Script" path="res://GodotCSharpToolkit/DataEditor/PopupMenu/EditorPopupMenu.cs" id="1_ekxal"]
+
+[node name="EditorPopupMenu" type="PopupMenu"]
+initial_position = 2
+visible = true
+script = ExtResource("1_ekxal")

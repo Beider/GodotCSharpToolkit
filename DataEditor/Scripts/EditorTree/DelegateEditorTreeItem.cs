@@ -14,7 +14,7 @@ namespace GodotCSharpToolkit.Editor
         public Action<DelegateEditorTreeItem> OnDispose { get; set; } = null;
         public Action<DelegateEditorTreeItem> OnReload { get; set; } = null;
 
-        public Func<DelegateEditorTreeItem, bool> OnContextMenuFill { get; set; } = null;
+        public Func<DelegateEditorTreeItem, EditorPopupMenu, bool> OnContextMenuFill { get; set; } = null;
 
         public Func<DelegateEditorTreeItem, bool> OnHasUnsavedChangedCheck { get; set; } = null;
 
@@ -40,11 +40,11 @@ namespace GodotCSharpToolkit.Editor
             }
         }
 
-        public override bool FillContextMenu()
+        public override bool FillContextMenu(EditorPopupMenu menu)
         {
             if (OnContextMenuFill != null)
             {
-                return OnContextMenuFill(this);
+                return OnContextMenuFill(this, menu);
             }
             return false;
         }

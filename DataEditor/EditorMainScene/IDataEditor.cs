@@ -12,7 +12,6 @@ namespace GodotCSharpToolkit.Editor
         EditorPrefsExtended Preferences { get; }
         EditorTreeView Tree { get; }
         EditorToolbar Toolbar { get; }
-        PopupMenu PopupMenu { get; }
 
         SearchWindow SearchWindow { get; }
 
@@ -63,27 +62,6 @@ namespace GodotCSharpToolkit.Editor
         /// Editor that lets you organize your mods
         /// </summary>
         void ShowFolderManagerDialog();
-
-
-        /// <summary>
-        /// Clear the popup menu
-        /// </summary>
-        void ClearPopupMenu();
-
-        /// <summary>
-        /// Adds a separator to the popup menu with the given name
-        /// </summary>
-        void AddPopupMenuSeparator(string name);
-
-        /// <summary>
-        /// Add a new entry to the popup menu.
-        /// </summary>
-        void AddPopupMenuEntry(string name, Action action, Texture2D icon = null, string subMenuName = "");
-
-        /// <summary>
-        /// Create a submenu with the given name
-        /// </summary>
-        void CreatePopupSubMenu(string name);
 
         /// <summary>
         /// Sent when a module tree item is pressed

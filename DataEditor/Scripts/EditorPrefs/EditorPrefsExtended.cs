@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using GodotCSharpToolkit.Extensions;
+using GodotCSharpToolkit.Logging;
 
 namespace GodotCSharpToolkit.Editor
 {

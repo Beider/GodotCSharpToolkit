@@ -11,12 +11,14 @@ namespace GodotCSharpToolkit.Misc
 {
     public static class ImageUtils
     {
-        public static Texture2D LoadTexture(string fullPath)
+        // We ignore cache by default since it tends to screw up sometimes when reloading a lot
+        public static Texture2D LoadTexture(string fullPath, ResourceLoader.CacheMode cacheMode = ResourceLoader.CacheMode.Ignore)
         {
             Texture2D texture = null;
             if (FileUtils.IsGodotPath(fullPath))
             {
-                texture = ResourceLoader.Load(fullPath) as Texture2D;
+
+                texture = ResourceLoader.Load(fullPath, "", cacheMode) as Texture2D;
                 if (texture == null)
                 {
                     Logger.Error($"Could not load internal image '{fullPath}'");

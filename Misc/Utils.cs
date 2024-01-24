@@ -12,6 +12,20 @@ namespace GodotCSharpToolkit.Misc
 {
     public static class Utils
     {
+        public static string FEATURE_MAC_OS = "macos";
+        private static bool _IsMacOS = false;
+        private static bool CheckedIsMacOS = false;
+
+        public static bool IsMacOS()
+        {
+            if (!CheckedIsMacOS)
+            {
+                _IsMacOS = OS.HasFeature(FEATURE_MAC_OS);
+                CheckedIsMacOS = true;
+            }
+            return _IsMacOS;
+        }
+
         /// <summary>
         /// Load all json files in a folder
         /// </summary>

@@ -211,9 +211,17 @@ namespace GodotCSharpToolkit.Editor
 
         protected bool SaveToDisk<X, R>(string rootPath, bool localOnly) where X : IJsonFile<R> where R : JsonDefWithName
         {
-            if (!Editor.Preferences.ShouldUseLocalPath()) { return false; }
+            if (!Editor.Preferences.ShouldUseLocalPath())
+            {
+                Logger.Error("Directory does not exist");
+                return false;
+            }
             var path = ModPaths.Find(p => p.StartsWith(Editor.Preferences.SettingLocalSavePath));
-            if (path.IsNullOrEmpty()) { return false; }
+            if (path.IsNullOrEmpty())
+            {
+                Logger.Error("Save path not found");
+                return false;
+            }
 
             path += GetRelativeDataPath();
             path = FileUtils.NormalizePath(path);

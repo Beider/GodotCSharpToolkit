@@ -18,7 +18,7 @@ namespace GodotCSharpToolkit.Misc
         /// </summary>
         public static string NormalizePath(string path)
         {
-            if (IsGodotPath(path))
+            if (IsGodotPath(path) || Utils.IsMacOS())
             {
                 return path.Replace("\\", "/");
             }
@@ -45,9 +45,9 @@ namespace GodotCSharpToolkit.Misc
         {
             if (pathToDir == null) { return null; }
             if (pathToDir == "") { return pathToDir; }
-            String path = pathToDir;
+            string path = pathToDir;
             if (!path.EndsWith("/") && !path.EndsWith("\\")) { path += "/"; }
-            return FileUtils.NormalizePath(path);
+            return NormalizePath(path);
         }
 
         /// <summary>
@@ -70,8 +70,14 @@ namespace GodotCSharpToolkit.Misc
 
         public static void CreateDirectory(string path)
         {
-            var dir = DirAccess.Open("res://");
-            dir.MakeDirRecursive(path);
+            try
+            {
+                System.IO.Directory.CreateDirectory(path);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Failed to create directory", ex);
+            }
         }
 
         public static void CreateDirectory(string path, string dirName)
@@ -110,7 +116,7 @@ namespace GodotCSharpToolkit.Misc
                 {
                     // Grab the subfolders
                     var subfolder = path + filePath + "/";
-                    if (!IsGodotPath(subfolder))
+                    if (!IsGodotPath(subfolder) || Utils.IsMacOS())
                     {
                         subfolder = subfolder.Replace("/", "\\");
                     }

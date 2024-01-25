@@ -55,7 +55,7 @@ namespace GodotCSharpToolkit.Misc
         /// </summary>
         public static string GetDirectoryName(string path)
         {
-            if (IsGodotPath(path))
+            if (IsGodotPath(path) || Utils.IsMacOS())
             {
                 var split = path.Split("/");
                 int dist = 1;
@@ -116,10 +116,7 @@ namespace GodotCSharpToolkit.Misc
                 {
                     // Grab the subfolders
                     var subfolder = path + filePath + "/";
-                    if (!IsGodotPath(subfolder) || Utils.IsMacOS())
-                    {
-                        subfolder = subfolder.Replace("/", "\\");
-                    }
+                    subfolder = NormalizePath(subfolder);
                     retList.Add(subfolder);
                 }
             }

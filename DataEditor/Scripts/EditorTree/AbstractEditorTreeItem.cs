@@ -91,7 +91,6 @@ namespace GodotCSharpToolkit.Editor
 
         public virtual void Dispose()
         {
-            TreeItemSelf?.Dispose();
             TreeItemSelf = null;
         }
     }

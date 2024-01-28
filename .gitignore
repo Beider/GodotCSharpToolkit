@@ -53,7 +53,7 @@ Thumbs.db
 
 # Godot-specific ignores
 .import/
-*.import
+*.translation
 export.cfg
 export_presets.cfg
 addons/*/*.ini

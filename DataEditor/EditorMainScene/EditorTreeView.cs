@@ -93,19 +93,10 @@ namespace GodotCSharpToolkit.Editor
             OnSelectItemRequest = delegate { };
 
             Clear();
-            TreeItemLookup.ForEach(vp =>
-            {
-                if (vp.Value.ResolveSelfItem() != null &&
-                    !IsInstanceValid(vp.Value.ResolveSelfItem()))
-                {
-                    vp.Value.ResolveSelfItem().Dispose();
-                }
-            });
             TreeItemLookup.Clear();
 
             InCode = true;
             HideRoot = true;
-            Root?.Dispose();
             Root = CreateItem(null);
             Root.SetMetadata(0, "root");
 

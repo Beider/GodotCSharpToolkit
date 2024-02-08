@@ -128,7 +128,11 @@ namespace GodotCSharpToolkit.Misc
             {
                 returnList.Add(val, val.ToString());
             }
-            return returnList.OrderBy(pair => pair.Key.ToString()).ToDictionary(obj => obj.Key, obj => obj.Value); ;
+            if (sorted)
+            {
+                return returnList.OrderBy(pair => pair.Key.ToString()).ToDictionary(obj => obj.Key, obj => obj.Value);
+            }
+            return returnList.ToDictionary(obj => obj.Key, obj => obj.Value);
         }
 
         /// <summary>

@@ -104,5 +104,26 @@ namespace GodotCSharpToolkit.Extensions
         {
             return new Vector2I((int)vector2.X, (int)vector2.Y);
         }
+
+        /// <summary>
+        /// Uses bubble sort to sort tree item children
+        /// </summary>
+        public static void SortTreeItemChildren(this TreeItem parent)
+        {
+            var n = parent.GetChildCount();
+            for (int i = 0; i < n - 1; i++)
+            {
+                for (int inner = 0; inner < n - i - 1; inner++)
+                {
+                    var child = parent.GetChild(inner);
+                    var child2 = parent.GetChild(inner + 1);
+                    if (child == null || child2 == null) { continue; }
+                    if (child.GetText(0).CompareTo(child2.GetText(0)) > 0)
+                    {
+                        child2.MoveBefore(child);
+                    }
+                }
+            }
+        }
     }
 }

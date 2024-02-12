@@ -9,6 +9,7 @@ using System.IO;
 public partial class DocumentPanel : Panel
 {
     private const string META_IS_DIR = "IsDirectory";
+    private const string META_KEY = "Key";
     private const string ROOT_PATH = "res://Documentation/";
     private Tree DocumentsTree;
     private RichTextLabel DocumentView;
@@ -49,7 +50,7 @@ public partial class DocumentPanel : Panel
 
     private void GotoLink(string link)
     {
-        var key = link.Replace(":", "/").Replace(" ", "_");
+        var key = link.Replace(":", "/");
         if (LeafItems.ContainsKey(key))
         {
             SelectExpandAndScrollTo(LeafItems[key]);
@@ -72,12 +73,34 @@ public partial class DocumentPanel : Panel
             parent.Collapsed = false;
             parent = parent.GetParent();
         }
-        item.Select(0);
-        DocumentsTree.ScrollToItem(item);
+        var selected = item;
+        if (selected.Visible == false)
+        {
+            // Resolve the folder item instead
+            var key = (string)selected.GetMeta(META_KEY, "123").Obj;
+            key += "/";
+            if (FolderItems.ContainsKey(key))
+            {
+                selected = FolderItems[key];
+            }
+        }
+        selected.Select(0);
+        DocumentsTree.ScrollToItem(selected);
     }
 
     private void ShowItem(TreeItem selectedItem)
     {
+        var isDir = (bool)selectedItem.GetMeta(META_IS_DIR, false).Obj;
+        if (isDir)
+        {
+            var key = (string)selectedItem.GetMeta(META_KEY, "123").Obj;
+            key = key.Substring(0, key.Length - 1);
+            if (LeafItems.ContainsKey(key))
+            {
+                ShowItem(LeafItems[key]);
+                return;
+            }
+        }
         var fileData = selectedItem.GetMetadata(0);
         if (fileData.VariantType == Variant.Type.String)
         {
@@ -87,6 +110,7 @@ public partial class DocumentPanel : Panel
             string content = ParseZimFile(path);
             DocumentView.Text = content;
         }
+
     }
 
     private string ParseZimFile(string path)
@@ -118,6 +142,27 @@ public partial class DocumentPanel : Panel
         AddToDocumentTree(ROOT_PATH);
 
         SortTree(Root);
+        HideItems(Root);
+    }
+
+    private void HideItems(TreeItem parent)
+    {
+        foreach (var child in parent.GetChildren())
+        {
+            var isDir = (bool)child.GetMeta(META_IS_DIR, false).Obj;
+            if (isDir)
+            {
+                HideItems(child);
+                continue;
+            }
+
+            var key = (string)child.GetMeta(META_KEY, "123").Obj;
+            key += "/";
+            if (FolderItems.ContainsKey(key))
+            {
+                child.Visible = false;
+            }
+        }
     }
 
     private void AddToDocumentTree(string documentationRoot)
@@ -126,7 +171,7 @@ public partial class DocumentPanel : Panel
 
         foreach (var file in files)
         {
-            var shortPath = file.Substring(documentationRoot.Length);
+            var shortPath = file.Substring(documentationRoot.Length).Replace("_", " ");
             var parts = shortPath.Split('/', '\\');
             if (parts.Length == 0) { continue; }
             var lastDir = Root;
@@ -152,12 +197,12 @@ public partial class DocumentPanel : Panel
     {
         var item = DocumentsTree.CreateItem(parent);
         var nameNoExtension = name.Replace(".txt", "", StringComparison.InvariantCultureIgnoreCase);
-        var fixedName = nameNoExtension.Replace("_", " ", StringComparison.InvariantCultureIgnoreCase);
-        item.SetText(0, fixedName);
+        var fullKey = $"{key}{nameNoExtension}";
+        item.SetText(0, nameNoExtension);
         item.SetMetadata(0, fullPath);
         item.SetCustomColor(0, ColorFile);
-
-        LeafItems[$"{key}{nameNoExtension}"] = item;
+        item.SetMeta(META_KEY, fullKey);
+        LeafItems[fullKey] = item;
     }
 
     private TreeItem AddDirectory(string name, string key, TreeItem parent)
@@ -170,6 +215,7 @@ public partial class DocumentPanel : Panel
             item.SetCustomColor(0, ColorDirectory);
             item.Collapsed = true;
             FolderItems[key] = item;
+            item.SetMeta(META_KEY, key);
         }
         return FolderItems[key];
     }

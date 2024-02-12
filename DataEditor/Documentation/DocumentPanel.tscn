@@ -40,3 +40,16 @@ theme_type_variation = &"MarginHelp"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="."]
+self_modulate = Color(1, 1, 1, 0.352941)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -127.0
+offset_top = 8.0
+offset_right = -32.0
+offset_bottom = 28.0
+grow_horizontal = 0
+text = "Hit F1 to close"

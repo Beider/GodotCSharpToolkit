@@ -55,6 +55,8 @@ namespace GodotCSharpToolkit.Editor
 
         private Control CurrentDialog = null;
 
+        private DocumentPanel DocumentPanel;
+
         private IDataEditorContent ActiveEditor = null;
 
         // Called when the node enters the scene tree for the first time.
@@ -64,6 +66,8 @@ namespace GodotCSharpToolkit.Editor
             EditorArea = FindChild("EditorArea") as Control;
             Toolbar = FindChild("Toolbar") as EditorToolbar;
 
+            Toolbar.OnToggleHelpVisible += ToggleHelpVisible;
+
             SearchWindow = FindChild("SearchWindow") as SearchWindow;
             EditorTreeSplit = FindChild("EditorTreeSplit") as HSplitContainer;
 
@@ -71,8 +75,11 @@ namespace GodotCSharpToolkit.Editor
             EditorRecentTracker.SetEditor(this);
             EditorRecentTracker.OnOpenEditorRequest += OnOpenEditorRequest;
 
+            DocumentPanel = FindChild("DocumentPanel") as DocumentPanel;
+            DocumentPanel.HideHelp();
+
             Tree.Visible = true;
-            SearchWindow.Visible = Preferences.FilterVisible;
+            SearchWindow.Visible = true;
             SearchWindow.MainScene = this;
 
             Tree.Init(this);
@@ -88,6 +95,11 @@ namespace GodotCSharpToolkit.Editor
             SaveTimer.Connect("timeout", new Callable(this, nameof(SavePreferences)));
             AddChild(SaveTimer);
             SaveTimer.Start();
+        }
+
+        private void ToggleHelpVisible()
+        {
+            DocumentPanel.ToggleVisible();
         }
 
         public override void _ExitTree()
@@ -122,13 +134,17 @@ namespace GodotCSharpToolkit.Editor
                 {
                     Toolbar.OnNewModPressed();
                 }
+                else if (keyEvent.IsCommandOrControlPressed() && keyEvent.Keycode == Key.B)
+                {
+                    Toolbar.OnBrowsePressed();
+                }
                 else if (keyEvent.IsCommandOrControlPressed() && keyEvent.Keycode == Key.R)
                 {
                     Toolbar.OnRefreshPressed();
                 }
-                else if (keyEvent.Keycode == Key.F2)
+                else if (keyEvent.Keycode == Key.F1)
                 {
-                    Toolbar.OnSearchPressed();
+                    ToggleHelpVisible();
                 }
                 else if (keyEvent.Keycode == Key.F4)
                 {
@@ -197,12 +213,6 @@ namespace GodotCSharpToolkit.Editor
             OnDataRefreshed();
             Tree.RefreshTree(true);
             Toolbar.Init(this);
-        }
-
-        public void NotifyOpenSearch()
-        {
-            SearchWindow.Visible = !SearchWindow.Visible;
-            Preferences.FilterVisible = SearchWindow.Visible;
         }
 
         public List<JsonDefWithName> Search(string query, bool exactMatch)

@@ -24,8 +24,7 @@ namespace GodotCSharpToolkit.Editor
             {
                 TreeItemLookup[item.Key] = item;
             }
-            var nameDelegate = Editor.Tree.GetDisplayNameDelegate();
-            var treeItem = CreateTreeItem(parent, nameDelegate(item), item.Color, item.ColorBg, item.Collapsed, item.Key);
+            var treeItem = CreateTreeItem(parent, item.Name, item.Color, item.ColorBg, item.Collapsed, item.Key);
             item.SetTreeItemReference(WeakRef(treeItem));
             return treeItem;
         }
@@ -112,54 +111,6 @@ namespace GodotCSharpToolkit.Editor
                 return TreeItemLookup[key];
             }
             return null;
-        }
-
-        /// <summary>
-        /// Adds a delegate that is used to get the name of an AbstractEditorTreeItem,
-        /// will automatically let you cycle through any you add in the toolbar menu.
-        /// </summary>
-        public void AddDisplayDelegate(string name, Func<AbstractEditorTreeItem, string> del)
-        {
-            DisplayNameDelegates.Add(name, del);
-        }
-
-        public Func<AbstractEditorTreeItem, string> GetDisplayNameDelegate()
-        {
-            var key = Editor.Preferences.PrefDisplayNameDelegateName;
-            if (!DisplayNameDelegates.ContainsKey(key))
-            {
-                key = DisplayNameDelegates.Keys.First();
-                Editor.Preferences.PrefDisplayNameDelegateName = key;
-            }
-            return DisplayNameDelegates[key];
-        }
-
-        /// <summary>
-        /// Switch to the next display name mode
-        /// </summary>
-        public void NextDisplayName()
-        {
-            var key = Editor.Preferences.PrefDisplayNameDelegateName;
-            if (DisplayNameDelegates.ContainsKey(key))
-            {
-                bool pick = false;
-
-                foreach (var keyName in DisplayNameDelegates.Keys)
-                {
-                    if (keyName.Equals(key))
-                    {
-                        pick = true;
-                    }
-                    else if (pick)
-                    {
-                        Editor.Preferences.PrefDisplayNameDelegateName = keyName;
-                        return;
-                    }
-                }
-            }
-
-            Editor.Preferences.PrefDisplayNameDelegateName = DisplayNameDelegates.Keys.First();
-            return;
         }
 
         /// <summary>

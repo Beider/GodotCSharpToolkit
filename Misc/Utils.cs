@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using GodotCSharpToolkit.Logging;
 using System.Linq;
+using System.IO;
 
 namespace GodotCSharpToolkit.Misc
 {
@@ -52,6 +53,28 @@ namespace GodotCSharpToolkit.Misc
                 }
             }
             return resultList;
+        }
+
+        public static Stream GenerateStreamFromString(this string str)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(str);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
+        public static string Repeat(this string text, uint n)
+        {
+            var textAsSpan = text.AsSpan();
+            var span = new Span<char>(new char[textAsSpan.Length * (int)n]);
+            for (var i = 0; i < n; i++)
+            {
+                textAsSpan.CopyTo(span.Slice((int)i * textAsSpan.Length, textAsSpan.Length));
+            }
+
+            return span.ToString();
         }
 
         /// <summary>

@@ -1,0 +1,42 @@
+[gd_scene load_steps=3 format=3 uid="uid://bu7dywtfi7vl6"]
+
+[ext_resource type="Script" path="res://GodotCSharpToolkit/DataEditor/Documentation/DocumentPanel.cs" id="1_hqt0p"]
+[ext_resource type="Theme" uid="uid://drnbelpv8oevu" path="res://Assets/New/Themes/editor_theme.tres" id="2_66513"]
+
+[node name="DocumentPanel" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_66513")
+script = ExtResource("1_hqt0p")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DocumentsTree" type="Tree" parent="HSplitContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+select_mode = 1
+
+[node name="View" type="ScrollContainer" parent="HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/View"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_type_variation = &"MarginHelp"
+
+[node name="DocumentView" type="RichTextLabel" parent="HSplitContainer/View/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

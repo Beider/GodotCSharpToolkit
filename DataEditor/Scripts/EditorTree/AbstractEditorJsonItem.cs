@@ -345,10 +345,9 @@ namespace GodotCSharpToolkit.Editor
 
         protected virtual void SortTreeItemList(List<DelegateEditorTreeItem> list)
         {
-            var nameDelegate = Editor.Tree.GetDisplayNameDelegate();
             list.Sort((i1, i2) =>
             {
-                return nameDelegate(i1).CompareTo(nameDelegate(i2));
+                return i1.Name.CompareTo(i2.Name);
             });
         }
 

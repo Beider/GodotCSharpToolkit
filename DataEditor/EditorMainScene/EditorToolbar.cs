@@ -7,67 +7,79 @@ namespace GodotCSharpToolkit.Editor
 {
     public partial class EditorToolbar : Panel
     {
+        private const string ICON_PATH = "res://GodotCSharpToolkit/DataEditor/Assets/Icons/";
+        private const string TEXT_NEW_MOD = "New Mod";
+        private const string TEXT_MANAGER = "Manager";
+        private const string TEXT_BROWSE = "Browse";
+        private const string TEXT_REFRESH = "Refresh";
+        private const string TEXT_SAVE_ALL = "Save All";
+        private const string TEXT_SETTINGS = "Settings";
+        public event Action OnToggleHelpVisible = delegate { };
         private EditorMainScene Editor;
-        private Button BtnSettings;
-        private Button BtnSave;
         private Button BtnSort;
-        private Button BtnDisplayName;
         private Button BtnLocalOnly;
-        private Button BtnFolderManager;
-        private Button BtnRefresh;
-        private Button BtnAddMod;
         private Button BtnClose;
-        private Button BtnBrowse;
-        private Button BtnSearch;
+        private Button BtnHelp;
+        private MenuButton BtnMenu;
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            BtnSettings = FindChild("BtnSettings") as Button;
-            BtnSettings.Connect("pressed", new Callable(this, nameof(OnSettingsPressed)));
-
-            BtnSave = FindChild("BtnSave") as Button;
-            BtnSave.Connect("pressed", new Callable(this, nameof(OnSavePressed)));
-
             BtnSort = FindChild("BtnSort") as Button;
             BtnSort.Connect("pressed", new Callable(this, nameof(OnSortPressed)));
-
-            BtnDisplayName = FindChild("BtnDisplayName") as Button;
-            BtnDisplayName.Connect("pressed", new Callable(this, nameof(OnToggleNamesPressed)));
 
             BtnLocalOnly = FindChild("BtnLocalOnly") as Button;
             BtnLocalOnly.Connect("pressed", new Callable(this, nameof(OnLocalOnlyPressed)));
 
-            BtnRefresh = FindChild("BtnRefresh") as Button;
-            BtnRefresh.Connect("pressed", new Callable(this, nameof(OnRefreshPressed)));
-
-            BtnAddMod = FindChild("BtnAddMod") as Button;
-            BtnAddMod.Connect("pressed", new Callable(this, nameof(OnNewModPressed)));
-
             BtnClose = FindChild("BtnClose") as Button;
             BtnClose.Connect("pressed", new Callable(this, nameof(OnClosePressed)));
 
-            BtnBrowse = FindChild("BtnBrowse") as Button;
-            BtnBrowse.Connect("pressed", new Callable(this, nameof(OnBrowsePressed)));
+            BtnHelp = FindChild("BtnHelp") as Button;
+            BtnHelp.Connect("pressed", new Callable(this, nameof(OnHelpPressed)));
 
-            BtnSearch = FindChild("BtnSearch") as Button;
-            BtnSearch.Connect("pressed", new Callable(this, nameof(OnSearchPressed)));
+            BtnMenu = FindChild("BtnMenu") as MenuButton;
+            FillButtonMenu();
+        }
 
-            BtnFolderManager = FindChild("BtnFolderManager") as Button;
-            BtnFolderManager.Connect("pressed", new Callable(this, nameof(OnBtnFolderManagerPressed)));
+        private void FillButtonMenu()
+        {
+            var popup = BtnMenu.GetPopup();
+            popup.Connect("id_pressed", new Callable(this, nameof(OnPopupMenuPressed)));
+            var icon = ResourceLoader.Load($"{ICON_PATH}module.png") as Texture2D;
+            popup.AddIconItem(icon, TEXT_NEW_MOD, -1, Key.N);
+
+            icon = ResourceLoader.Load($"{ICON_PATH}open-book.png") as Texture2D;
+            popup.AddIconItem(icon, TEXT_BROWSE, -1, Key.B);
+
+            icon = ResourceLoader.Load($"{ICON_PATH}manager.png") as Texture2D;
+            popup.AddIconItem(icon, TEXT_MANAGER, -1, Key.M);
+
+            icon = ResourceLoader.Load($"{ICON_PATH}refresh.png") as Texture2D;
+            popup.AddIconItem(icon, TEXT_REFRESH, -1, Key.R);
+
+            icon = ResourceLoader.Load($"{ICON_PATH}save.png") as Texture2D;
+            popup.AddIconItem(icon, TEXT_SAVE_ALL, -1, Key.S);
+
+            icon = ResourceLoader.Load($"{ICON_PATH}settings.png") as Texture2D;
+            popup.AddIconItem(icon, TEXT_SETTINGS, -1, Key.T);
+        }
+
+        private void OnPopupMenuPressed(int index)
+        {
+            string text = BtnMenu.GetPopup().GetItemText(index);
+            if (TEXT_NEW_MOD.Equals(text)) { OnNewModPressed(); }
+            else if (TEXT_MANAGER.Equals(text)) { OnBtnFolderManagerPressed(); }
+            else if (TEXT_BROWSE.Equals(text)) { OnBrowsePressed(); }
+            else if (TEXT_REFRESH.Equals(text)) { OnRefreshPressed(); }
+            else if (TEXT_SAVE_ALL.Equals(text)) { OnSavePressed(); }
+            else if (TEXT_SETTINGS.Equals(text)) { OnSettingsPressed(); }
         }
 
         public void Init(EditorMainScene editor)
         {
             this.Editor = editor;
             BtnSort.ButtonPressed = Editor.Preferences.PrefSortTree;
-            BtnDisplayName.Text = Editor.Preferences.PrefDisplayNameDelegateName;
             BtnLocalOnly.ButtonPressed = Editor.Preferences.PrefIsLocalOnly;
-
-            BtnSave.Disabled = !Editor.Preferences.SettingIsLoadLocalData;
-            BtnRefresh.Disabled = !Editor.Preferences.SettingIsLoadLocalData;
-
-            BtnDisplayName.Visible = Editor.Tree.DisplayNameDelegates.Count > 1;
 
             if (!Editor.Preferences.IsPathValid(Editor.Preferences.SettingLocalSavePath))
             {
@@ -80,12 +92,7 @@ namespace GodotCSharpToolkit.Editor
             Editor.Close();
         }
 
-        public void OnSearchPressed()
-        {
-            Editor.NotifyOpenSearch();
-        }
-
-        private void OnBrowsePressed()
+        public void OnBrowsePressed()
         {
             Editor.NotifyOpenBrowseDialog();
         }
@@ -123,16 +130,15 @@ namespace GodotCSharpToolkit.Editor
             Editor.Refresh(true);
         }
 
+        public void OnHelpPressed()
+        {
+            OnToggleHelpVisible();
+        }
+
         public void OnSortPressed()
         {
             Editor.Preferences.PrefSortTree = !Editor.Preferences.PrefSortTree;
             BtnSort.ButtonPressed = Editor.Preferences.PrefSortTree;
-        }
-
-        public void OnToggleNamesPressed()
-        {
-            Editor.Tree.NextDisplayName();
-            BtnDisplayName.Text = Editor.Preferences.PrefDisplayNameDelegateName;
         }
 
         public void OnLocalOnlyPressed()

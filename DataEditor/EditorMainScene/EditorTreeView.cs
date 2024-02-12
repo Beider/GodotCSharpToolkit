@@ -22,7 +22,6 @@ namespace GodotCSharpToolkit.Editor
         public Dictionary<string, DelegateEditorTreeItem> ModItems = new Dictionary<string, DelegateEditorTreeItem>();
 
         private AbstractEditorTreeModFolderProvider ModProvider = null;
-        public Dictionary<string, Func<AbstractEditorTreeItem, string>> DisplayNameDelegates = new Dictionary<string, Func<AbstractEditorTreeItem, string>>();
 
         public JsonDefWithName CopiedObject { get; set; } = null;
         private bool RefreshInProgress = false;
@@ -44,9 +43,6 @@ namespace GodotCSharpToolkit.Editor
             this.Connect("item_mouse_selected", new Callable(this, nameof(OnItemRmbSelected)));
             AllowReselect = true;
             AllowRmbSelect = true;
-
-            DisplayNameDelegates.Add("Name", i => i.Name);
-            //DisplayNameDelegates.Add("Key", i => i.Key);
         }
 
         public void Init(IDataEditor editor)

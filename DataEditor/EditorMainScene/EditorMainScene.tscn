@@ -110,6 +110,10 @@ focus_mode = 0
 text = "Close"
 icon = ExtResource("12")
 
+[node name="DocumentPanel" parent="Background/ToolBarSplit" instance=ExtResource("11_l86tq")]
+visible = false
+layout_mode = 2
+
 [node name="MainArea" type="Control" parent="Background/ToolBarSplit"]
 layout_mode = 2
 
@@ -200,7 +204,3 @@ script = ExtResource("16")
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="DocumentPanel" parent="Background" instance=ExtResource("11_l86tq")]
-visible = false
-layout_mode = 1

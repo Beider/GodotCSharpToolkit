@@ -56,6 +56,7 @@ namespace GodotCSharpToolkit.Editor
         private Control CurrentDialog = null;
 
         private DocumentPanel DocumentPanel;
+        private Control MainArea;
 
         private IDataEditorContent ActiveEditor = null;
 
@@ -77,6 +78,8 @@ namespace GodotCSharpToolkit.Editor
 
             DocumentPanel = FindChild("DocumentPanel") as DocumentPanel;
             DocumentPanel.HideHelp();
+
+            MainArea = FindChild("MainArea") as Control;
 
             Tree.Visible = true;
             SearchWindow.Visible = true;
@@ -100,6 +103,7 @@ namespace GodotCSharpToolkit.Editor
         private void ToggleHelpVisible()
         {
             DocumentPanel.ToggleVisible();
+            MainArea.Visible = !DocumentPanel.Visible;
         }
 
         public override void _ExitTree()

@@ -8,6 +8,7 @@ namespace GodotCSharpToolkit.ZimParser
 {
     public partial class ZimParser
     {
+        public const string MARKED_COLOR = "CornflowerBlue";
         private static List<Type> RuleTypes = new List<Type>();
         private List<ZimWikiRuleAbstract> Rules = new List<ZimWikiRuleAbstract>();
         public Dictionary<string, string> ExtractedData = new Dictionary<string, string>();

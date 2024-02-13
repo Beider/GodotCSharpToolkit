@@ -8,7 +8,7 @@ namespace GodotCSharpToolkit.ZimParser
         public ZimMarked()
         {
             Pattern = @"__(?<item>.*?)__";
-            Replacement = "[bgcolor=CornflowerBlue]${item}[/bgcolor]";
+            Replacement = $"[bgcolor={ZimParser.MARKED_COLOR}]" + "${item}[/bgcolor]";
         }
 
     }

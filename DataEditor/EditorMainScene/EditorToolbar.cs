@@ -46,22 +46,22 @@ namespace GodotCSharpToolkit.Editor
             var popup = BtnMenu.GetPopup();
             popup.Connect("id_pressed", new Callable(this, nameof(OnPopupMenuPressed)));
             var icon = ResourceLoader.Load($"{ICON_PATH}module.png") as Texture2D;
-            popup.AddIconItem(icon, TEXT_NEW_MOD, -1, Key.N);
+            popup.AddIconItem(icon, TEXT_NEW_MOD, -1);
 
             icon = ResourceLoader.Load($"{ICON_PATH}open-book.png") as Texture2D;
-            popup.AddIconItem(icon, TEXT_BROWSE, -1, Key.B);
+            popup.AddIconItem(icon, TEXT_BROWSE, -1);
 
             icon = ResourceLoader.Load($"{ICON_PATH}manager.png") as Texture2D;
-            popup.AddIconItem(icon, TEXT_MANAGER, -1, Key.M);
+            popup.AddIconItem(icon, TEXT_MANAGER, -1);
 
             icon = ResourceLoader.Load($"{ICON_PATH}refresh.png") as Texture2D;
-            popup.AddIconItem(icon, TEXT_REFRESH, -1, Key.R);
+            popup.AddIconItem(icon, TEXT_REFRESH, -1);
 
             icon = ResourceLoader.Load($"{ICON_PATH}save.png") as Texture2D;
-            popup.AddIconItem(icon, TEXT_SAVE_ALL, -1, Key.S);
+            popup.AddIconItem(icon, TEXT_SAVE_ALL, -1);
 
             icon = ResourceLoader.Load($"{ICON_PATH}settings.png") as Texture2D;
-            popup.AddIconItem(icon, TEXT_SETTINGS, -1, Key.T);
+            popup.AddIconItem(icon, TEXT_SETTINGS, -1);
         }
 
         private void OnPopupMenuPressed(int index)

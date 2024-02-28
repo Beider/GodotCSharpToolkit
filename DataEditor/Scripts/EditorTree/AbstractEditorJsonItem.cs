@@ -351,6 +351,11 @@ namespace GodotCSharpToolkit.Editor
             });
         }
 
+        protected virtual Texture2D GetIconForItem(JsonDefWithName item)
+        {
+            return null;
+        }
+
         /// <summary>
         /// Can override to change behavior
         /// </summary>
@@ -444,9 +449,14 @@ namespace GodotCSharpToolkit.Editor
             return Editor.Preferences.GetDefaultBgColor();
         }
 
-        private TreeItem CreateJsonEntryItem(TreeItem parent, AbstractEditorTreeItem item)
+        private TreeItem CreateJsonEntryItem(TreeItem parent, DelegateEditorTreeItem item)
         {
             var treeItem = Editor.Tree.CreateTreeItem(parent, item);
+            var icon = GetIconForItem((JsonDefWithName)item.RelatedData);
+            if (icon != null)
+            {
+                treeItem.SetIcon(0, icon);
+            }
             return treeItem;
         }
 

@@ -38,6 +38,11 @@ namespace GodotCSharpToolkit.Editor
             // Do nothing
         }
 
+        public void Refresh()
+        {
+
+        }
+
         public void Init(IDataEditor editor)
         {
             Editor = editor;

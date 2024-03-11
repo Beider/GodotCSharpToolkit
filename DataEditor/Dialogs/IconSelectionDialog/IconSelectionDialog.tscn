@@ -1,0 +1,128 @@
+[gd_scene load_steps=3 format=3 uid="uid://4x7jdnm5que8"]
+
+[ext_resource type="Script" path="res://GodotCSharpToolkit/DataEditor/Dialogs/IconSelectionDialog/IconSelectionDialog.cs" id="1_s42fm"]
+[ext_resource type="Script" path="res://GodotCSharpToolkit/DataEditor/Dialogs/AdvancedListDialog/AdvancedDialogWindowInput.cs" id="2_ibd48"]
+
+[node name="IconSelectionDialog" type="ColorRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.490196)
+script = ExtResource("1_s42fm")
+metadata/_edit_lock_ = true
+
+[node name="Dialog" type="Window" parent="."]
+title = "Select Icon"
+initial_position = 1
+size = Vector2i(500, 500)
+exclusive = true
+script = ExtResource("2_ibd48")
+
+[node name="Panel" type="Panel" parent="Dialog"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"PanelNoBorder"
+
+[node name="MarginContainer" type="MarginContainer" parent="Dialog/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VSplitContainer" type="VSplitContainer" parent="Dialog/Panel/MarginContainer"]
+layout_mode = 2
+collapsed = true
+dragger_visibility = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Dialog/Panel/MarginContainer/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="IconGrid" type="GridContainer" parent="Dialog/Panel/MarginContainer/VSplitContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 7
+
+[node name="ButtonArea" type="Control" parent="Dialog/Panel/MarginContainer/VSplitContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="Dialog/Panel/MarginContainer/VSplitContainer/ButtonArea"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = 5.0
+offset_right = 217.0
+offset_bottom = 36.0
+theme_override_constants/h_separation = 20
+columns = 2
+
+[node name="BtnOk" type="Button" parent="Dialog/Panel/MarginContainer/VSplitContainer/ButtonArea/GridContainer"]
+layout_mode = 2
+text = "Ok (Enter)"
+
+[node name="BtnCancel" type="Button" parent="Dialog/Panel/MarginContainer/VSplitContainer/ButtonArea/GridContainer"]
+layout_mode = 2
+text = "Cancel (Esc)"
+
+[node name="GridPages" type="GridContainer" parent="Dialog/Panel/MarginContainer/VSplitContainer/ButtonArea"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -422.0
+offset_top = -25.0
+offset_right = 4.0
+offset_bottom = 6.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_constants/h_separation = 20
+columns = 4
+
+[node name="TxtSearch" type="LineEdit" parent="Dialog/Panel/MarginContainer/VSplitContainer/ButtonArea/GridPages"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+
+[node name="BtnPrev" type="Button" parent="Dialog/Panel/MarginContainer/VSplitContainer/ButtonArea/GridPages"]
+layout_mode = 2
+text = "Previous Page"
+
+[node name="LblCount" type="Label" parent="Dialog/Panel/MarginContainer/VSplitContainer/ButtonArea/GridPages"]
+layout_mode = 2
+text = "(1 / 100)"
+
+[node name="BtnNext" type="Button" parent="Dialog/Panel/MarginContainer/VSplitContainer/ButtonArea/GridPages"]
+layout_mode = 2
+text = "Next Page"
+
+[node name="ImgPreview" type="TextureRect" parent="Dialog/Panel/MarginContainer/VSplitContainer/ButtonArea"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -480.0
+offset_top = -24.0
+offset_right = -432.0
+offset_bottom = 24.0
+grow_horizontal = 0
+grow_vertical = 2
+expand_mode = 2

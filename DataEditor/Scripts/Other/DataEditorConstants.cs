@@ -125,6 +125,9 @@ namespace GodotCSharpToolkit.Editor
         public static readonly PackedScene SCENE_POPUP_MENU =
                 ResourceLoader.Load($"{EDITOR_ROOT}PopupMenu/EditorPopupMenu.tscn") as PackedScene;
 
+        public static readonly PackedScene SCENE_DIALOG_ICON_SELECTION =
+                ResourceLoader.Load($"{EDITOR_ROOT}Dialogs/IconSelectionDialog/IconSelectionDialog.tscn") as PackedScene;
+
 
 
         private static readonly PackedScene SCENE_INPUT_TEXT =

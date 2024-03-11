@@ -1,4 +1,5 @@
 using Godot;
+using ScriptSystem.Data;
 using System;
 using System.Collections.Generic;
 
@@ -69,11 +70,21 @@ namespace GodotCSharpToolkit.Editor
         void NotifyOnModuleTreeItemPressed(string name, DelegateEditorTreeItem item);
 
         /// <summary>
+        /// Shows an icon selection dialog and sets icon to editor data
+        /// </summary>
+        void ShowIconSelectionDialog(IEditorDataParent data, IIconProvider provider);
+
+        /// <summary>
         /// Search for json defs
         /// </summary>
         /// <param name="query"></param>
         /// <param name="exactMatch"></param>
         /// <returns></returns>
         List<JsonDefWithName> Search(string query, bool exactMatch);
+
+        /// <summary>
+        /// Refresh the active editor if there is one
+        /// </summary>
+        void RefreshActiveEditor();
     }
 }

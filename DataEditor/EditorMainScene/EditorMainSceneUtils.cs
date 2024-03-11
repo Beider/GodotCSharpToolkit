@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using GodotCSharpToolkit.Logging;
 using GodotCSharpToolkit.Extensions;
+using ScriptSystem.Data;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -58,6 +59,14 @@ namespace GodotCSharpToolkit.Editor
             AddChild(dialog);
         }
 
+        public void ShowIconSelectionDialog(IEditorDataParent data, IIconProvider provider)
+        {
+            var dialog = DataEditorConstants.SCENE_DIALOG_ICON_SELECTION.Instantiate() as IconSelectionDialog;
+            dialog.Init(this, data, provider);
+            CurrentDialog = dialog;
+            AddChild(dialog);
+        }
+
         public void ShowFolderManagerDialog()
         {
             var dialog = DataEditorConstants.SCENE_DIALOG_FOLDER_MANAGER.Instantiate() as FolderManager;
@@ -72,6 +81,11 @@ namespace GodotCSharpToolkit.Editor
             dialog.Init(input, this);
             CurrentDialog = dialog;
             AddChild(dialog);
+        }
+
+        public void RefreshActiveEditor()
+        {
+            ActiveEditor?.Refresh();
         }
     }
 }

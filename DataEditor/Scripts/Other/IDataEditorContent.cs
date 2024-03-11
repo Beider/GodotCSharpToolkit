@@ -9,6 +9,8 @@ namespace GodotCSharpToolkit.Editor
 
         void QueueFree();
 
+        void Refresh();
+
         void SetData(object data, object provider);
 
         void Init(IDataEditor editor);

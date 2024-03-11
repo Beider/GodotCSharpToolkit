@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bymg6xspw4oiu"]
+
+[ext_resource type="Texture2D" uid="uid://das2ejtqghgrx" path="res://Assets/Icons/sbed/help.svg" id="1_jr04h"]
+
+[node name="IconButton" type="Button"]
+custom_minimum_size = Vector2(64, 64)
+toggle_mode = true
+icon = ExtResource("1_jr04h")
+expand_icon = true

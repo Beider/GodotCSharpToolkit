@@ -126,7 +126,17 @@ namespace GodotCSharpToolkit.Editor
                 if (!ModItems.ContainsKey(modName))
                 {
                     var delegateItem = CreateModItem(Root, modName, ModFolders[modName]);
+                    var modData = EditorScene.GetModuleData(modName);
                     modItem = CreateTreeItem(Root, delegateItem);
+                    if (modData != null && !modData.EditorData.Icon.IsNullOrEmpty())
+                    {
+                        var icon = IconProvider.Instance.GetIcon(modData.EditorData.Icon);
+                        if (icon != null)
+                        {
+                            modItem.SetIcon(0, icon);
+                            modItem.SetIconMaxWidth(0, 24);
+                        }
+                    }
                     ModItems[modName] = delegateItem;
                 }
                 else

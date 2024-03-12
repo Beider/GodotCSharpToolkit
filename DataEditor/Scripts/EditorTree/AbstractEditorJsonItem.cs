@@ -6,6 +6,7 @@ using GodotCSharpToolkit.Misc;
 using GodotCSharpToolkit.Logging;
 using GodotCSharpToolkit.DataManager;
 using GodotCSharpToolkit.Extensions;
+using ScriptSystem.Data;
 
 namespace GodotCSharpToolkit.Editor
 {
@@ -351,6 +352,16 @@ namespace GodotCSharpToolkit.Editor
             });
         }
 
+        protected Texture2D _GetIconForItem(JsonDefWithName item)
+        {
+            if (item is IEditorDataParent edp && !edp.EditorData.Icon.IsNullOrEmpty())
+            {
+                var icon = IconProvider.Instance.GetIcon(edp.EditorData.Icon);
+                if (icon != null) { return icon; }
+            }
+            return GetIconForItem(item);
+        }
+
         protected virtual Texture2D GetIconForItem(JsonDefWithName item)
         {
             return null;
@@ -452,9 +463,10 @@ namespace GodotCSharpToolkit.Editor
         private TreeItem CreateJsonEntryItem(TreeItem parent, DelegateEditorTreeItem item)
         {
             var treeItem = Editor.Tree.CreateTreeItem(parent, item);
-            var icon = GetIconForItem((JsonDefWithName)item.RelatedData);
+            var icon = _GetIconForItem((JsonDefWithName)item.RelatedData);
             if (icon != null)
             {
+                treeItem.SetIconMaxWidth(0, 24);
                 treeItem.SetIcon(0, icon);
             }
             return treeItem;

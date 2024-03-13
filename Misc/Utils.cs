@@ -131,6 +131,11 @@ namespace GodotCSharpToolkit.Misc
             return defValue;
         }
 
+        public static bool IsEditorBuild()
+        {
+            return OS.HasFeature("editor");
+        }
+
         public static List<string> GetEnumValuesAsString(Type enumType)
         {
             var returnList = new List<string>();

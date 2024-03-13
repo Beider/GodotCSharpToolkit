@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using GodotCSharpToolkit.Logging;
+using System.Linq;
 
 /// <summary>
 /// The file utils in this class work on both godot paths (res:// or user://) and absolute file paths.
@@ -156,7 +157,7 @@ namespace GodotCSharpToolkit.Misc
                          (extension != "" && filePath.ToLower().EndsWith(extension)))
                 {
                     // Grab name of all files found
-                    if (!Engine.IsEditorHint() && filePath.EndsWith(IMPORT_EXTENSION))
+                    if (!Utils.IsEditorBuild() && filePath.EndsWith(IMPORT_EXTENSION))
                     {
                         // In export builds get rid of the .import at the end
                         retList.Add(path + filePath.Replace(IMPORT_EXTENSION, ""));
@@ -166,14 +167,16 @@ namespace GodotCSharpToolkit.Misc
                         retList.Add(path + filePath);
                     }
                 }
-                else if (!Engine.IsEditorHint() && extension != "" && filePath.ToLower().EndsWith($"{extension}{IMPORT_EXTENSION}"))
+                else if (!Utils.IsEditorBuild() && extension != "" && filePath.ToLower().EndsWith($"{extension}{IMPORT_EXTENSION}"))
                 {
-                    // This is an export build so we need to look for .Import files
+                    // For export builds we may need to look for .import files
                     retList.Add(path + filePath.Replace(IMPORT_EXTENSION, ""));
                 }
             }
             dir.ListDirEnd();
-            return retList;
+
+            // Just in case of dupes because of import files
+            return new List<string>(retList.Distinct());
         }
 
         /// <summary>
@@ -196,7 +199,7 @@ namespace GodotCSharpToolkit.Misc
             if (IsGodotPath(path))
             {
                 var exists = FileAccess.FileExists(path);
-                if (!exists && !Engine.IsEditorHint())
+                if (!exists && !Utils.IsEditorBuild())
                 {
                     exists = FileAccess.FileExists($"{path}{IMPORT_EXTENSION}");
                 }

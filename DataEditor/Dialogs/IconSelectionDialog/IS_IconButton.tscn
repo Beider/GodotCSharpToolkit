@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bymg6xspw4oiu"]
 
-[ext_resource type="Texture2D" uid="uid://das2ejtqghgrx" path="res://Assets/Icons/sbed/help.svg" id="1_jr04h"]
+[ext_resource type="Texture2D" uid="uid://dxs4jyy6hu8sw" path="res://Assets/Icons/help.svg" id="1_jr04h"]
 
 [node name="IconButton" type="Button"]
 custom_minimum_size = Vector2(64, 64)

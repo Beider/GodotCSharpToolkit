@@ -1,6 +1,7 @@
 using Godot;
 using GodotCSharpToolkit.Logging;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace GodotCSharpToolkit.Extensions
@@ -55,6 +56,16 @@ namespace GodotCSharpToolkit.Extensions
 
             Logger.Error($"Failed to convert value to decimal '{value}'. Returning 0.");
             return false;
+        }
+
+        public static string SanitizeFileName(this string name, bool allowSpace = false)
+        {
+            var invalids = new List<char>(System.IO.Path.GetInvalidFileNameChars());
+            if (!allowSpace)
+            {
+                invalids.Add(' ');
+            }
+            return String.Join("_", name.Split(invalids.ToArray(), StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
         }
     }
 }

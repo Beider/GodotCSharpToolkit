@@ -356,7 +356,7 @@ namespace GodotCSharpToolkit.Editor
         {
             if (item is IEditorDataParent edp && !edp.EditorData.Icon.IsNullOrEmpty())
             {
-                var icon = IconProvider.Instance.GetIcon(edp.EditorData.Icon);
+                var icon = IconProvider.FetchIcon(edp.EditorData.Icon);
                 if (icon != null) { return icon; }
             }
             return GetIconForItem(item);

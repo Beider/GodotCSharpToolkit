@@ -133,7 +133,7 @@ namespace GodotCSharpToolkit.Misc
             List<string> retList = new();
 
             // Release builds do not like backslashes
-            String path = NormalizeDirectory(pathToFolder);
+            var path = NormalizeDirectory(pathToFolder);
             DirAccess dir = DirAccess.Open(path);
 
             if (dir == null)
@@ -143,7 +143,7 @@ namespace GodotCSharpToolkit.Misc
             dir.ListDirBegin();
             while (true)
             {
-                String filePath = dir.GetNext();
+                var filePath = dir.GetNext();
                 if (filePath == "")
                 {
                     break;

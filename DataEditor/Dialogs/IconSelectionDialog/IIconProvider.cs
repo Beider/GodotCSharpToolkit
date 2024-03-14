@@ -27,5 +27,10 @@ namespace GodotCSharpToolkit.Editor
         /// Get the given icon
         /// </summary>
         Texture2D GetIcon(string key);
+
+        /// <summary>
+        /// Returns the page the icon is on
+        /// </summary>
+        int GetPageForIcon(string icon);
     }
 }

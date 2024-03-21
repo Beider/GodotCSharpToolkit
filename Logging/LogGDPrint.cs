@@ -56,7 +56,7 @@ namespace GodotCSharpToolkit.Logging
         private void LogError(string message, Exception ex)
         {
             Exception curEx = ex;
-
+            GD.Print(message);
             GD.PrintErr(message);
             if (curEx != null)
             {

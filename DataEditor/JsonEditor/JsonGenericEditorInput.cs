@@ -6,6 +6,13 @@ using System.Globalization;
 
 namespace GodotCSharpToolkit.Editor
 {
+    public enum ItemMovements
+    {
+        Top,
+        Up,
+        Down,
+        Bottom
+    }
     public partial class JsonGenericEditorInput
     {
         /// <summary>
@@ -94,7 +101,7 @@ namespace GodotCSharpToolkit.Editor
                         Action<IDataEditorInput> onAdd, Action<object, IDataEditorInput> onEdit,
                         Action<object, IDataEditorInput> onRemove,
                         Action<object, IDataEditorInput> onDoubleClick = null,
-                        List<JsonTreeMenuItem> menuItems = null)
+                        List<JsonTreeMenuItem> menuItems = null, Action<object, ItemMovements> onMovement = null)
         {
             var row = new JsonGenericEditorInputRowTree();
             row.Name = name;
@@ -107,6 +114,7 @@ namespace GodotCSharpToolkit.Editor
             row.MenuItems = menuItems;
             row.Columns = columns;
             row.GetObjectList = getObjectList;
+            row.OnMovement = onMovement;
             Rows.Add(row);
             return row;
         }
@@ -338,5 +346,7 @@ namespace GodotCSharpToolkit.Editor
         public List<DEA_TreeColumn> Columns { get; set; } = new List<DEA_TreeColumn>();
 
         public List<JsonTreeMenuItem> MenuItems { get; set; } = null;
+
+        public Action<object, ItemMovements> OnMovement { get; set; } = null;
     }
 }

@@ -13,14 +13,40 @@ namespace GodotCSharpToolkit.Editor
         private TreeItem Root;
         private JsonGenericEditorInputRowTree Input;
 
+        private GridContainer ParentGrid;
+        private GridContainer MovementGrid;
+
+        private Button BtnTop;
+        private Button BtnUp;
+        private Button BtnDown;
+        private Button BtnBottom;
+
+        private List<Button> Buttons = new List<Button>();
+
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
             base._Ready();
             Tree = FindChild("Tree") as Tree;
+            Tree.Connect("item_selected", new Callable(this, nameof(ToggleButtonStates)));
             Tree.Connect("item_activated", new Callable(this, nameof(OnItemActivated)));
             Tree.Connect("item_mouse_selected", new Callable(this, nameof(OnRmbClicked)));
             Tree.Connect("empty_clicked", new Callable(this, nameof(OnRmbClicked)));
+
+            ParentGrid = FindChild("ParentGrid") as GridContainer;
+            MovementGrid = FindChild("MovementGrid") as GridContainer;
+
+            BtnTop = FindChild("BtnTop") as Button;
+            BtnTop.Connect("pressed", Callable.From(() => OnMove(ItemMovements.Top)));
+
+            BtnUp = FindChild("BtnUp") as Button;
+            BtnUp.Connect("pressed", Callable.From(() => OnMove(ItemMovements.Up)));
+
+            BtnDown = FindChild("BtnDown") as Button;
+            BtnDown.Connect("pressed", Callable.From(() => OnMove(ItemMovements.Down)));
+
+            BtnBottom = FindChild("BtnBottom") as Button;
+            BtnBottom.Connect("pressed", Callable.From(() => OnMove(ItemMovements.Bottom)));
         }
 
         protected override void Init()
@@ -28,8 +54,48 @@ namespace GodotCSharpToolkit.Editor
             Input = InputData as JsonGenericEditorInputRowTree;
             Tree.CustomMinimumSize = new Vector2(Input.EditorWidth, Input.EditorHeight);
             Tree.TooltipText = InputData.ToolTip;
+
+            if (Input.OnMovement == null)
+            {
+                ParentGrid.Columns = 1;
+                MovementGrid.Visible = false;
+            }
             BuildTreeColumns();
             Refresh();
+        }
+
+        private void OnMove(ItemMovements direction)
+        {
+            if (Input.OnMovement == null) { return; }
+
+            var obj = GetSelectedObject();
+            if (obj == null) { return; }
+
+            Input.OnMovement(obj, direction);
+            Refresh(obj);
+        }
+
+        private void ToggleButtonStates()
+        {
+            // Default disabled
+            BtnTop.Disabled = true;
+            BtnUp.Disabled = true;
+            BtnDown.Disabled = true;
+            BtnBottom.Disabled = true;
+
+            var item = Tree.GetSelected();
+            if (item == null) { return; }
+
+            var parent = item.GetParent();
+            if (parent == null) { return; }
+
+            int index = item.GetIndex();
+            int total = parent.GetChildCount() - 1;
+
+            BtnTop.Disabled = index == 0;
+            BtnUp.Disabled = index == 0;
+            BtnDown.Disabled = index == total;
+            BtnBottom.Disabled = index == total;
         }
 
         private void OnRmbClicked(Vector2 pos, int buttonIndex)
@@ -135,10 +201,16 @@ namespace GodotCSharpToolkit.Editor
 
         public override void Refresh()
         {
+            Refresh(null);
+        }
+
+        private void Refresh(object reselect = null)
+        {
             Tree.Clear();
             Root = Tree.CreateItem(null);
             if (Root == null) { return; }
             var list = Input.GetObjectList();
+            TreeItem selectAfterRefresh = null;
             for (int i = 0; i < list.Count; i++)
             {
                 var obj = list[i];
@@ -150,8 +222,17 @@ namespace GodotCSharpToolkit.Editor
                 {
                     FillTreeItemColumn(item, c, obj);
                 }
+                if (obj.Equals(reselect))
+                {
+                    selectAfterRefresh = item;
+                }
             }
             Tree.HideRoot = list.Count != 0;
+            if (selectAfterRefresh != null)
+            {
+                selectAfterRefresh.Select(0);
+            }
+            ToggleButtonStates();
         }
 
         private void FillTreeItemColumn(TreeItem item, int colIndex, object obj)

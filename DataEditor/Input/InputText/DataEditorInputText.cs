@@ -43,7 +43,10 @@ namespace GodotCSharpToolkit.Editor
         private void _TakeFocus()
         {
             if (TextField == null) { return; }
-            TextField.GrabFocus();
+            if (TextField.FocusMode != FocusModeEnum.None)
+            {
+                TextField.GrabFocus();
+            }
             TextField.CaretColumn = TextField.Text.Length;
         }
 

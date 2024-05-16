@@ -36,7 +36,10 @@ namespace GodotCSharpToolkit.Editor
 
         private void _TakeFocus()
         {
-            ListField?.GrabFocus();
+            if (ListField != null && ListField.FocusMode != FocusModeEnum.None)
+            {
+                ListField.GrabFocus();
+            }
         }
 
         private void ShowPopupMenu(int index, Vector2 pos, int buttonIndex)

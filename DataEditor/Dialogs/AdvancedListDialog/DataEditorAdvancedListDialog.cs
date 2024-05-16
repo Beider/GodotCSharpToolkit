@@ -71,7 +71,10 @@ namespace GodotCSharpToolkit.Editor
             LoadPrefs();
             RefreshDialog();
             Dialog.Show();
-            TxtSearchField.GrabFocus();
+            if (TxtSearchField != null && TxtSearchField.FocusMode != FocusModeEnum.None)
+            {
+                TxtSearchField.GrabFocus();
+            }
         }
 
         private void OnSearchTextChanged(string newText)

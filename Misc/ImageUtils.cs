@@ -11,8 +11,10 @@ namespace GodotCSharpToolkit.Misc
 {
     public static class ImageUtils
     {
+        private static Dictionary<string, ImageTexture> _ImageCache = new Dictionary<string, ImageTexture>();
+
         // We ignore cache by default since it tends to screw up sometimes when reloading a lot
-        public static Texture2D LoadTexture(string fullPath)
+        public static Texture2D LoadTexture(string fullPath, bool useCache = true)
         {
             Texture2D texture = null;
             if (FileUtils.IsGodotPath(fullPath))
@@ -30,17 +32,26 @@ namespace GodotCSharpToolkit.Misc
             }
             else
             {
-                texture = LoadExternal(fullPath);
+                texture = LoadExternal(fullPath, useCache);
             }
             return texture;
         }
 
-        public static ImageTexture LoadExternal(string fullPath)
+        public static void ClearExternalCache()
+        {
+            _ImageCache.Clear();
+        }
+
+        public static ImageTexture LoadExternal(string fullPath, bool useCache)
         {
             if (fullPath.IsNullOrEmpty())
             {
                 Logger.Error($"Could not load external image path is empty");
                 return null;
+            }
+            if (useCache && _ImageCache.ContainsKey(fullPath))
+            {
+                return _ImageCache[fullPath];
             }
             var image = new Image();
             var error = image.Load(fullPath);
@@ -49,6 +60,10 @@ namespace GodotCSharpToolkit.Misc
                 Logger.Error($"Could not load external image '{fullPath}': {error.ToString()}");
             }
             ImageTexture imageTexture = ImageTexture.CreateFromImage(image);
+            if (useCache)
+            {
+                _ImageCache[fullPath] = imageTexture;
+            }
             image = null;
             return imageTexture;
         }

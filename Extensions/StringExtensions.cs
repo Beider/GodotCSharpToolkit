@@ -26,12 +26,7 @@ namespace GodotCSharpToolkit.Extensions
 
         public static bool IsNullOrEmpty(this string value)
         {
-            if (value == null || value.Trim() == "")
-            {
-                return true;
-            }
-
-            return false;
+            return string.IsNullOrEmpty(value);
         }
 
         /// <summary>

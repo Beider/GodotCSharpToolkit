@@ -128,25 +128,30 @@ namespace GodotCSharpToolkit.Editor
                     var delegateItem = CreateModItem(Root, modName, ModFolders[modName]);
                     var modData = EditorScene.GetModuleData(modName);
                     modItem = CreateTreeItem(Root, delegateItem);
-                    if (modData != null && !modData.EditorData.Icon.IsNullOrEmpty())
-                    {
-                        if (!modData.EditorData.Name.IsNullOrEmpty())
-                        {
-                            modItem.SetText(0, modData.EditorData.Name);
-                        }
-                        var icon = IconProvider.FetchIcon(modData.EditorData.Icon);
-                        if (icon != null)
-                        {
-                            modItem.SetIcon(0, icon);
-                            modItem.SetIconMaxWidth(0, 24);
-                        }
-                    }
+                    delegateItem.TreeItemName = modData.EditorData.Name;
+                    delegateItem.TreeItemIcon = modData.EditorData.Icon;
                     ModItems[modName] = delegateItem;
                 }
                 else
                 {
                     // Recreate the tree item
                     modItem = CreateTreeItem(Root, ModItems[modName]);
+                }
+
+                // Refresh the icon
+                var mItem = ModItems[modName];
+                if (!mItem.TreeItemIcon.IsNullOrEmpty())
+                {
+                    if (!mItem.TreeItemName.IsNullOrEmpty())
+                    {
+                        modItem.SetText(0, mItem.TreeItemName);
+                    }
+                    var icon = IconProvider.FetchIcon(mItem.TreeItemIcon);
+                    if (icon != null)
+                    {
+                        modItem.SetIcon(0, icon);
+                        modItem.SetIconMaxWidth(0, 24);
+                    }
                 }
 
                 // Add features

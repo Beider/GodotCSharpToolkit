@@ -19,6 +19,8 @@ namespace GodotCSharpToolkit.Editor
         public Func<DelegateEditorTreeItem, bool> OnHasUnsavedChangedCheck { get; set; } = null;
 
         public object RelatedData;
+        public string TreeItemName { get; set; } = "";
+        public string TreeItemIcon { get; set; } = "";
 
         protected override void OnSelectItemRequest(string uniqueId)
         {

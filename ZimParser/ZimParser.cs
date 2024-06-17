@@ -14,6 +14,7 @@ namespace GodotCSharpToolkit.ZimParser
         public Dictionary<string, string> ExtractedData = new Dictionary<string, string>();
 
         public string RootPath = "";
+        public string FilePath = "";
         public ZimParser()
         {
 
@@ -49,9 +50,10 @@ namespace GodotCSharpToolkit.ZimParser
             }
         }
 
-        public string ParseTextToBBCode(string wikiText, string rootPath)
+        public string ParseTextToBBCode(string wikiText, string rootPath, string filePath)
         {
             RootPath = rootPath;
+            FilePath = filePath;
             InitRules();
             ExtractedData.Clear();
             string parsedText = wikiText;

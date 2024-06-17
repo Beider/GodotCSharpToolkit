@@ -116,7 +116,8 @@ public partial class DocumentPanel : Panel
     private string ParseZimFile(string path)
     {
         var content = FileUtils.LoadTextFile(path);
-        return ZimParser.ParseTextToBBCode(content, ROOT_PATH);
+        var filePath = FileUtils.NormalizePath(Path.GetDirectoryName(path));
+        return ZimParser.ParseTextToBBCode(content, ROOT_PATH, filePath);
     }
 
     public void ToggleVisible()

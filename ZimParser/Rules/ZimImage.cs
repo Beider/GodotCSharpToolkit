@@ -25,8 +25,8 @@ namespace GodotCSharpToolkit.ZimParser
 
             // Remove the leading ..\
             text = text.Substring(3);
-            text = $"{Parser.RootPath}{text}";
-            text = FileUtils.NormalizePath(text).Replace("res://", "");
+            text = $"{Parser.FilePath}/{text}";
+            text = FileUtils.NormalizePath(text).Replace("res://", "").Replace("res:/", "");
             return $"[img]{text}[/img]";
         }
 

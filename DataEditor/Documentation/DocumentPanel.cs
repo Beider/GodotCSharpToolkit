@@ -109,6 +109,7 @@ public partial class DocumentPanel : Panel
 
             string content = ParseZimFile(path);
             DocumentView.Text = content;
+            DocumentView.ScrollToLine(0);
         }
 
     }

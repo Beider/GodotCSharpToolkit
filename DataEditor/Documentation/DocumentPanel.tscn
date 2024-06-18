@@ -25,18 +25,13 @@ custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 select_mode = 1
 
-[node name="View" type="ScrollContainer" parent="HSplitContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-horizontal_scroll_mode = 0
-
-[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/View"]
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_type_variation = &"MarginHelp"
 
-[node name="DocumentView" type="RichTextLabel" parent="HSplitContainer/View/MarginContainer"]
+[node name="DocumentView" type="RichTextLabel" parent="HSplitContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

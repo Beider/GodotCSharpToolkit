@@ -2,6 +2,7 @@ using Godot;
 using GodotCSharpToolkit.Extensions;
 using GodotCSharpToolkit.Misc;
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace GodotCSharpToolkit.ZimParser
@@ -26,7 +27,15 @@ namespace GodotCSharpToolkit.ZimParser
             // Remove the leading ..\
             text = text.Substring(3);
             text = $"{Parser.FilePath}/{text}";
-            text = FileUtils.NormalizePath(text).Replace("res://", "").Replace("res:/", "");
+            text = FileUtils.NormalizePath(text, true);
+            if (!FileUtils.FileExists(text))
+            {
+                // Backup is to just try the images folder
+                var name = Path.GetFileName(text);
+                text = $"{Parser.RootPath}Images/{name}";
+                text = FileUtils.NormalizePath(text);
+            }
+            text = text.Replace("res://", "").Replace("res:/", "");
             return $"[img]{text}[/img]";
         }
 

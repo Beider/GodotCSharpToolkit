@@ -16,14 +16,25 @@ namespace GodotCSharpToolkit.Misc
 
         /// <summary>
         /// Will fix the slashes in the path name
+        /// resolveRelative will remove relative parts of the path.
         /// </summary>
-        public static string NormalizePath(string path)
+        public static string NormalizePath(string path, bool resolveRelative = false)
         {
-            if (IsGodotPath(path) || Utils.IsMacOS())
+            var curPath = path;
+            if (resolveRelative)
             {
-                return path.Replace("\\", "/");
+                // If your path is something like res://folder/folder2/../Filename.png
+                // This part will resolve it to res://folder/Filename.png by removing the ../
+                curPath = System.IO.Path.GetFullPath(path).Replace(System.Environment.CurrentDirectory, "");
+                if (curPath.StartsWith("//")) { curPath = curPath.Substring(2); }
+                if (curPath.StartsWith("\\")) { curPath = curPath.Substring(1); }
+                curPath = curPath.Replace("res:\\", "res://");
             }
-            return path.Replace("/", "\\");
+            if (IsGodotPath(curPath) || Utils.IsMacOS())
+            {
+                return curPath.Replace("\\", "/");
+            }
+            return curPath.Replace("/", "\\");
         }
 
         /// <summary>

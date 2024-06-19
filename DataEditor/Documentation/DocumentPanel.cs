@@ -55,6 +55,27 @@ public partial class DocumentPanel : Panel
         {
             SelectExpandAndScrollTo(LeafItems[key]);
         }
+        else
+        {
+            // If pages have been moved in ZIM path might not be correct
+            // If so we first try to find by full path, if not we find by name
+            if (GotoLinkByEndsWithSearch(key)) { return; }
+            var name = key.Substring(key.LastIndexOf("/"));
+            if (GotoLinkByEndsWithSearch(name)) { return; }
+        }
+    }
+
+    private bool GotoLinkByEndsWithSearch(string searchKey)
+    {
+        foreach (var item in LeafItems)
+        {
+            if (item.Key.EndsWith(searchKey, StringComparison.OrdinalIgnoreCase))
+            {
+                SelectExpandAndScrollTo(item.Value);
+                return true;
+            }
+        }
+        return false;
     }
 
     private void OnItemSelected()

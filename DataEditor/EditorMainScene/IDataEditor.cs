@@ -86,5 +86,10 @@ namespace GodotCSharpToolkit.Editor
         /// Refresh the active editor if there is one
         /// </summary>
         void RefreshActiveEditor();
+
+        /// <summary>
+        /// Shows the help window for the given item
+        /// </summary>
+        void ShowHelpForItem(string item);
     }
 }

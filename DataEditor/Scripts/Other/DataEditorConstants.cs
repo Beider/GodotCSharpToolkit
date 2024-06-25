@@ -101,6 +101,10 @@ namespace GodotCSharpToolkit.Editor
         public static readonly Texture2D ICON_SEARCH =
                 ResourceLoader.Load($"{EDITOR_ROOT}Assets/Icons/search.png") as Texture2D;
 
+        public static readonly Texture2D ICON_HELP =
+                ResourceLoader.Load($"{EDITOR_ROOT}Assets/Icons/help.png") as Texture2D;
+
+
         //
         // Scene paths
         //

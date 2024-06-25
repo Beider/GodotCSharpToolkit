@@ -106,6 +106,12 @@ namespace GodotCSharpToolkit.Editor
             MainArea.Visible = !DocumentPanel.Visible;
         }
 
+        public void ShowHelpForItem(string item)
+        {
+            ToggleHelpVisible();
+            DocumentPanel.Search(item);
+        }
+
         public override void _ExitTree()
         {
             SavePreferences();
@@ -175,6 +181,11 @@ namespace GodotCSharpToolkit.Editor
 
         public void Close()
         {
+            if (DocumentPanel.Visible)
+            {
+                ToggleHelpVisible();
+                return;
+            }
             if (_HasUnsavedChanges())
             {
                 ShowConfirmDialog("You have unsaved changes, would you like to save before you exit?", shouldSave => { Close(shouldSave); });

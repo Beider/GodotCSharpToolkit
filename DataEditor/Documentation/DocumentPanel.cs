@@ -291,4 +291,10 @@ public partial class DocumentPanel : Panel
         Visible = true;
         RefreshDocumentTree();
     }
+
+    internal void Search(string item)
+    {
+        GotoLink(item);
+    }
+
 }

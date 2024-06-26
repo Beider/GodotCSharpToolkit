@@ -135,8 +135,11 @@ namespace GodotCSharpToolkit.Editor
             newItem.AddMetadata(DataEditorConstants.METADATA_KEY_EDITOR, this);
             newItem.IsModified = true;
             newItem.IsNew = true;
+            InitNewItem(newItem);
             return newItem;
         }
+
+        public virtual void InitNewItem(JsonDefWithName newItem) { }
 
         public override void Reload()
         {

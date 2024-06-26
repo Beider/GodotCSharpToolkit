@@ -84,5 +84,12 @@ namespace GodotCSharpToolkit.Editor
                 OnSave(this);
             }
         }
+
+        public void UpdateSettings(string key, string name, string icon)
+        {
+            Key = key;
+            TreeItemName = name;
+            TreeItemIcon = icon;
+        }
     }
 }

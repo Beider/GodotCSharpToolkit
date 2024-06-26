@@ -21,8 +21,7 @@ namespace GodotCSharpToolkit.Editor
         private void OnTreeItemCollapsed(TreeItem item)
         {
             if (InCode) { return; }
-            var aItem = GetAbstractTreeItem(item);
-            string text = aItem == null ? item.GetText(0) : aItem.Name;
+            string text = item.GetText(0);
             Editor.Preferences.SetTreeItemCollapsedState(item);
         }
 

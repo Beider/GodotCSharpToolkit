@@ -127,9 +127,10 @@ namespace GodotCSharpToolkit.Editor
                 {
                     var delegateItem = CreateModItem(Root, modName, ModFolders[modName]);
                     var modData = EditorScene.GetModuleData(modName);
+                    var newKey = GetUniqueKey(Root, modData.EditorData.Name);
+                    delegateItem.UpdateSettings(newKey, modData.EditorData.Name, modData.EditorData.Icon);
+
                     modItem = CreateTreeItem(Root, delegateItem);
-                    delegateItem.TreeItemName = modData.EditorData.Name;
-                    delegateItem.TreeItemIcon = modData.EditorData.Icon;
                     ModItems[modName] = delegateItem;
                 }
                 else
@@ -145,6 +146,7 @@ namespace GodotCSharpToolkit.Editor
                     if (!mItem.TreeItemName.IsNullOrEmpty())
                     {
                         modItem.SetText(0, mItem.TreeItemName);
+                        modItem.Collapsed = Editor.Preferences.GetTreeItemCollapsedState(modItem, true);
                     }
                     var icon = IconProvider.FetchIcon(mItem.TreeItemIcon);
                     if (icon != null)

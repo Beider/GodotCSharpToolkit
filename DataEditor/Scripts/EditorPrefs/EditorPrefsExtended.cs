@@ -28,7 +28,7 @@ namespace GodotCSharpToolkit.Editor
         private const string PREFIX_TREE_COLOR_PREF = "tree_color_";
         private const string SETTING_AUTOLOAD = "editor_pref_autoload";
         private const string SETTING_SAVE_PATH = "editor_pref_save_path";
-        private const string SETTING_WEB_MODE = "editor_web_mode";
+        private const string SETTING_DISABLE_VS_CONTEXT = "editor_disable_context";
         public EditorPrefsExtended(string path = null) : base(path)
         {
 
@@ -94,10 +94,10 @@ namespace GodotCSharpToolkit.Editor
             set { SetValue(SETTING_SAVE_PATH, value); }
         }
 
-        public bool SettingWebMode
+        public bool DisableContextScriptEditor
         {
-            get { return GetValue(SETTING_WEB_MODE, false); }
-            set { SetValue(SETTING_WEB_MODE, value); }
+            get { return GetValue(SETTING_DISABLE_VS_CONTEXT, false); }
+            set { SetValue(SETTING_DISABLE_VS_CONTEXT, value); }
         }
 
         public bool PrefSortTree

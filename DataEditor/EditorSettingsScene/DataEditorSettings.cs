@@ -9,7 +9,7 @@ namespace GodotCSharpToolkit.Editor
     public partial class DataEditorSettings : Control, IDataEditorContent
     {
         private CheckBox LoadLocalData;
-        private CheckBox WebMode;
+        private CheckBox DisableContext;
         private LineEdit SavePath;
         private Label SaveLabel;
 
@@ -24,8 +24,7 @@ namespace GodotCSharpToolkit.Editor
             btn.Connect("pressed", new Callable(this, nameof(SavePressed)));
 
             LoadLocalData = FindChild("AutoLoad") as CheckBox;
-            WebMode = FindChild("WebMode") as CheckBox;
-            WebMode.Connect("pressed", new Callable(this, nameof(WebModePressed)));
+            DisableContext = FindChild("DisableContext") as CheckBox;
             SavePath = FindChild("SavePath") as LineEdit;
             SaveLabel = FindChild("SaveLabel") as Label;
             Refresh();
@@ -36,28 +35,11 @@ namespace GodotCSharpToolkit.Editor
             Editor = editor;
         }
 
-        private void WebModePressed()
-        {
-            SavePath.Editable = !WebMode.ButtonPressed;
-        }
-
         public void Refresh()
         {
             LoadLocalData.ButtonPressed = Editor.Preferences.SettingIsLoadLocalData;
             SavePath.Text = Editor.Preferences.SettingLocalSavePath;
-            if (OS.HasFeature("web"))
-            {
-                Editor.Preferences.SettingWebMode = true;
-                WebMode.ButtonPressed = true;
-                WebMode.Disabled = true;
-                WebModePressed();
-                Save();
-            }
-            else
-            {
-                WebMode.ButtonPressed = Editor.Preferences.SettingWebMode;
-                WebModePressed();
-            }
+            DisableContext.ButtonPressed = Editor.Preferences.DisableContextScriptEditor;
 
             if (!Editor.Preferences.IsPathValid(SavePath.Text))
             {
@@ -78,21 +60,13 @@ namespace GodotCSharpToolkit.Editor
         public void Save()
         {
             Editor.Preferences.SettingIsLoadLocalData = LoadLocalData.ButtonPressed;
-            Editor.Preferences.SettingWebMode = WebMode.ButtonPressed;
-            SetupWebMode();
+            Editor.Preferences.DisableContextScriptEditor = DisableContext.ButtonPressed;
             var path = FileUtils.NormalizeDirectory(SavePath.Text);
             if (path != Editor.Preferences.SettingLocalSavePath)
             {
                 Editor.Preferences.SettingLocalSavePath = path;
                 SavePath.Text = path;
             }
-        }
-
-        private void SetupWebMode()
-        {
-            if (!WebMode.ButtonPressed) { return; };
-            FileUtils.CreateDirectory("user://", "mods");
-            SavePath.Text = "user://mods/";
         }
 
         public void SetData(object data, object provider)

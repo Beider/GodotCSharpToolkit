@@ -21,12 +21,11 @@ namespace GodotCSharpToolkit.Editor
         private const string KEY_COLOR_ERROR = "error_tree_item_color";
         private const string KEY_COLOR_MODS = "mods_tree_item_color";
         private const string PREF_EDITOR_SORT = "sort_tree_items";
-        private const string PREF_EDITOR_SHOW_DISPLAY_NAMES = "show_display_names";
-        private const string PREF_EDITOR_DISPLAY_NAMES = "display_name_delegate_number";
         private const string PREF_EDITOR_IS_LOCAL_ONLY = "is_local_only";
         private const string PREFIX_TREE_COLLAPSED_STATE_PREF = "tree_col_state_";
         private const string PREFIX_TREE_COLOR_PREF = "tree_color_";
         private const string SETTING_AUTOLOAD = "editor_pref_autoload";
+        private const string SPLIT_OFFSET = "editor_pref_split_offset";
         private const string SETTING_SAVE_PATH = "editor_pref_save_path";
         private const string SETTING_DISABLE_VS_CONTEXT = "editor_disable_context";
         public EditorPrefsExtended(string path = null) : base(path)
@@ -78,8 +77,8 @@ namespace GodotCSharpToolkit.Editor
 
         public int SettingEditorSplitOffset
         {
-            get { return GetValue(SETTING_AUTOLOAD, 0); }
-            set { SetValue(SETTING_AUTOLOAD, value); }
+            get { return GetValue(SPLIT_OFFSET, 0); }
+            set { SetValue(SPLIT_OFFSET, value); }
         }
 
         public bool SettingIsLoadLocalData

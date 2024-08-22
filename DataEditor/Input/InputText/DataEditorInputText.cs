@@ -23,7 +23,7 @@ namespace GodotCSharpToolkit.Editor
 
         private void _OnTextChanged(string newText)
         {
-            OnValueChanged(newText);
+            OnValueChanged(newText == null ? "" : newText);
         }
 
         protected override void Init()

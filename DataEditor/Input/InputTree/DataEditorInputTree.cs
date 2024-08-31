@@ -71,8 +71,10 @@ namespace GodotCSharpToolkit.Editor
             var obj = GetSelectedObject();
             if (obj == null) { return; }
 
-            Input.OnMovement(obj, direction);
-            Refresh(obj);
+            var index = GetSelectedIndex();
+
+            var newIndex = Input.OnMovement(index, obj, direction);
+            Refresh(newIndex);
         }
 
         private void ToggleButtonStates()
@@ -117,7 +119,8 @@ namespace GodotCSharpToolkit.Editor
             var selection = GetSelectedObject();
             if (selection != null && Input.OnDoubleClick != null)
             {
-                Input.OnDoubleClick(selection, this);
+                var index = GetSelectedIndex();
+                Input.OnDoubleClick(index, selection, this);
             }
         }
 
@@ -130,6 +133,17 @@ namespace GodotCSharpToolkit.Editor
                 return Input.GetObjectList()[index];
             }
             return null;
+        }
+
+        private int GetSelectedIndex()
+        {
+            var item = Tree.GetSelected();
+            if (item != null && item != Root)
+            {
+                int index = (int)item.GetMetadata(0);
+                return index;
+            }
+            return -1;
         }
 
         private void ShowPopupMenu(TreeItem item, Vector2 pos)
@@ -151,6 +165,7 @@ namespace GodotCSharpToolkit.Editor
         {
             var item = Tree.GetSelected();
             var selectedItem = GetSelectedObject();
+            var index = GetSelectedIndex();
             menu.AddPopupMenuSeparator(InputData.Name);
             if (Input.OnAdd != null)
             {
@@ -164,14 +179,14 @@ namespace GodotCSharpToolkit.Editor
             {
                 menu.AddPopupMenuEntry($"Edit {item.GetText(0)} ", () =>
                 {
-                    Input.OnEdit(selectedItem, this);
+                    Input.OnEdit(index, selectedItem, this);
                 }, DataEditorConstants.ICON_EDIT);
             }
             if (Input.OnRemove != null)
             {
                 menu.AddPopupMenuEntry($"Remove {item.GetText(0)} ", () =>
                 {
-                    Input.OnRemove(selectedItem, this);
+                    Input.OnRemove(index, selectedItem, this);
                 }, DataEditorConstants.ICON_DELETE);
             }
             if (Input.MenuItems != null)
@@ -180,7 +195,7 @@ namespace GodotCSharpToolkit.Editor
                 {
                     menu.AddPopupMenuEntry(mItem.Name, () =>
                     {
-                        mItem.Action(selectedItem, this);
+                        mItem.Action(index, selectedItem, this);
                     }, mItem.Icon);
                 }
             }
@@ -201,10 +216,10 @@ namespace GodotCSharpToolkit.Editor
 
         public override void Refresh()
         {
-            Refresh(null);
+            Refresh();
         }
 
-        private void Refresh(object reselect = null)
+        private void Refresh(int selectIndex = -1)
         {
             Tree.Clear();
             Root = Tree.CreateItem(null);
@@ -222,7 +237,7 @@ namespace GodotCSharpToolkit.Editor
                 {
                     FillTreeItemColumn(item, c, obj);
                 }
-                if (obj.Equals(reselect))
+                if (i == selectIndex)
                 {
                     selectAfterRefresh = item;
                 }

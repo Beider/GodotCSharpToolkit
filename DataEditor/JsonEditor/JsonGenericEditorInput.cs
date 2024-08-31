@@ -98,10 +98,10 @@ namespace GodotCSharpToolkit.Editor
 
         public JsonGenericEditorInputRowTree AddTreeField(string name, int rowNum,
                         List<DEA_TreeColumn> columns, Func<List<object>> getObjectList,
-                        Action<IDataEditorInput> onAdd, Action<object, IDataEditorInput> onEdit,
-                        Action<object, IDataEditorInput> onRemove,
-                        Action<object, IDataEditorInput> onDoubleClick = null,
-                        List<JsonTreeMenuItem> menuItems = null, Action<object, ItemMovements> onMovement = null)
+                        Action<IDataEditorInput> onAdd, Action<int, object, IDataEditorInput> onEdit,
+                        Action<int, object, IDataEditorInput> onRemove,
+                        Action<int, object, IDataEditorInput> onDoubleClick = null,
+                        List<JsonTreeMenuItem> menuItems = null, Func<int, object, ItemMovements, int> onMovement = null)
         {
             var row = new JsonGenericEditorInputRowTree();
             row.Name = name;
@@ -298,7 +298,7 @@ namespace GodotCSharpToolkit.Editor
 
     public partial class JsonTreeMenuItem
     {
-        public JsonTreeMenuItem(string name, Texture2D icon, Action<object, IDataEditorInput> action)
+        public JsonTreeMenuItem(string name, Texture2D icon, Action<int, object, IDataEditorInput> action)
         {
             this.Name = name;
             this.Icon = icon;
@@ -306,7 +306,7 @@ namespace GodotCSharpToolkit.Editor
         }
 
         public string Name;
-        public Action<object, IDataEditorInput> Action;
+        public Action<int, object, IDataEditorInput> Action;
         public Texture2D Icon;
     }
 
@@ -322,18 +322,18 @@ namespace GodotCSharpToolkit.Editor
         /// <summary>
         /// Triggered when this item is double clicked
         /// </summary>
-        public Action<object, IDataEditorInput> OnDoubleClick { get; set; } = null;
+        public Action<int, object, IDataEditorInput> OnDoubleClick { get; set; } = null;
 
         /// <summary>
         /// The object is the key value of the item.
         /// You need to manually call refresh on the IDataEditorInput
         /// </summary>
-        public Action<object, IDataEditorInput> OnRemove { get; set; } = null;
+        public Action<int, object, IDataEditorInput> OnRemove { get; set; } = null;
 
         /// <summary>
         /// Same as OnRemove except you are expected to modify the object accordingly
         /// </summary>
-        public Action<object, IDataEditorInput> OnEdit { get; set; } = null;
+        public Action<int, object, IDataEditorInput> OnEdit { get; set; } = null;
 
         /// <summary>
         /// After adding you need to manually call refresh on the IDataEditorInput
@@ -347,6 +347,6 @@ namespace GodotCSharpToolkit.Editor
 
         public List<JsonTreeMenuItem> MenuItems { get; set; } = null;
 
-        public Action<object, ItemMovements> OnMovement { get; set; } = null;
+        public Func<int, object, ItemMovements, int> OnMovement { get; set; } = null;
     }
 }

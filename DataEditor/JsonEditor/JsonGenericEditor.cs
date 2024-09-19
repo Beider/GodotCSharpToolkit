@@ -39,7 +39,7 @@ namespace GodotCSharpToolkit.Editor
             }
         }
 
-        public void Refresh()
+        public new void Refresh()
         {
             ControlContainer.Visible = false;
             ControlContainer.QueueFree();

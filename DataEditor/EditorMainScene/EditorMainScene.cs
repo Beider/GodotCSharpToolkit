@@ -212,6 +212,7 @@ namespace GodotCSharpToolkit.Editor
 
         public void Save()
         {
+            ActiveEditor.Save();
             Tree.Save();
             OnDataSaved();
             _Refresh();

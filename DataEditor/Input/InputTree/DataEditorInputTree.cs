@@ -221,6 +221,7 @@ namespace GodotCSharpToolkit.Editor
 
         private void Refresh(int selectIndex = -1)
         {
+            if (Tree == null || !IsInstanceValid(Tree)) { return; }
             Tree.Clear();
             Root = Tree.CreateItem(null);
             if (Root == null) { return; }
